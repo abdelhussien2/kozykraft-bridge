@@ -6,6 +6,9 @@
 <title>10 Reasons This Hand-Crafted Ohio Sourdough Starter Is Making Thousands Quit Store-Bought Bread</title>
 <meta name="description" content="Sponsored Advertising Post">
 
+<!-- Bread emoji favicon (SVG, works in all modern browsers) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍞</text></svg>">
+
 <!-- ============ META PIXEL — REPLACE YOUR_PIXEL_ID_HERE WITH THE 16-DIGIT ID ============ -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -480,6 +483,246 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
     .product-grid { flex-direction: column; }
     .product-card .product-img { max-width: 200px; }
   }
+
+  /* ============ CONVERSION MECHANICS ============ */
+
+  /* Top trust row — star rating just below sub-hook */
+  .trust-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    background: var(--cream-soft);
+    border-radius: 2px;
+    margin: 0 0 28px;
+    border: 1px solid var(--line);
+  }
+  .trust-row .stars { color: var(--accent); font-size: 17px; letter-spacing: 2px; }
+  .trust-row .rating-text { font-size: 13px; color: var(--coffee); font-weight: 600; }
+  .trust-row .rating-text strong { font-family: 'Playfair Display', Georgia, serif; color: var(--coffee); font-size: 16px; }
+  .trust-row .divider-dot { color: var(--line); }
+
+  /* Above-the-fold quick-CTA bar */
+  .quick-cta-row {
+    display: flex;
+    gap: 12px;
+    margin: 0 0 32px;
+    flex-wrap: wrap;
+  }
+  .quick-cta-row a {
+    flex: 1 1 200px;
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+    text-decoration: none;
+    text-align: center;
+    color: var(--coffee);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+  .quick-cta-row a:hover { background: var(--coffee); color: var(--cream); border-color: var(--coffee); transform: translateY(-1px); }
+  .quick-cta-row .price-pill {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--coffee);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 6px;
+  }
+
+  /* Guarantee badge near CTAs */
+  .guarantee-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--coffee-soft);
+    margin: 10px 0 0;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .guarantee-row .badge-icon {
+    color: var(--crust);
+    font-size: 14px;
+  }
+  .guarantee-row .sep { color: var(--line); }
+
+  /* Inline soft CTA between reasons */
+  .inline-cta {
+    background: var(--cream-soft);
+    border-left: 3px solid var(--crust);
+    padding: 18px 22px;
+    margin: 32px 0;
+    border-radius: 0 2px 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .inline-cta .text {
+    flex: 1 1 240px;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--coffee);
+    line-height: 1.4;
+  }
+  .inline-cta .text strong { font-style: normal; }
+  .inline-cta .btn {
+    background: var(--coffee);
+    color: var(--cream);
+    padding: 10px 18px;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .inline-cta .btn:hover { background: var(--crust-deep); transform: translateY(-1px); }
+
+  /* "What's in the box" section */
+  .whats-in-box {
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 26px 24px;
+    margin: 36px 0;
+    position: relative;
+    border-radius: 2px;
+  }
+  .whats-in-box::before {
+    content: "";
+    position: absolute;
+    top: 6px; left: 6px; right: 6px; bottom: 6px;
+    border: 1px solid var(--linen);
+    pointer-events: none;
+  }
+  .whats-in-box h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    color: var(--coffee);
+    margin: 0 0 14px;
+    font-weight: 600;
+    position: relative;
+  }
+  .whats-in-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  .whats-in-box li {
+    padding: 6px 0 6px 24px;
+    position: relative;
+    font-size: 15px;
+    color: var(--coffee-soft);
+    line-height: 1.5;
+  }
+  .whats-in-box li::before {
+    content: "❋";
+    position: absolute;
+    left: 0; top: 6px;
+    color: var(--crust);
+    font-size: 12px;
+  }
+
+  /* Founder mini-card */
+  .founder-card {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    background: var(--cream-soft);
+    border-left: 3px solid var(--crust);
+    padding: 18px;
+    margin: 22px 0 8px;
+    border-radius: 0 2px 2px 0;
+  }
+  .founder-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+  }
+  .founder-card .quote {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--coffee);
+    margin: 0 0 6px;
+    line-height: 1.5;
+  }
+  .founder-card .signature {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  @media (max-width: 500px) {
+    .founder-card { flex-direction: column; text-align: center; gap: 12px; }
+    .founder-card img { width: 80px; height: 80px; }
+  }
+
+  /* Sticky mobile CTA bar */
+  .sticky-cta {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--coffee);
+    padding: 10px 14px env(safe-area-inset-bottom, 10px);
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
+    box-shadow: 0 -2px 12px rgba(61, 40, 23, 0.15);
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  }
+  .sticky-cta.visible { transform: translateY(0); }
+  .sticky-cta a {
+    flex: 1;
+    background: var(--cream);
+    color: var(--coffee);
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 8px;
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    line-height: 1.2;
+  }
+  .sticky-cta a .price {
+    display: block;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 2px;
+    letter-spacing: 0;
+    color: var(--crust-deep);
+  }
+  .sticky-cta a:active { background: var(--cream-soft); }
+  .sticky-cta-spacer { height: 78px; display: none; }
+  @media (max-width: 760px) {
+    .sticky-cta { display: flex; }
+    .sticky-cta-spacer { display: block; }
+  }
+  @media (min-width: 761px) {
+    .sticky-cta { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -512,6 +755,27 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
   </div>
 
   <p class="sub-hook">"What I Learned After 3 Years Of Failed Sourdough Starters"</p>
+
+  <!-- TRUST ROW + ABOVE-FOLD QUICK CTAs -->
+  <div class="trust-row">
+    <span class="stars">★ ★ ★ ★ ★</span>
+    <span class="rating-text"><strong>4.8</strong> · Verified Amazon Reviews</span>
+    <span class="divider-dot">·</span>
+    <span class="rating-text">30-Day "It Works" Guarantee</span>
+  </div>
+
+  <div class="quick-cta-row">
+    <a href="https://www.amazon.com/dp/B0FCPFH2WR?ascsubtag=meta_kk_bridge_topcta_dehyd_w20"
+       target="_blank" rel="nofollow noopener"
+       onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'top',sku:'dehydrated'});}">
+       Shop Dehydrated <span class="price-pill">$6.99</span>
+    </a>
+    <a href="https://www.amazon.com/dp/B0GBWB83NM?ascsubtag=meta_kk_bridge_topcta_live_w20"
+       target="_blank" rel="nofollow noopener"
+       onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'top',sku:'live'});}">
+       Shop Live Jar <span class="price-pill">$12.99</span>
+    </a>
+  </div>
 
   <!-- ============ REASONS 1-5 ============ -->
 
@@ -552,6 +816,17 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
       <h2>03. Long fermentation <em>breaks down</em> the gluten that hurts your stomach</h2>
       <p>If wheat makes you bloated, gassy, or foggy — it may not be the gluten itself. It may be that you've never had <strong>properly fermented</strong> bread. A real sourdough ferment (24–48 hours, not 90 minutes like grocery bread) lets wild bacteria pre-digest much of the gluten and phytic acid. Many people who can't tolerate commercial bread report no symptoms with long-fermented sourdough. This is how humans ate wheat for thousands of years before industrial yeast existed.</p>
     </div>
+  </div>
+
+  <!-- INLINE SOFT CTA — appetite peak after R03 -->
+  <div class="inline-cta">
+    <div class="text">If you've gotten this far, you already get it. <strong>Most readers grab the dehydrated to start.</strong></div>
+    <a class="btn"
+       href="https://www.amazon.com/dp/B0FCPFH2WR?ascsubtag=meta_kk_bridge_inlineR3_dehyd_w20"
+       target="_blank" rel="nofollow noopener"
+       onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'inline_r3',sku:'dehydrated'});}">
+       Shop $6.99 →
+    </a>
   </div>
 
   <!-- REASON 4 — claims audit: softened 98% to "thousands of starters with strong success rate" — verify exact figure before going live -->
@@ -600,6 +875,12 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
          onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'mid',sku:'dehydrated'});}">
          Buy Dehydrated On Amazon
       </a>
+      <div class="guarantee-row">
+        <span class="badge-icon">❋</span>
+        <span>30-Day Guarantee</span>
+        <span class="sep">·</span>
+        <span>Free Prime Shipping</span>
+      </div>
     </div>
     <!-- Live -->
     <div class="product-card">
@@ -617,6 +898,12 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
          onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'mid',sku:'live'});}">
          Buy Live Jar On Amazon
       </a>
+      <div class="guarantee-row">
+        <span class="badge-icon">❋</span>
+        <span>30-Day Guarantee</span>
+        <span class="sep">·</span>
+        <span>Free Prime Shipping</span>
+      </div>
     </div>
   </div>
 
@@ -656,6 +943,14 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
     <div class="reason-body">
       <h2>08. Support a small American family business — not a corporation</h2>
       <p>Every order goes directly to a small team in Ohio. No warehouse, no venture capital, no overseas manufacturer. When you buy a KozyKraft starter, you're keeping a <strong>thousands-of-years-old craft alive</strong> and putting food on the table for a real American family. You can't say the same about the bread aisle at Walmart.</p>
+
+      <div class="founder-card">
+        <img src="images/founder-abdel-amr.png" alt="KozyKraft co-founders Abdel and Amr in their Ohio kitchen" loading="lazy">
+        <div>
+          <p class="quote">"We started KozyKraft because we couldn't find a starter that actually worked the first time. Every jar leaves our kitchen tested, alive, and ready to bake."</p>
+          <p class="signature">— Abdel &amp; Amr, KK Co-Founders</p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -679,59 +974,59 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
         <tr>
           <th></th>
           <th class="kk-col">KozyKraft</th>
-          <th>Captain Sourpants</th>
-          <th>ERNEY</th>
-          <th>Cultures for Health</th>
+          <th>Brand A</th>
+          <th>Brand B</th>
+          <th>Brand C</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="row-label">Made in USA (Ohio)</td>
-          <td class="kk-col"><span class="yes">✓ Hand-made in Ohio</span></td>
-          <td>Unclear sourcing</td>
-          <td>Unclear sourcing</td>
-          <td>Industrial facility</td>
+          <td class="row-label">Hand-made in a small US kitchen</td>
+          <td class="kk-col"><span class="yes">✓ Ohio</span></td>
+          <td>Not specified</td>
+          <td>Not specified</td>
+          <td>Industrial scale</td>
         </tr>
         <tr>
-          <td class="row-label">Both dehydrated AND live formats</td>
+          <td class="row-label">Both dehydrated AND live formats offered</td>
           <td class="kk-col"><span class="yes">✓ Both available</span></td>
           <td><span class="no">✗ Dehydrated only</span></td>
           <td><span class="no">✗ Dehydrated only</span></td>
           <td><span class="no">✗ Dehydrated only</span></td>
         </tr>
         <tr>
-          <td class="row-label">Time to first loaf</td>
+          <td class="row-label">Time to first loaf (typical)</td>
           <td class="kk-col"><span class="yes">Live: 24–48 hrs<br>Dehydrated: 5–7 days</span></td>
-          <td>14+ days typical</td>
+          <td>14+ days</td>
           <td>10–14 days</td>
-          <td>14+ days typical</td>
+          <td>14+ days</td>
         </tr>
         <tr>
-          <td class="row-label">Tested + activated before ship</td>
+          <td class="row-label">Each batch tested before shipping</td>
           <td class="kk-col"><span class="yes">✓ Every batch</span></td>
-          <td>Not verified</td>
-          <td>Not verified</td>
-          <td>Mass-dried, not tested</td>
+          <td>Not publicly stated</td>
+          <td>Not publicly stated</td>
+          <td>Not publicly stated</td>
         </tr>
         <tr>
-          <td class="row-label">Free replacement guarantee</td>
+          <td class="row-label">Free-replacement guarantee</td>
           <td class="kk-col"><span class="yes">✓ 30-day</span></td>
-          <td>Limited returns</td>
-          <td>Limited returns</td>
-          <td>Standard return only</td>
+          <td>Standard Amazon return</td>
+          <td>Standard Amazon return</td>
+          <td>Standard Amazon return</td>
         </tr>
         <tr>
           <td class="row-label">Starting price</td>
           <td class="kk-col"><strong>$6.99</strong></td>
-          <td>$11.99+</td>
-          <td>$9.99+</td>
-          <td>$14.99+</td>
+          <td>$11+</td>
+          <td>$9+</td>
+          <td>$14+</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <p style="font-size: 12px; color: #777; font-style: italic; margin-top: 8px;">Competitor data based on publicly listed Amazon details as of May 2026. Pricing and offerings may change.</p>
+  <p style="font-size: 12px; color: #777; font-style: italic; margin-top: 8px;">Comparison reflects publicly listed details of competing sourdough starter brands available on major US retailers as of May 2026. Pricing and offerings may change.</p>
 
   <!-- ============ REAL CUSTOMER REVIEWS ============ -->
   <h2 class="section-heading">What Real Customers Are Saying</h2>
@@ -803,36 +1098,27 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
   </div>
 
   <div class="faq-item">
-    <p class="faq-q">Do I need any special equipment?</p>
-    <p class="faq-a">No. A glass jar (any clean mason jar works), a kitchen scale or measuring cups, flour, water, and a wooden spoon. That's it. No fancy proofing baskets or Dutch ovens required to start — though they help once you fall in love with the craft.</p>
-  </div>
-
-  <div class="faq-item">
     <p class="faq-q">How do I maintain the starter long-term?</p>
-    <p class="faq-a">Once active, feed it 1:1:1 (starter : flour : water) every 12–24 hours if kept at room temperature, or once a week if stored in the fridge. We include written care instructions with every order, plus access to a private email support line for any questions.</p>
-  </div>
-
-  <div class="faq-item">
-    <p class="faq-q">Is this really better than what I can buy at Whole Foods?</p>
-    <p class="faq-a">A Whole Foods sourdough loaf runs $7–$10 and is typically made with bakery yeast, not a true long-ferment culture. Bread you bake yourself from a live wild culture has deeper flavor, better digestibility for most people, and costs about $1.20 a loaf in ingredients. Plus you'll never run out — one starter lasts a lifetime if maintained.</p>
-  </div>
-
-  <div class="faq-item">
-    <p class="faq-q">Why not just make my own starter from flour and water?</p>
-    <p class="faq-a">You can — and many people try. But traditional starters take 10–14 days minimum, often fail (mold, bacterial imbalance, dormant cultures), and require daily attention while building. Our pre-tested culture skips that — you're starting with a mature, balanced wild yeast population that's already proven to bake bread.</p>
-  </div>
-
-  <div class="faq-item">
-    <p class="faq-q">What's the shipping situation?</p>
-    <p class="faq-a">Free Prime shipping when ordered on Amazon. Most orders arrive in 1–2 days. Ships from Ohio. The dehydrated pouch is shelf-stable so no special handling needed.</p>
+    <p class="faq-a">Once active, feed it 1:1:1 (starter : flour : water) every 12–24 hours at room temperature, or once a week if stored in the fridge. We include written care instructions with every order, plus an email support line for questions.</p>
   </div>
 
   <div class="faq-item">
     <p class="faq-q">What if I change my mind?</p>
-    <p class="faq-a">Amazon's standard 30-day return policy applies. On top of that, our "It Works" guarantee means if your starter doesn't activate within 30 days, we replace it free regardless of what Amazon's return window says.</p>
+    <p class="faq-a">Amazon's standard 30-day return policy applies. On top of that, our "It Works" guarantee means if your starter doesn't activate within 30 days, we ship a free replacement regardless of what Amazon's return window says.</p>
   </div>
 
   <!-- ============ SCARCITY / URGENCY BLOCK ============ -->
+  <!-- WHAT'S IN THE BOX — risk reduction before final CTA -->
+  <div class="whats-in-box">
+    <h3>What you'll receive</h3>
+    <ul>
+      <li><strong>One jar of KozyKraft sourdough starter</strong> — 5g dehydrated pouch or 30g live wet jar, depending on your choice</li>
+      <li><strong>Step-by-step feeding instructions</strong> — printed card, beginner-friendly, plus a digital copy by email</li>
+      <li><strong>Email support line</strong> — write us anytime if your starter slows down or you need help</li>
+      <li><strong>30-day "It Works" replacement guarantee</strong> — if your starter doesn't activate within 30 days, we ship a free replacement, no questions</li>
+    </ul>
+  </div>
+
   <div class="urgency-block">
     <div class="urgency-title">⚠ Limited Inventory This Week</div>
     <div class="urgency-text">
@@ -857,6 +1143,12 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
          onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'end',sku:'dehydrated'});fbq('track','InitiateCheckout');}">
          Buy Dehydrated On Amazon
       </a>
+      <div class="guarantee-row">
+        <span class="badge-icon">❋</span>
+        <span>30-Day Guarantee</span>
+        <span class="sep">·</span>
+        <span>Free Prime Shipping</span>
+      </div>
     </div>
     <div class="product-card">
       <span class="badge-label">New · Live Starter</span>
@@ -873,6 +1165,12 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
          onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'end',sku:'live'});fbq('track','InitiateCheckout');}">
          Buy Live Jar On Amazon
       </a>
+      <div class="guarantee-row">
+        <span class="badge-icon">❋</span>
+        <span>30-Day Guarantee</span>
+        <span class="sep">·</span>
+        <span>Free Prime Shipping</span>
+      </div>
     </div>
   </div>
 
@@ -891,20 +1189,39 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
 
 </div>
 
-<!-- ============ SCROLL-DEPTH PIXEL EVENT ============ -->
+<!-- ============ STICKY MOBILE CTA BAR ============ -->
+<div class="sticky-cta-spacer"></div>
+<div class="sticky-cta" id="stickyCta">
+  <a href="https://www.amazon.com/dp/B0FCPFH2WR?ascsubtag=meta_kk_bridge_sticky_dehyd_w20"
+     target="_blank" rel="nofollow noopener"
+     onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'sticky',sku:'dehydrated'});}">
+     Buy Dehydrated <span class="price">$6.99</span>
+  </a>
+  <a href="https://www.amazon.com/dp/B0GBWB83NM?ascsubtag=meta_kk_bridge_sticky_live_w20"
+     target="_blank" rel="nofollow noopener"
+     onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'sticky',sku:'live'});}">
+     Buy Live Jar <span class="price">$12.99</span>
+  </a>
+</div>
+
+<!-- ============ SCROLL-DEPTH PIXEL EVENT + STICKY CTA REVEAL ============ -->
 <script>
   (function(){
     var fired50 = false;
+    var sticky = document.getElementById('stickyCta');
     window.addEventListener('scroll', function(){
-      if (fired50) return;
       var scrolled = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+      if (sticky && scrolled >= 0.20 && !sticky.classList.contains('visible')) {
+        sticky.classList.add('visible');
+      }
+      if (fired50) return;
       if (scrolled >= 0.5) {
         fired50 = true;
         if (typeof fbq !== 'undefined') {
           fbq('trackCustom', 'BridgeScroll50');
         }
       }
-    });
+    }, { passive: true });
   })();
 </script>
 

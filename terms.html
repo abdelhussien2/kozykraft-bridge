@@ -5,93 +5,192 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Terms of Use — The Loaf Report</title>
 <meta name="description" content="Terms of Use for The Loaf Report">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+  :root {
+    --cream: #faf6ee;
+    --cream-soft: #f3ecdc;
+    --linen: #e8ddc4;
+    --crust: #b8763e;
+    --crust-deep: #8b4513;
+    --coffee: #3d2817;
+    --coffee-soft: #5a4231;
+    --ink: #2a1f17;
+    --muted: #8a7560;
+    --line: #d9cfb8;
+  }
   * { box-sizing: border-box; }
   body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
-    color: #2a2a2a;
-    background: #ffffff;
-    line-height: 1.6;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.7;
     font-size: 15px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .topbar {
+    text-align: center;
+    padding: 26px 16px 22px;
+    border-bottom: 1px solid var(--line);
+    background: var(--cream-soft);
+  }
+  .topbar .site-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--coffee);
+    font-size: 13px;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+  }
+  .topbar .site-tagline {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
   }
   .container {
-    max-width: 720px;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 40px 20px 60px;
+    padding: 50px 22px 70px;
   }
-  h1 {
-    font-size: 28px;
-    color: #0a3a7a;
-    margin: 0 0 8px;
-    font-weight: bold;
-  }
-  .updated {
-    color: #777;
-    font-size: 13px;
-    margin: 0 0 30px;
-  }
-  h2 {
-    font-size: 18px;
-    color: #0a3a7a;
-    margin: 28px 0 10px;
-  }
-  p { margin: 8px 0; }
-  a { color: #0a3a7a; }
   .back-link {
     display: inline-block;
-    margin-bottom: 24px;
-    font-size: 13px;
-    color: #666;
+    margin-bottom: 28px;
+    font-size: 12px;
+    color: var(--coffee-soft);
     text-decoration: none;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    transition: all 0.2s;
   }
-  .back-link:hover { text-decoration: underline; }
+  .back-link:hover { color: var(--crust); border-color: var(--crust); }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 38px;
+    color: var(--coffee);
+    margin: 0 0 8px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+  .updated {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 36px;
+    font-style: italic;
+  }
+  h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    color: var(--coffee);
+    margin: 36px 0 12px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  p { margin: 10px 0; color: var(--coffee-soft); }
+  a { color: var(--crust); text-decoration: none; border-bottom: 1px solid var(--linen); transition: all 0.2s; }
+  a:hover { color: var(--crust-deep); border-color: var(--crust); }
+  strong { color: var(--coffee); font-weight: 600; }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 40px 0;
+    position: relative;
+  }
+  .divider::after {
+    content: "❋";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--cream);
+    padding: 0 14px;
+    color: var(--crust);
+    font-size: 14px;
+  }
+  .callout {
+    background: var(--cream-soft);
+    border-left: 3px solid var(--crust);
+    padding: 16px 20px;
+    margin: 22px 0;
+    border-radius: 0 2px 2px 0;
+  }
+  .callout p { margin: 0; color: var(--coffee); font-style: italic; }
   .footer {
     text-align: center;
     font-size: 11px;
-    color: #888;
+    color: var(--muted);
     padding: 30px 0 0;
-    margin-top: 40px;
-    border-top: 1px solid #eee;
+    margin-top: 50px;
+    border-top: 1px solid var(--line);
+    letter-spacing: 0.3px;
   }
-  .footer a { color: #666; margin: 0 8px; }
+  .footer a { color: var(--coffee-soft); margin: 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+  @media (max-width: 600px) {
+    h1 { font-size: 30px; }
+    h2 { font-size: 19px; }
+  }
 </style>
 </head>
 <body>
+
+<div class="topbar">
+  <p class="site-name">The Loaf Report</p>
+  <p class="site-tagline">Honest reviews of food worth eating</p>
+</div>
+
 <div class="container">
 
   <a href="index.html" class="back-link">← Back to The Loaf Report</a>
 
   <h1>Terms of Use</h1>
-  <p class="updated">Last updated: May 13, 2026</p>
+  <p class="updated">Last updated May 13, 2026</p>
 
   <p>Welcome to The Loaf Report. By accessing or using this website, you agree to be bound by these Terms of Use. If you do not agree, do not use the site.</p>
 
   <h2>About The Loaf Report</h2>
-  <p>The Loaf Report is an online publication featuring editorial content, product reviews, and sponsored advertising content related to home baking and sourdough. The site is operated as a marketing channel that includes paid advertorial content for partner brands.</p>
+  <p>The Loaf Report is an online publication featuring editorial content, product reviews, and sponsored advertising content related to home baking and sourdough.</p>
 
   <h2>Sponsored Content</h2>
   <p>Articles on The Loaf Report may be sponsored advertising content. We receive compensation in exchange for publishing certain content and may earn affiliate commissions when readers click links to third-party retailers (including Amazon.com) and complete purchases. Sponsored content is identified with a disclosure at the top of the article.</p>
 
+  <hr class="divider">
+
   <h2>Editorial Disclaimer</h2>
-  <p>Content on The Loaf Report is provided for informational and entertainment purposes only. It is not a substitute for professional medical, nutritional, dietary, or legal advice. Statements about the health, dietary, or nutritional properties of any product or ingredient mentioned on this site have not been evaluated by the U.S. Food and Drug Administration and are not intended to diagnose, treat, cure, or prevent any disease.</p>
+  <p>Content on The Loaf Report is provided for informational and entertainment purposes only. It is not a substitute for professional medical, nutritional, dietary, or legal advice.</p>
+
+  <div class="callout">
+    <p>Statements about the health, dietary, or nutritional properties of any product or ingredient mentioned on this site have not been evaluated by the U.S. Food and Drug Administration and are not intended to diagnose, treat, cure, or prevent any disease.</p>
+  </div>
 
   <p>Customer experiences and testimonials shared on this site are individual and may not represent typical results. Outcomes from using any product mentioned will vary.</p>
 
-  <h2>No Health or Medical Advice</h2>
-  <p>Sourdough fermentation is described in some articles as breaking down gluten and phytic acid; this information is provided as a general overview of the fermentation process and is not medical advice. Sourdough is NOT gluten-free and is not safe for individuals diagnosed with celiac disease. Anyone with food sensitivities or medical conditions should consult a qualified healthcare provider before changing their diet.</p>
+  <h2>No Medical Advice</h2>
+  <p>Sourdough fermentation is described in some articles as breaking down gluten and phytic acid; this is provided as a general overview of the fermentation process and is not medical advice. <strong>Sourdough is NOT gluten-free and is not safe for individuals diagnosed with celiac disease.</strong> Anyone with food sensitivities or medical conditions should consult a qualified healthcare provider before changing their diet.</p>
 
-  <h2>Third-Party Products and Links</h2>
-  <p>Our articles link to third-party retailers, including Amazon.com. Purchases made through those links are governed by the terms and policies of the third-party retailer. We are not responsible for transactions, fulfillment, returns, warranties, or product quality issues with third-party purchases. Any disputes related to purchases from a third-party retailer must be resolved through that retailer.</p>
+  <h2>Third-Party Products & Links</h2>
+  <p>Our articles link to third-party retailers, including Amazon.com. Purchases through those links are governed by the terms and policies of the third-party retailer. We are not responsible for transactions, fulfillment, returns, warranties, or product quality issues with third-party purchases.</p>
 
   <h2>Intellectual Property</h2>
-  <p>All content on The Loaf Report — including articles, images, layouts, and brand names — is the property of The Loaf Report or its content licensors and is protected by U.S. and international copyright and trademark law. You may not reproduce, distribute, or create derivative works without prior written permission.</p>
+  <p>All content on The Loaf Report — articles, images, layouts, and brand names — is the property of The Loaf Report or its content licensors and is protected by U.S. and international copyright and trademark law. You may not reproduce, distribute, or create derivative works without prior written permission.</p>
 
   <h2>User Conduct</h2>
-  <p>You agree not to misuse the site, including but not limited to: attempting to gain unauthorized access; scraping content without permission; using the site for any unlawful purpose; or interfering with site functionality.</p>
+  <p>You agree not to misuse the site, including: attempting to gain unauthorized access; scraping content without permission; using the site for any unlawful purpose; or interfering with site functionality.</p>
 
   <h2>Limitation of Liability</h2>
-  <p>To the maximum extent permitted by law, The Loaf Report, its owners, and its affiliates are not liable for any direct, indirect, incidental, consequential, or punitive damages arising from your use of the site or any products or services referenced on the site. Your sole remedy for dissatisfaction with the site is to stop using it.</p>
+  <p>To the maximum extent permitted by law, The Loaf Report, its owners, and its affiliates are not liable for any direct, indirect, incidental, consequential, or punitive damages arising from your use of the site or any products or services referenced. Your sole remedy for dissatisfaction with the site is to stop using it.</p>
 
   <h2>Indemnification</h2>
   <p>You agree to indemnify and hold harmless The Loaf Report and its affiliates from any claims, damages, or expenses arising from your violation of these Terms.</p>
@@ -103,13 +202,13 @@
   <p>We may revise these Terms at any time. Continued use of the site after changes constitutes acceptance of the revised Terms.</p>
 
   <h2>Contact</h2>
-  <p>Questions about these Terms can be sent to: <a href="mailto:legacystrategies1@gmail.com">legacystrategies1@gmail.com</a></p>
+  <p>Questions about these Terms: <a href="mailto:legacystrategies1@gmail.com">legacystrategies1@gmail.com</a></p>
 
   <div class="footer">
-    <p>The Loaf Report · A publication featuring sponsored editorial content.</p>
+    <p>The Loaf Report · A publication featuring sponsored editorial content</p>
     <p>
-      <a href="privacy.html">Privacy Policy</a> |
-      <a href="terms.html">Terms</a> |
+      <a href="privacy.html">Privacy</a> ·
+      <a href="terms.html">Terms</a> ·
       <a href="contact.html">Contact</a>
     </p>
   </div>

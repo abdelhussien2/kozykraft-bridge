@@ -3,29 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>10 Reasons This Hand-Crafted Ohio Sourdough Starter Is Making Thousands Quit Store-Bought Bread</title>
-<meta name="description" content="Sponsored Advertising Post">
+<title>9 Reasons Home Bakers Are Switching To This Small-Batch Ohio Sourdough Starter</title>
+<meta name="description" content="A dehydrated sourdough starter made in small batches in Ohio. First bubbles by day 3, bake-ready in 5–7 days. Sponsored content by KozyKraft.">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Loaf Report">
+<meta property="og:title" content="9 Reasons Home Bakers Are Switching To This Small-Batch Ohio Sourdough Starter">
+<meta property="og:description" content="First bubbles by day 3. Bake-ready in 5–7 days. Made in small batches in Ohio.">
+<meta property="og:url" content="https://www.theloafreport.com/">
+<meta property="og:image" content="https://www.theloafreport.com/images/og-share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 
 <!-- Bread emoji favicon (SVG, works in all modern browsers) -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍞</text></svg>">
 
-<!-- ============ META PIXEL — REPLACE YOUR_PIXEL_ID_HERE WITH THE 16-DIGIT ID ============ -->
+<!-- ============ SITE CONFIG — the only values to edit before launch ============
+     PIXEL_ID:               Meta Events Manager → Data sources → your pixel → 15–16 digit ID.
+     GOOGLE_ADS_ID:          Google Ads → Goals → Conversions → your action → Tag setup → "AW-123456789".
+     GOOGLE_ADS_CLICK_LABEL: the part after the slash in send_to ("AW-123456789/AbC-dEfGhIj" → "AbC-dEfGhIj").
+     AMAZON_URLS:            Amazon Ads → Measurement → Amazon Attribution → one tag per traffic source
+                             for ASIN B0FCPFH2WR. Paste each full tag URL (contains maas=...).
+                             Extra keys work too: add  meta_broad: '...'  and link ads to ?t=meta_broad.
+     How a visitor's link is chosen: ?t=<key> in the map → gclid or utm_source=google → google
+     → fbclid or utm_source=facebook/instagram/meta → meta → default. An empty value falls back
+     to default, then to the plain listing URL.
+     Pixel and Google tag stay off until their IDs are real, so no junk events are sent.
+     ============================================================================== -->
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'YOUR_PIXEL_ID_HERE');
-fbq('track', 'PageView');
-fbq('trackCustom', 'BridgePageView');
+  window.KK = {
+    PIXEL_ID: 'PASTE_PIXEL_ID_HERE',
+    GOOGLE_ADS_ID: 'AW-XXXXXXXXX',
+    GOOGLE_ADS_CLICK_LABEL: '',
+    AMAZON_URLS: {
+      meta: '',
+      google: '',
+      default: ''
+    },
+    FALLBACK_URL: 'https://www.amazon.com/dp/B0FCPFH2WR',
+    ASIN: 'B0FCPFH2WR',
+    VALUE: 10.99
+  };
+
+  KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
+  KK.gtagOn = /^AW-\d+$/.test(KK.GOOGLE_ADS_ID);
+
+  // Unique per event so a server-side Conversions API copy can be deduplicated later.
+  KK.eventId = function(prefix){
+    var rand = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+    return prefix + '_' + rand;
+  };
+
+  // Pick the Amazon link for this visitor's traffic source.
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var urls = KK.AMAZON_URLS;
+    var t = params.get('t');
+    var utm = (params.get('utm_source') || '').toLowerCase();
+    var key = 'default';
+    if (t && Object.prototype.hasOwnProperty.call(urls, t)) key = t;
+    else if (params.has('gclid') || utm === 'google') key = 'google';
+    else if (params.has('fbclid') || ['facebook', 'instagram', 'meta'].indexOf(utm) !== -1) key = 'meta';
+    KK.trafficKey = key;
+    KK.amazonUrl = urls[key] || urls['default'] || KK.FALLBACK_URL;
+  })();
 </script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/></noscript>
+
+<!-- ============ META PIXEL ============ -->
+<script>
+if (KK.pixelOn) {
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', KK.PIXEL_ID);
+  fbq('track', 'PageView', {}, { eventID: KK.eventId('pv') });
+  fbq('trackCustom', 'BridgePageView', { source: KK.trafficKey }, { eventID: KK.eventId('bpv') });
+}
+</script>
 <!-- ============ END META PIXEL ============ -->
+
+<!-- ============ GOOGLE TAG (gtag.js) ============ -->
+<script>
+if (KK.gtagOn) {
+  (function(){
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(KK.GOOGLE_ADS_ID);
+    document.head.appendChild(s);
+  })();
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', KK.GOOGLE_ADS_ID);
+}
+</script>
+<!-- ============ END GOOGLE TAG ============ -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -762,208 +841,203 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
   @media (min-width: 761px) {
     .sticky-cta { display: none; }
   }
+
+  /* ============ SINGLE-PRODUCT ADDITIONS ============ */
+  .byline .monogram {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--coffee);
+    color: var(--cream);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .product-grid.single .product-card {
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  .product-grid.single .product-card .product-img { max-width: 300px; }
+  .product-card .product-sub {
+    font-size: 13px;
+    color: var(--coffee-soft);
+    margin: -6px 0 16px;
+    position: relative;
+  }
+  .sticky-cta a { font-size: 13px; padding: 14px 8px; }
+  .compare-table { min-width: 0; }
+  @media (max-width: 600px) {
+    .compare-table { font-size: 12px; }
+    .compare-table th, .compare-table td { padding: 10px 7px; }
+  }
 </style>
 </head>
 <body>
 
 <div class="disclaimer">
-  The Loaf Report may receive compensation for products featured in this article. This is sponsored content for KozyKraft, not a customer testimonial.
+  Advertorial · This article is sponsored content written and published by KozyKraft LLC, the maker of the product featured.
 </div>
 
 <div class="container">
 
   <div class="site-name">The Loaf Report</div>
-  <div class="site-tagline">Honest reviews of food worth eating</div>
+  <div class="site-tagline">Real bread, made at home</div>
 
   <!-- HERO BANNER LOOP — falls back to a static image if the video can't load -->
   <div class="hero-banner">
-    <video autoplay loop muted playsinline preload="metadata" poster="images/r04-sliced-loaf.png">
-      <source src="loops/loop-hero-jar-loaf.mp4" type="video/mp4">
-      <img src="images/r04-sliced-loaf.png" alt="KozyKraft live sourdough starter jar and freshly baked sourdough loaf on a kitchen counter">
+    <video autoplay loop muted playsinline preload="metadata" poster="images/hero-loaf.jpg">
+      <source src="loops/hero-loaf.mp4" type="video/mp4">
+      <img src="images/hero-loaf.jpg" alt="Sliced homemade sourdough loaf with an open crumb">
     </video>
   </div>
 
-  <h1>9 Reasons This Hand-Crafted Ohio Sourdough Starter Is Making Thousands Quit Store-Bought Bread For Good</h1>
+  <h1>9 Reasons Home Bakers Are Switching To This Small-Batch Ohio Sourdough Starter</h1>
 
   <div class="byline">
-    <img class="avatar" src="images/author-victoria.png" alt="Margaret Reilly">
+    <div class="monogram" aria-hidden="true">LR</div>
     <div>
-      <div class="name">By: Margaret Reilly</div>
-      <div class="updated">Last Updated May 13, 2026</div>
+      <div class="name">By The Loaf Report Staff</div>
+      <div class="updated">Updated October 2026</div>
     </div>
   </div>
 
-  <p class="sub-hook">"What I Learned After 3 Years Of Failed Sourdough Starters"</p>
+  <p class="sub-hook">First bubbles by day 3. Bake-ready in 5–7 days. Here's why it's the easiest way to start baking real sourdough.</p>
 
   <!-- TRUST ROW -->
   <div class="trust-row">
-    <span class="stars">★ ★ ★ ★ ☆</span>
-    <span class="rating-text"><strong>4.2</strong> · Verified Amazon Reviews</span>
+    <span class="rating-text">Hundreds of verified Amazon reviews</span>
     <span class="divider-dot">·</span>
-    <span class="rating-text">30-Day "It Works" Guarantee</span>
+    <span class="rating-text">Day-7 Bubble Guarantee</span>
   </div>
 
   <!-- ============ REASONS 1-5 ============ -->
 
-  <!-- REASON 1 — claims audit: glyphosate WHO classification IS factual (IARC Group 2A "probable human carcinogen" 2015) — keep but cite source -->
   <div class="reason">
     <div class="reason-img">
-      <img src="images/r01-glyphosate.png" alt="Herbicide spray bottle next to grocery bread" loading="lazy" decoding="async">
+      <img src="images/r01-glyphosate.jpg" alt="Spray bottle next to a slice of store-bought white bread" loading="lazy" decoding="async">
     </div>
     <div class="reason-body">
-      <h2>01. It's not soaked in glyphosate like the bread in your pantry</h2>
-      <p>Most commercial wheat is sprayed with <span class="red">glyphosate</span> right before harvest. The World Health Organization's International Agency for Research on Cancer classified it as a <strong>"probable human carcinogen" (IARC Group 2A, 2015)</strong>, and ongoing research links it to gut microbiome damage and hormone disruption. KozyKraft starter is grown with nothing but organic flour and filtered water — the way bread has been made for thousands of years.</p>
+      <h2>01. It starts with USDA organic flour — not conventionally sprayed wheat</h2>
+      <p>On many conventional wheat farms, <span class="red">glyphosate</span> is sprayed shortly before harvest to dry the crop. Certified organic flour isn't grown that way. KozyKraft starter is cultured from <strong>USDA organic flour and filtered water — nothing else</strong>, the way bread has been made for thousands of years.</p>
     </div>
   </div>
 
-  <!-- REASON 2 — keep, ingredient names are factual -->
   <div class="reason">
     <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r02-ingredient-label.png">
-        <source data-src="loops/loop-r02-chemical-label.mp4" type="video/mp4">
-        <img src="images/r02-ingredient-label.png" alt="Toxic chemical additives circled on a bread ingredient label">
+      <img src="images/r02-ingredient-label.jpg" alt="Additives circled on a store-bought bread ingredient label" loading="lazy" decoding="async">
+    </div>
+    <div class="reason-body">
+      <h2>02. No "dough conditioners" or industrial additives</h2>
+      <p>Read the label on a typical grocery loaf and you'll find ingredients most people can't pronounce — <strong>azodicarbonamide</strong> (not permitted in the EU), DATEM, mono- and diglycerides, calcium propionate. They're there to give factory bread a long shelf life and a pillowy texture. A loaf from a KozyKraft starter has exactly four ingredients: <strong>flour, water, salt, and time.</strong></p>
+    </div>
+  </div>
+
+  <div class="reason">
+    <div class="reason-img">
+      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r03-bubbly-jar.jpg">
+        <source data-src="loops/r03-bubbly-jar.mp4" type="video/mp4">
+        <img src="images/r03-bubbly-jar.jpg" alt="Active, bubbling sourdough starter in a glass jar">
       </video>
     </div>
     <div class="reason-body">
-      <h2>02. No "dough conditioners" or industrial additives that wreck your gut</h2>
-      <p>Read the label on any grocery loaf and you'll find ingredients most people can't pronounce — <strong>azodicarbonamide</strong> (banned in Europe and Australia), DATEM, mono- and diglycerides, calcium propionate. These exist to give factory bread shelf life and a pillowy texture. Many have been linked to gut irritation and inflammation. A loaf from a KozyKraft starter contains exactly four ingredients: <strong>flour, water, salt, and time.</strong></p>
+      <h2>03. Real, <em>slow</em> fermentation — the way bread used to be made</h2>
+      <p>Grocery bread goes from mixer to oven in about 90 minutes using commercial yeast. Real sourdough rises slowly over many hours, giving wild yeast and lactobacillus time to work through the flour. That's where the deep, tangy flavor and chewy, open crumb come from — and it's why so many people say they can taste the difference from the very first slice.</p>
     </div>
   </div>
 
-  <!-- REASON 3 — keep, fermentation claim is supported -->
   <div class="reason">
     <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r03-bubbly-jar.png">
-        <source data-src="loops/loop-r03-bubbly-jar.mp4" type="video/mp4">
-        <img src="images/r03-bubbly-jar.png" alt="Active bubbling sourdough starter in a glass jar">
+      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r04-sliced-loaf.jpg">
+        <source data-src="loops/r04-sliced-loaf.mp4" type="video/mp4">
+        <img src="images/r04-sliced-loaf.jpg" alt="Sliced artisan sourdough loaf with an open crumb">
       </video>
     </div>
     <div class="reason-body">
-      <h2>03. Long fermentation <em>breaks down</em> the gluten that hurts your stomach</h2>
-      <p>If wheat makes you bloated, gassy, or foggy — it may not be the gluten itself. It may be that you've never had <strong>properly fermented</strong> bread. A real sourdough ferment (24–48 hours, not 90 minutes like grocery bread) lets wild bacteria pre-digest much of the gluten and phytic acid. Many people who can't tolerate commercial bread report no symptoms with long-fermented sourdough. This is how humans ate wheat for thousands of years before industrial yeast existed.</p>
+      <h2>04. Bake-ready in 5–7 days — and every batch is tested for viability</h2>
+      <p>Starting a starter from scratch can take weeks, and plenty of attempts never take off. KozyKraft starter is a mature culture, and <strong>every batch is tested for viability before it's packed.</strong> Just mix it with flour and water and keep up the daily feedings: you'll see <strong>first bubbles by day 3</strong>, and it's <strong>bake-ready in 5–7 days</strong>.</p>
     </div>
   </div>
 
-  <!-- REASON 4 — claims audit: softened 98% to "thousands of starters with strong success rate" — verify exact figure before going live -->
   <div class="reason">
     <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r04-sliced-loaf.png">
-        <source data-src="loops/loop-r04-sliced-loaf.mp4" type="video/mp4">
-        <img src="images/r04-sliced-loaf.png" alt="Beautiful sliced artisan sourdough loaf with open crumb">
-      </video>
+      <img src="images/r05-hands-kneading.jpg" alt="Flour-dusted hands kneading bread dough in a small kitchen" loading="lazy" decoding="async">
     </div>
     <div class="reason-body">
-      <h2>04. It actually works — every batch is tested before it ships</h2>
-      <p>Most starter kits arrive dead or weak — you wait days for bubbles that never come. KozyKraft starter is <strong>activated and tested before it ships.</strong> Just rehydrate, feed, and within 12–24 hours you'll see active bubbling. Most customers bake their first loaf within <strong>5 to 7 days</strong> — the time the wild culture needs to build full strength. We've shipped thousands of starters to home bakers nationwide.</p>
+      <h2>05. Hand-crafted in small batches in Ohio — not mass-produced</h2>
+      <p>Many starters sold online are produced at industrial scale. KozyKraft is different. Every batch is grown, fed, and dehydrated <strong>by hand, in small batches, in Ohio</strong>. We don't run a factory. We run a kitchen. You can taste the difference in the first loaf.</p>
     </div>
   </div>
 
-  <!-- REASON 5 — keep, Ohio claim is from your spec memory -->
-  <div class="reason">
-    <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r05-hands-kneading.png">
-        <source data-src="loops/loop-r05-hands-kneading.mp4" type="video/mp4">
-        <img src="images/r05-hands-kneading.png" alt="Flour-dusted hands kneading bread dough in a small Ohio kitchen">
-      </video>
-    </div>
-    <div class="reason-body">
-      <h2>05. Hand-crafted in small batches in Ohio — not mass-produced in a factory</h2>
-      <p>Most "artisan" sourdough starters on Amazon are dehydrated in industrial facilities — often overseas — then re-packaged with a homespun label. KozyKraft is different. Every batch is grown, fed, and dehydrated <strong>by hand in our small kitchen in Ohio</strong> by people who've been baking sourdough for decades. We don't run a factory. We run a kitchen. You can taste the difference in the first loaf.</p>
-    </div>
-  </div>
-
-  <!-- ============ MID-ARTICLE PRODUCT CARDS — DUAL ============ -->
-  <div class="product-grid">
-    <!-- Dehydrated -->
+  <!-- ============ MID-ARTICLE PRODUCT CARD ============ -->
+  <div class="product-grid single">
     <div class="product-card">
-      <span class="badge-label">Best Seller · Dehydrated</span>
+      <span class="badge-label">Small Batch · Made in Ohio</span>
       <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
-      <img class="product-img" src="images/product-card-pouch.png" alt="KozyKraft Sourdough Starter Pouch" loading="lazy" decoding="async">
-      <div class="price-row">
-        <span class="price-old">$19.99</span>
-        <span class="price-new">$6.99</span>
-        <span class="save-badge">SAVE 65%</span>
-      </div>
-      <a class="cta-button"
-         href="https://www.amazon.com/dp/B0FCPFH2WR?ascsubtag=meta_kk_bridge_midcard_dehyd_w20"
-         target="_blank" rel="nofollow noopener"
-         onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'mid',sku:'dehydrated'});}">
-         Buy Dehydrated On Amazon
+      <div class="product-sub">15g pouch · Organic · Non-GMO · Shelf-stable</div>
+      <img class="product-img" src="images/pouch-15g.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch in front of a sourdough loaf" loading="lazy" decoding="async">
+      <a class="cta-button amz-link" data-pos="midcard"
+         href="https://www.amazon.com/dp/B0FCPFH2WR"
+         rel="nofollow noopener">
+         Check Today's Price On Amazon
       </a>
       <div class="guarantee-row">
         <span class="badge-icon">❋</span>
-        <span>30-Day Guarantee</span>
+        <span>Day-7 Guarantee</span>
         <span class="sep">·</span>
-        <span>Free Prime Shipping</span>
-      </div>
-    </div>
-    <!-- Live -->
-    <div class="product-card">
-      <span class="badge-label">New · Live Starter</span>
-      <div class="product-name">KozyKraft Live Sourdough Starter Jar</div>
-      <img class="product-img" src="images/product-card-livejar.png" alt="KozyKraft Live Sourdough Starter Jar" loading="lazy" decoding="async">
-      <div class="price-row">
-        <span class="price-old">$24.99</span>
-        <span class="price-new">$12.99</span>
-        <span class="save-badge">SAVE 48%</span>
-      </div>
-      <a class="cta-button"
-         href="https://www.amazon.com/dp/B0GBWB83NM?ascsubtag=meta_kk_bridge_midcard_live_w20"
-         target="_blank" rel="nofollow noopener"
-         onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'mid',sku:'live'});}">
-         Buy Live Jar On Amazon
-      </a>
-      <div class="guarantee-row">
-        <span class="badge-icon">❋</span>
-        <span>30-Day Guarantee</span>
-        <span class="sep">·</span>
-        <span>Free Prime Shipping</span>
+        <span>Prime Eligible</span>
       </div>
     </div>
   </div>
 
-  <!-- ============ REASONS 6-10 ============ -->
+  <!-- ============ REASONS 6-9 ============ -->
 
   <div class="reason">
     <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r06-starter-macro.png">
-        <source data-src="loops/loop-r06-starter-macro.mp4" type="video/mp4">
-        <img src="images/r06-starter-macro.png" alt="Macro closeup of a vibrant active sourdough starter">
+      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r06-starter-macro.jpg">
+        <source data-src="loops/r06-starter-macro.mp4" type="video/mp4">
+        <img src="images/r06-starter-macro.jpg" alt="Macro close-up of an active sourdough starter">
       </video>
     </div>
     <div class="reason-body">
-      <h2>06. It's a <em>living</em> heritage starter — not a lab-bred yeast strain</h2>
-      <p>The starter you'll receive is a direct descendant of a culture we've maintained for years. It carries diverse strains of wild yeast and lactobacillus bacteria — the kind that produce the deep, tangy, nutty flavor real sourdough is famous for. Cheap starters often rely on a single strain of <strong>Saccharomyces cerevisiae</strong> — the same yeast in commercial beer. There's no comparison in flavor or fermentation depth.</p>
+      <h2>06. It's a <em>living</em> heritage culture — not packet yeast</h2>
+      <p>The starter you'll receive comes from a culture we've maintained for years. It carries a mix of wild yeast and lactobacillus bacteria — the combination behind the deep, tangy, nutty flavor real sourdough is famous for. Packet yeast is a single strain of <strong>Saccharomyces cerevisiae</strong> bred for speed, not flavor. There's no comparison.</p>
     </div>
   </div>
 
-  <!-- REASON 7 — claims audit: $1,500/yr math is supportable IF baking twice a week. Softened to "up to" framing -->
   <div class="reason">
     <div class="reason-img">
-      <img src="images/r07-receipt.png" alt="Grocery receipt with $8.99 sourdough loaf circled in red" loading="lazy" decoding="async">
+      <img src="images/r07-receipt.jpg" alt="Grocery receipt with an $8.99 sourdough loaf circled in red" loading="lazy" decoding="async">
     </div>
     <div class="reason-body">
       <h2>07. Cheaper than buying bread — by a lot</h2>
-      <p>Real sourdough at the grocery store runs <strong>$7–$10 a loaf</strong>. A bakery loaf runs $9–$14. One KozyKraft starter feeds you <strong>indefinitely</strong> — properly maintained, our starter can be kept alive for years and passed down. The actual cost per loaf? About <strong>$1.20</strong> in flour and salt. Bake twice a week and you could save <span class="red">up to $1,500+ per year</span> on bread alone.</p>
+      <p>Sourdough at the grocery store runs <strong>$7–$10 a loaf</strong>, and a bakery loaf can run $9–$14. Your starter, properly fed, can live for years — so the cost per homemade loaf comes down to about <strong>$1.20</strong> in flour and salt. Bake twice a week instead of buying a $9 loaf and that's <span class="red">roughly $800 a year</span> back in your pocket.</p>
     </div>
+  </div>
+
+  <div class="inline-cta">
+    <div class="text"><strong>One pouch.</strong> Years of homemade loaves.</div>
+    <a class="btn amz-link" data-pos="inline"
+       href="https://www.amazon.com/dp/B0FCPFH2WR"
+       rel="nofollow noopener">See It On Amazon →</a>
   </div>
 
   <div class="reason">
     <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="images/r09-ohio-kitchen.png">
-        <source data-src="loops/loop-r09-ohio-kitchen.mp4" type="video/mp4">
-        <img src="images/r09-ohio-kitchen.png" alt="Small homestead kitchen in rural Ohio with jars of sourdough starter">
-      </video>
+      <img src="images/r09-ohio-kitchen.jpg" alt="Small farmhouse kitchen with jars of sourdough starter on the counter" loading="lazy" decoding="async">
     </div>
     <div class="reason-body">
       <h2>08. Support a small American family business — not a corporation</h2>
-      <p>Every order goes directly to a small team in Ohio. No warehouse, no venture capital, no overseas manufacturer. When you buy a KozyKraft starter, you're keeping a <strong>thousands-of-years-old craft alive</strong> and putting food on the table for a real American family. You can't say the same about the bread aisle at Walmart.</p>
+      <p>KozyKraft is a small team in Ohio. No venture capital, no overseas manufacturer. When you buy a KozyKraft starter, you're helping keep a <strong>thousands-of-years-old craft alive</strong> and supporting a real American family business.</p>
 
       <div class="founder-card">
-        <img src="images/founder-abdel-amr.png" alt="KozyKraft co-founders Abdel and Amr in their Ohio kitchen" loading="lazy">
         <div>
-          <p class="quote">"We started KozyKraft because we couldn't find a starter that actually worked the first time. Every jar leaves our kitchen tested, alive, and ready to bake."</p>
-          <p class="signature">— Abdel &amp; Amr, KK Co-Founders</p>
+          <p class="quote">"We started KozyKraft because we couldn't find a starter that actually worked the first time. Every batch leaves our kitchen tested, alive, and ready to bake."</p>
+          <p class="signature">— Abdel &amp; Amr, KozyKraft Co-Founders</p>
         </div>
       </div>
     </div>
@@ -971,117 +1045,97 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
 
   <div class="reason">
     <div class="reason-img">
-      <img src="images/r10-loaf-collage.png" alt="Collage of customer home-baked sourdough loaves" loading="lazy" decoding="async">
+      <img src="images/r10-loaf-collage.jpg" alt="Collage of home-baked sourdough loaves" loading="lazy" decoding="async">
     </div>
     <div class="reason-body">
-      <h2>09. 5-Star Reviews + "It Works" Guarantee</h2>
-      <p>★ ★ ★ ★ ★</p>
-      <p>If your starter doesn't activate within <strong>30 days</strong> of feeding, we'll ship you a <strong>free replacement</strong> — no questions asked. We've sent thousands of starters to homes across the country and our customers keep telling us the same thing: <em>"I'll never buy bread again."</em> That's the goal.</p>
+      <h2>09. Backed by our day-7 guarantee</h2>
+      <p><strong>Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free.</strong> Ordered on Amazon? Message us from Your Orders.</p>
+      <p>We've shipped thousands of starters to kitchens across the country, and our goal is simple: <em>you never need to buy another loaf.</em></p>
     </div>
   </div>
 
-  <!-- ============ COMPARISON TABLE — KK VS COMPETITORS ============ -->
-  <h2 class="section-heading">How KozyKraft Compares To Every Other Sourdough Starter On Amazon</h2>
+  <!-- ============ COMPARISON TABLE ============ -->
+  <h2 class="section-heading">KozyKraft vs. Starting From Scratch vs. Buying The Loaf</h2>
 
   <div class="compare-wrap">
     <table class="compare-table">
       <thead>
         <tr>
           <th></th>
-          <th class="kk-col">KozyKraft</th>
-          <th>Brand A</th>
-          <th>Brand B</th>
-          <th>Brand C</th>
+          <th class="kk-col">KozyKraft Starter</th>
+          <th>DIY From Scratch</th>
+          <th>Grocery Sourdough</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="row-label">Hand-made in a small US kitchen</td>
-          <td class="kk-col"><span class="yes">✓ Ohio</span></td>
-          <td>Not specified</td>
-          <td>Not specified</td>
-          <td>Industrial scale</td>
+          <td class="row-label">Time to first loaf</td>
+          <td class="kk-col"><span class="yes">5–7 days</span></td>
+          <td>2–3 weeks, if it takes</td>
+          <td>—</td>
         </tr>
         <tr>
-          <td class="row-label">Both dehydrated AND live formats offered</td>
-          <td class="kk-col"><span class="yes">✓ Both available</span></td>
-          <td><span class="no">✗ Dehydrated only</span></td>
-          <td><span class="no">✗ Dehydrated only</span></td>
-          <td><span class="no">✗ Dehydrated only</span></td>
-        </tr>
-        <tr>
-          <td class="row-label">Time to first loaf (typical)</td>
-          <td class="kk-col"><span class="yes">Live: 24–48 hrs<br>Dehydrated: 5–7 days</span></td>
-          <td>14+ days</td>
-          <td>10–14 days</td>
-          <td>14+ days</td>
-        </tr>
-        <tr>
-          <td class="row-label">Each batch tested before shipping</td>
+          <td class="row-label">Mature, tested culture</td>
           <td class="kk-col"><span class="yes">✓ Every batch</span></td>
-          <td>Not publicly stated</td>
-          <td>Not publicly stated</td>
-          <td>Not publicly stated</td>
+          <td><span class="no">✗ Hit or miss</span></td>
+          <td>—</td>
         </tr>
         <tr>
-          <td class="row-label">Free-replacement guarantee</td>
-          <td class="kk-col"><span class="yes">✓ 30-day</span></td>
-          <td>Standard Amazon return</td>
-          <td>Standard Amazon return</td>
-          <td>Standard Amazon return</td>
+          <td class="row-label">Ingredients in your bread</td>
+          <td class="kk-col"><span class="yes">Flour, water, salt</span></td>
+          <td>Flour, water, salt</td>
+          <td>Often added yeast, conditioners, preservatives</td>
         </tr>
         <tr>
-          <td class="row-label">Starting price</td>
-          <td class="kk-col"><strong>$6.99</strong></td>
-          <td>$11+</td>
-          <td>$9+</td>
-          <td>$14+</td>
+          <td class="row-label">Cost per loaf</td>
+          <td class="kk-col"><strong>~$1.20</strong></td>
+          <td>~$1.20</td>
+          <td>$7–$10</td>
+        </tr>
+        <tr>
+          <td class="row-label">Free fresh-packet guarantee</td>
+          <td class="kk-col"><span class="yes">✓ Day 7</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <p style="font-size: 12px; color: #777; font-style: italic; margin-top: 8px;">Comparison reflects publicly listed details of competing sourdough starter brands available on major US retailers as of May 2026. Pricing and offerings may change.</p>
+  <p style="font-size: 12px; color: #777; font-style: italic; margin-top: 8px;">Grocery prices reflect typical US supermarket and bakery sourdough as of 2026. Homemade cost assumes flour and salt only.</p>
 
-  <!-- ============ REAL CUSTOMER REVIEWS ============ -->
+  <!-- ============ REAL CUSTOMER REVIEWS (verbatim, ASIN B0FCPFH2WR) ============ -->
   <h2 class="section-heading">What Real Customers Are Saying</h2>
-  <p style="font-size: 14px; color: #555; margin: 0 0 18px;">A selection of verified buyer reviews from Amazon. Drawn from the most recent feedback.</p>
-
-  <!--
-    NOTE TO LEGACY: replace each [REVIEW PLACEHOLDER] below with the actual top
-    Amazon reviews for ASIN B0FCPFH2WR. Pull from Amazon Seller Central → Voice
-    of the Customer → reviews. Use real names + dates. Substantiated reviews
-    raise CR significantly more than generic claims.
-  -->
+  <p style="font-size: 14px; color: #555; margin: 0 0 18px;">Recent verified-purchase reviews of the dehydrated starter on Amazon.</p>
 
   <div class="review">
     <div class="stars">★ ★ ★ ★ ★</div>
-    <p class="quote">"Impressed with this sourdough starter! It comes in a kitchen-tested jar (literally!) — let's me know it is made fresh. Treat it like your own homemade starter, because it basically is. I usually make my own starter, but our oven stopped working and all my starter went bad. My oven is good now and I've been baking with this starter, and the bread quality is fantastic. Rise is perfect, strength is there, and the taste is spot on sourdough — tangy and delicious. Would definitely buy again for my sourdough fix!"</p>
-    <div class="attribution">— Ann Marie, Verified Buyer · March 22, 2026 · "Homemade Taste"</div>
+    <p class="quote">"This absolutely change my sour dough game. The starter is performing better than any of mine did. I am BEYOND satisfied with this product and highly recommend. These pics are a loaf made 7 days after the first water was added to the dehydrated starter. It doubles in size in under 3 hours and makes amazing loaves."</p>
+    <div class="attribution">— Carrie D., Verified Purchase · September 28, 2026 · "Yes, yes and yes again."</div>
   </div>
 
   <div class="review">
     <div class="stars">★ ★ ★ ★ ★</div>
-    <p class="quote">"I ordered the KozyKraft Live Wet Sourdough Starter Jar and was really happy with the quality. It arrived fresh, well-packaged, and ready to feed right away. The instructions were simple to follow, and within a short time it became very active and bubbly."</p>
-    <div class="attribution">— Jana Cowan, Verified Buyer · April 19, 2026 · "Great Live Starter — Perfect for Beginners and Experienced Bakers"</div>
+    <p class="quote">"First time ever giving Sourdough a try, I purchased this in the hopes to get good results my very first loaf. My starter is looking great. I've already had to discard as it is rising well. From a person that's never had a starter I think this is a great option. Keep this at a nice warm temperature."</p>
+    <div class="attribution">— Julia R., Verified Purchase · September 22, 2026 · "Works, keep it warm. Feed it daily."</div>
   </div>
 
   <div class="review">
     <div class="stars">★ ★ ★ ★ ★</div>
-    <p class="quote">"I was shocked at how easy this starter was to use! Instructions are simple and easy to follow, and the starter came to life right away. I was able to convert it to a (mostly) gluten-free starter by feeding it gluten-free flour. Within a week it was healthy enough to bake with! The bread tastes delicious and has a wonderful sourdough flavor."</p>
-    <div class="attribution">— Gavin, Verified Buyer · March 24, 2026 · "Healthy and Easy to Use"</div>
+    <p class="quote">"Worked great. I followed the simple directions and it was ready in approximately 7 days. I made bread with it yesterday."</p>
+    <div class="attribution">— Jana, Verified Purchase · October 15, 2026 · "Dry sourdough starter"</div>
   </div>
 
   <div class="review">
     <div class="stars">★ ★ ★ ★ ★</div>
-    <p class="quote">"I was so hesitant to give this a go — it's intimidating! However, the little container gives detailed information on how to get this started, and was very easy to follow. It was hard to decide whether I should continue, but I'm glad I did!"</p>
-    <div class="attribution">— Bethany Lindsay, Verified Buyer · March 28, 2026 · "Not as intimidating as I thought!"</div>
+    <p class="quote">"So much easier than trying to make one from scratch… Def worth it to get your journey going."</p>
+    <div class="attribution">— Kira I., Verified Purchase · October 22, 2026 · "Worth it"</div>
   </div>
 
   <div class="review">
     <div class="stars">★ ★ ★ ★ ★</div>
-    <p class="quote">"I've been using this product for a few weeks now and I'm really impressed. The quality is excellent, it works exactly as described, and it arrived quickly in great packaging. You can tell it's made with care and attention to detail. I've already recommended it to friends."</p>
-    <div class="attribution">— Esther Liu, Verified Buyer · April 15, 2026 · "Sourdough Starter"</div>
+    <p class="quote">"Turned out perfect. Taste amazing. Happy with my purchase."</p>
+    <div class="attribution">— Janet R., Verified Purchase · October 14, 2026 · "Sourdough starter"</div>
   </div>
 
   <!-- ============ FAQ ============ -->
@@ -1089,112 +1143,89 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
 
   <div class="faq-item">
     <p class="faq-q">Will the starter arrive dead?</p>
-    <p class="faq-a">Every batch is tested for activity before it ships. If yours doesn't activate within 30 days of feeding, we send a free replacement — no questions asked.</p>
+    <p class="faq-a">No — it arrives dormant, not dead. Every batch is tested for viability before it's packed, and it wakes up when you add flour and water. Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free. Ordered on Amazon? Message us from Your Orders.</p>
   </div>
 
   <div class="faq-item">
     <p class="faq-q">How long until I can bake my first loaf?</p>
-    <p class="faq-a">Most customers bake their first loaf within 5 to 7 days of starting their daily feedings. The wild culture needs that time to build full strength. Compare that to traditional flour-and-water starters which typically take 14+ days.</p>
+    <p class="faq-a">You'll see first bubbles by day 3. Keep up the daily feedings and it's bake-ready in 5–7 days. Starting a starter from scratch usually takes two to three weeks.</p>
   </div>
 
   <div class="faq-item">
-    <p class="faq-q">Why is the price so low? Is something wrong with it?</p>
-    <p class="faq-a">Nothing's wrong — we're a small Ohio kitchen, not a corporate brand. We don't pay for big-box retail markups, celebrity endorsements, or warehouse overhead. Our cost stays low so yours can too. The $6.99 price reflects 5 grams of pure starter culture (enough for a lifetime of baking if maintained).</p>
+    <p class="faq-q">Any tips for getting it going?</p>
+    <p class="faq-a">Warmth is the big one. Starters are happiest around 75–80°F, so keep yours somewhere warm and out of drafts. Feed it on schedule every day during the first week — skipping a feeding early on is the most common reason a starter stalls.</p>
   </div>
 
   <div class="faq-item">
-    <p class="faq-q">I have a gluten sensitivity — can I eat this bread?</p>
-    <p class="faq-a">Sourdough is not gluten-free. However, the long fermentation process breaks down a significant portion of the gluten and phytic acid that cause discomfort for many people. Many customers report that they can eat properly fermented sourdough comfortably even when they can't tolerate commercial bread. If you have celiac disease, consult your doctor — sourdough is not safe for celiacs.</p>
+    <p class="faq-q">I've never baked sourdough. Is this beginner-friendly?</p>
+    <p class="faq-a">Yes. The pouch comes with step-by-step instructions written for first-timers, and many of our customers bake their very first loaf with it. If you get stuck, you can reach us any time.</p>
   </div>
 
   <div class="faq-item">
-    <p class="faq-q">What's the difference between the dehydrated pouch and the live jar?</p>
-    <p class="faq-a">The dehydrated pouch is dormant — just-add-water, takes 5–7 days to first loaf. The live jar is an already-active culture — feeds within hours, can bake within 1–2 days. Both produce identical bread; the live jar is just faster to get going. Most first-time bakers choose the dehydrated for value; experienced bakers often pick the live jar for speed.</p>
+    <p class="faq-q">How do I store the pouch before I start?</p>
+    <p class="faq-a">It's shelf-stable. Keep the sealed pouch in a cool, dry pantry until you're ready to activate it.</p>
   </div>
 
   <div class="faq-item">
     <p class="faq-q">How do I maintain the starter long-term?</p>
-    <p class="faq-a">Once active, feed it 1:1:1 (starter : flour : water) every 12–24 hours at room temperature, or once a week if stored in the fridge. We include written care instructions with every order, plus an email support line for questions.</p>
+    <p class="faq-a">Once active, feed it 1:1:1 (starter : flour : water) every 12–24 hours at room temperature, or about once a week if you keep it in the fridge. Cared for this way, a starter can live for years.</p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">Is sourdough gluten-free?</p>
+    <p class="faq-a">No. Sourdough made with wheat flour contains gluten and is not safe for people with celiac disease. If you have a gluten sensitivity, check with your doctor before trying it.</p>
   </div>
 
   <div class="faq-item">
     <p class="faq-q">What if I change my mind?</p>
-    <p class="faq-a">Amazon's standard 30-day return policy applies. On top of that, our "It Works" guarantee means if your starter doesn't activate within 30 days, we ship a free replacement regardless of what Amazon's return window says.</p>
+    <p class="faq-a">Amazon's standard return policy applies. On top of that, our day-7 guarantee: Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free. Ordered on Amazon? Message us from Your Orders.</p>
   </div>
 
-  <!-- ============ SCARCITY / URGENCY BLOCK ============ -->
   <!-- WHAT'S IN THE BOX — risk reduction before final CTA -->
   <div class="whats-in-box">
     <h3>What you'll receive</h3>
     <ul>
-      <li><strong>One jar of KozyKraft sourdough starter</strong> — 5g dehydrated pouch or 30g live wet jar, depending on your choice</li>
-      <li><strong>Step-by-step feeding instructions</strong> — printed card, beginner-friendly, plus a digital copy by email</li>
-      <li><strong>Email support line</strong> — write us anytime if your starter slows down or you need help</li>
-      <li><strong>30-day "It Works" replacement guarantee</strong> — if your starter doesn't activate within 30 days, we ship a free replacement, no questions</li>
+      <li><strong>One 15g pouch of KozyKraft dehydrated sourdough starter</strong> — organic, non-GMO, made in the USA</li>
+      <li><strong>Step-by-step activation instructions</strong> — beginner-friendly, from first feeding to first loaf</li>
+      <li><strong>Direct support from our team</strong> — reach out any time if your starter slows down or you need help</li>
+      <li><strong>Day-7 guarantee</strong> — Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free. Ordered on Amazon? Message us from Your Orders.</li>
     </ul>
   </div>
 
   <div class="urgency-block">
-    <div class="urgency-title">⚠ Limited Inventory This Week</div>
+    <div class="urgency-title">Made In Small Batches</div>
     <div class="urgency-text">
-      Every KozyKraft starter is hand-fed and tested before shipping. Our small Ohio kitchen produces a limited batch each week — we don't carry industrial inventory. Recent demand from this article has accelerated shipments. <strong>Order today to lock in your batch before this week's allocation sells out.</strong>
+      Every KozyKraft starter is cultured, tested, and dehydrated by hand in small runs in Ohio — we don't make industrial inventory. <strong>When a batch sells through, it can take time to restock, so grab yours while it's available.</strong>
     </div>
   </div>
 
-  <!-- ============ FINAL PRODUCT CARDS — DUAL ============ -->
-  <div class="product-grid">
+  <!-- ============ FINAL PRODUCT CARD ============ -->
+  <div class="product-grid single">
     <div class="product-card">
-      <span class="badge-label">Best Seller · Dehydrated</span>
+      <span class="badge-label">Small Batch · Made in Ohio</span>
       <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
-      <img class="product-img" src="images/product-card-pouch.png" alt="KozyKraft Sourdough Starter Pouch" loading="lazy" decoding="async">
-      <div class="price-row">
-        <span class="price-old">$19.99</span>
-        <span class="price-new">$6.99</span>
-        <span class="save-badge">SAVE 65%</span>
-      </div>
-      <a class="cta-button"
-         href="https://www.amazon.com/dp/B0FCPFH2WR?ascsubtag=meta_kk_bridge_endcard_dehyd_w20"
-         target="_blank" rel="nofollow noopener"
-         onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'end',sku:'dehydrated'});fbq('track','InitiateCheckout');}">
-         Buy Dehydrated On Amazon
+      <div class="product-sub">15g pouch · Bake-ready in 5–7 days</div>
+      <img class="product-img" src="images/pouch-15g.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch in front of a sourdough loaf" loading="lazy" decoding="async">
+      <a class="cta-button amz-link" data-pos="endcard"
+         href="https://www.amazon.com/dp/B0FCPFH2WR"
+         rel="nofollow noopener">
+         Check Today's Price On Amazon
       </a>
       <div class="guarantee-row">
         <span class="badge-icon">❋</span>
-        <span>30-Day Guarantee</span>
+        <span>Day-7 Guarantee</span>
         <span class="sep">·</span>
-        <span>Free Prime Shipping</span>
-      </div>
-    </div>
-    <div class="product-card">
-      <span class="badge-label">New · Live Starter</span>
-      <div class="product-name">KozyKraft Live Sourdough Starter Jar</div>
-      <img class="product-img" src="images/product-card-livejar.png" alt="KozyKraft Live Sourdough Starter Jar" loading="lazy" decoding="async">
-      <div class="price-row">
-        <span class="price-old">$24.99</span>
-        <span class="price-new">$12.99</span>
-        <span class="save-badge">SAVE 48%</span>
-      </div>
-      <a class="cta-button"
-         href="https://www.amazon.com/dp/B0GBWB83NM?ascsubtag=meta_kk_bridge_endcard_live_w20"
-         target="_blank" rel="nofollow noopener"
-         onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'end',sku:'live'});fbq('track','InitiateCheckout');}">
-         Buy Live Jar On Amazon
-      </a>
-      <div class="guarantee-row">
-        <span class="badge-icon">❋</span>
-        <span>30-Day Guarantee</span>
-        <span class="sep">·</span>
-        <span>Free Prime Shipping</span>
+        <span>Prime Eligible</span>
       </div>
     </div>
   </div>
 
   <p style="text-align: center; font-size: 13px; color: #555; margin: 16px 0;">
-    Free Prime shipping · Ships from Ohio · 30-day "It Works" guarantee
+    Made in Ohio · Prime Eligible · Day-7 bubble guarantee
   </p>
 
   <div class="footer">
-    <p>This is a sponsored advertorial. KozyKraft LLC, Ohio USA.</p>
+    <p>This is a sponsored advertorial published by KozyKraft LLC, Ohio USA.</p>
     <p>
       <a href="privacy.html">Privacy Policy</a> |
       <a href="terms.html">Terms</a> |
@@ -1204,32 +1235,81 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
 
 </div>
 
-<!-- ============ FLOATING DESKTOP CTA (EB-style) ============ -->
-<a href="https://www.amazon.com/dp/B0FCPFH2WR?ascsubtag=meta_kk_bridge_floatcta_w20"
-   class="float-cta"
+<!-- ============ FLOATING DESKTOP CTA ============ -->
+<a href="https://www.amazon.com/dp/B0FCPFH2WR"
+   class="float-cta amz-link" data-pos="floatcta"
    id="floatCta"
-   target="_blank" rel="nofollow noopener"
-   onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'float',sku:'dehydrated'});}">
-   Buy On Amazon <span class="arrow">→</span>
+   rel="nofollow noopener">
+   Check Price On Amazon <span class="arrow">→</span>
 </a>
 
 <!-- ============ STICKY MOBILE CTA BAR ============ -->
 <div class="sticky-cta-spacer"></div>
 <div class="sticky-cta" id="stickyCta">
-  <a href="https://www.amazon.com/dp/B0FCPFH2WR?ascsubtag=meta_kk_bridge_sticky_dehyd_w20"
-     target="_blank" rel="nofollow noopener"
-     onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'sticky',sku:'dehydrated'});}">
-     Buy Dehydrated <span class="price">$6.99</span>
-  </a>
-  <a href="https://www.amazon.com/dp/B0GBWB83NM?ascsubtag=meta_kk_bridge_sticky_live_w20"
-     target="_blank" rel="nofollow noopener"
-     onclick="if(typeof fbq!=='undefined'){fbq('trackCustom','BridgeAmzClick',{position:'sticky',sku:'live'});}">
-     Buy Live Jar <span class="price">$12.99</span>
+  <a href="https://www.amazon.com/dp/B0FCPFH2WR"
+     class="amz-link" data-pos="sticky"
+     rel="nofollow noopener">
+     Check Today's Price On Amazon →
   </a>
 </div>
 
-<!-- ============ LAZY VIDEO + SCROLL EVENTS + STICKY CTA ============ -->
+<!-- ============ AMAZON LINKS + PIXEL EVENTS + LAZY VIDEO + STICKY CTA ============ -->
 <script>
+  // Point every buy button at the chosen Amazon link and open it in the same tab.
+  // On click: Meta InitiateCheckout + Google Ads conversion, then navigate once both have had time to send.
+  (function(){
+    var hasGoogleConversion = KK.gtagOn && !!KK.GOOGLE_ADS_CLICK_LABEL;
+
+    function fireClickEvents(position, onGoogleSent){
+      if (KK.pixelOn && typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', {
+          content_ids: [KK.ASIN],
+          content_type: 'product',
+          value: KK.VALUE,
+          currency: 'USD'
+        }, { eventID: KK.eventId('ic') });
+        fbq('trackCustom', 'BridgeAmzClick', {
+          position: position, sku: 'dehydrated', source: KK.trafficKey
+        }, { eventID: KK.eventId('bac') });
+      }
+      if (hasGoogleConversion && typeof gtag !== 'undefined') {
+        gtag('event', 'conversion', {
+          send_to: KK.GOOGLE_ADS_ID + '/' + KK.GOOGLE_ADS_CLICK_LABEL,
+          value: KK.VALUE,
+          currency: 'USD',
+          transport_type: 'beacon',
+          event_callback: onGoogleSent
+        });
+      } else if (onGoogleSent) {
+        onGoogleSent();
+      }
+    }
+
+    document.querySelectorAll('a.amz-link').forEach(function(a){
+      a.href = KK.amazonUrl;
+      a.removeAttribute('target');
+      a.addEventListener('click', function(e){
+        // Cmd/Ctrl/middle-click opens a new tab and leaves this page alive — fire and let the browser handle it.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+          fireClickEvents(a.dataset.pos);
+          return;
+        }
+        e.preventDefault();
+        var googleSent = !hasGoogleConversion, minWaitDone = !KK.pixelOn, gone = false;
+        function go(){
+          if (gone || !googleSent || !minWaitDone) return;
+          gone = true;
+          window.location.href = KK.amazonUrl;
+        }
+        fireClickEvents(a.dataset.pos, function(){ googleSent = true; go(); });
+        // The pixel has no send callback: give its request ~300ms to leave, and never hold the click past 1s.
+        setTimeout(function(){ minWaitDone = true; go(); }, 300);
+        setTimeout(function(){ googleSent = minWaitDone = true; go(); }, 1000);
+        go();
+      });
+    });
+  })();
+
   // Lazy-load + autoplay reason loops only when entering viewport. Pauses when offscreen.
   (function(){
     if (!('IntersectionObserver' in window)) {
@@ -1274,8 +1354,9 @@ src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
       if (fired50) return;
       if (scrolled >= 0.5) {
         fired50 = true;
-        if (typeof fbq !== 'undefined') {
-          fbq('trackCustom', 'BridgeScroll50');
+        if (KK.pixelOn && typeof fbq !== 'undefined') {
+          fbq('track', 'ViewContent', { content_ids: [KK.ASIN], content_type: 'product' }, { eventID: KK.eventId('vc') });
+          fbq('trackCustom', 'BridgeScroll50', {}, { eventID: KK.eventId('bs50') });
         }
       }
     }, { passive: true });

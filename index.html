@@ -26,9 +26,13 @@
      AMAZON_URLS:            Amazon Ads → Measurement → Amazon Attribution → one tag per traffic source
                              for ASIN B0FCPFH2WR. Paste each full tag URL (contains maas=...).
                              Extra keys work too: add  meta_broad: '...'  and link ads to ?t=meta_broad.
-     How a visitor's link is chosen: ?t=<key> in the map → gclid or utm_source=google → google
+     How a visitor's link is chosen: ?t=<key> in the map → gclid/gbraid/wbraid or utm_source=google → google
      → fbclid or utm_source=facebook/instagram/meta → meta → default. An empty value falls back
      to default, then to the plain listing URL.
+     PROMO:                  reader code shown in a banner + under every buy button while code and percent
+                             are set and today is on or before ends (YYYY-MM-DD). Blank code hides it all.
+     URGENCY_LINE:           true, time-based nudge above the last product card (no inventory/scarcity
+                             claims). Swap for gift / January lines later; blank hides it.
      Pixel and Google tag stay off until their IDs are real, so no junk events are sent.
      ============================================================================== -->
 <script>
@@ -43,7 +47,9 @@
     },
     FALLBACK_URL: 'https://www.amazon.com/dp/B0FCPFH2WR',
     ASIN: 'B0FCPFH2WR',
-    VALUE: 10.99
+    VALUE: 10.99,
+    PROMO: { code: '', percent: '', ends: '' },
+    URGENCY_LINE: "Start this week and you're baking well before Thanksgiving."
   };
 
   KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
@@ -64,7 +70,7 @@
     var utm = (params.get('utm_source') || '').toLowerCase();
     var key = 'default';
     if (t && Object.prototype.hasOwnProperty.call(urls, t)) key = t;
-    else if (params.has('gclid') || utm === 'google') key = 'google';
+    else if (params.has('gclid') || params.has('gbraid') || params.has('wbraid') || utm === 'google') key = 'google';
     else if (params.has('fbclid') || ['facebook', 'instagram', 'meta'].indexOf(utm) !== -1) key = 'meta';
     KK.trafficKey = key;
     KK.amazonUrl = urls[key] || urls['default'] || KK.FALLBACK_URL;
@@ -760,11 +766,26 @@ if (KK.gtagOn) {
   }
 
   /* Floating "Buy On Amazon" CTA (Earth Breeze style) — desktop only */
-  .float-cta {
+  .float-wrap {
     position: fixed;
     bottom: 24px;
     right: 24px;
     z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+  }
+  .float-wrap.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .float-cta {
     background: var(--accent-soft);
     color: #1a1a1a;
     text-decoration: none;
@@ -775,24 +796,16 @@ if (KK.gtagOn) {
     border-radius: 4px;
     box-shadow: 0 4px 14px rgba(61, 40, 23, 0.25);
     transition: all 0.2s ease;
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-    pointer-events: none;
     display: flex;
     align-items: center;
     gap: 10px;
     border: 1px solid #c47e0a;
   }
-  .float-cta.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
-  }
   .float-cta:hover { background: #f0a020; transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 18px rgba(61, 40, 23, 0.3); }
   .float-cta .arrow { font-size: 18px; }
   @media (max-width: 760px) {
     /* Hide desktop float CTA on mobile — sticky bar handles mobile */
-    .float-cta { display: none; }
+    .float-wrap { display: none; }
   }
 
   /* Sticky mobile CTA bar */
@@ -875,6 +888,100 @@ if (KK.gtagOn) {
     .compare-table { font-size: 12px; }
     .compare-table th, .compare-table td { padding: 10px 7px; }
   }
+
+  /* Above-the-fold buy button */
+  .hero-cta { margin: 0 0 24px; }
+  .hero-cta .cta-button { margin-top: 0; }
+
+  /* "How to find us" — small pouch thumbnail above each product-card button */
+  .find-us {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 340px;
+    margin: 0 auto 12px;
+    padding: 8px 10px;
+    background: var(--cream-soft);
+    border-radius: 2px;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--coffee-soft);
+    position: relative;
+  }
+  .find-us img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Reader promo — banner under the disclosure + a line under every buy button */
+  .promo-banner {
+    background: var(--coffee);
+    color: var(--cream);
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 8px 14px;
+  }
+  .promo-line {
+    flex-basis: 100%;
+    max-width: 340px;
+    margin: 8px auto 0;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--coffee);
+    position: relative;
+  }
+  .promo-copy {
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--coffee);
+    background: var(--cream-soft);
+    border: 1px dashed var(--crust);
+    border-radius: 2px;
+    padding: 3px 8px;
+    margin-left: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .promo-banner .promo-copy,
+  .sticky-cta .promo-copy {
+    color: var(--cream);
+    background: transparent;
+    border-color: var(--accent-soft);
+  }
+  .sticky-cta { flex-wrap: wrap; }
+  .sticky-cta .promo-line { color: var(--cream); max-width: none; margin: 6px 0 0; }
+  .float-wrap .promo-line {
+    max-width: 260px;
+    margin: 0;
+    padding: 6px 10px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(61, 40, 23, 0.12);
+  }
+
+  /* Tighter header on phones so a buy button fits on the first screen at 375px */
+  @media (max-width: 600px) {
+    .site-name { margin: 16px 0 4px; }
+    .site-tagline { margin: 0 0 14px; }
+    .hero-banner { margin: 0 -22px 16px; }
+    .hero-banner video,
+    .hero-banner img { aspect-ratio: 2 / 1; }
+    .hero-cta .cta-button { font-size: 13px; letter-spacing: 0.8px; padding: 14px 16px; }
+    .promo-banner { padding: 6px 12px; }
+    h1 { font-size: 26px; margin: 0 0 12px; }
+    .byline { margin: 0 0 14px; }
+    .byline .monogram { width: 40px; height: 40px; font-size: 14px; }
+  }
 </style>
 </head>
 <body>
@@ -882,6 +989,7 @@ if (KK.gtagOn) {
 <div class="disclaimer">
   Advertorial · This article is sponsored content written and published by KozyKraft LLC, the maker of the product featured.
 </div>
+<div class="promo-banner" id="promoBanner" hidden></div>
 
 <div class="container">
 
@@ -904,6 +1012,14 @@ if (KK.gtagOn) {
       <div class="name">By The Loaf Report Staff</div>
       <div class="updated">Updated October 2026</div>
     </div>
+  </div>
+
+  <div class="hero-cta">
+    <a class="cta-button amz-link" data-pos="hero"
+       href="https://www.amazon.com/dp/B0FCPFH2WR"
+       rel="nofollow noopener">
+       Check Today's Price On Amazon
+    </a>
   </div>
 
   <p class="sub-hook">First bubbles by day 3. Bake-ready in 5–7 days. Here's why it's the easiest way to start baking real sourdough.</p>
@@ -979,7 +1095,11 @@ if (KK.gtagOn) {
       <span class="badge-label">Small Batch · Made in Ohio</span>
       <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
       <div class="product-sub">15g pouch · Organic · Non-GMO · Shelf-stable</div>
-      <img class="product-img" src="images/pouch-15g.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch in front of a sourdough loaf" loading="lazy" decoding="async">
+      <img class="product-img" src="images/pouch-clean.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" loading="lazy" decoding="async">
+      <div class="find-us">
+        <img src="images/pouch-clean-thumb.jpg" alt="" width="44" height="44" loading="lazy" decoding="async">
+        <span>Look for KozyKraft on Amazon, then tap <strong>Add to Cart</strong>.</span>
+      </div>
       <a class="cta-button amz-link" data-pos="midcard"
          href="https://www.amazon.com/dp/B0FCPFH2WR"
          rel="nofollow noopener">
@@ -1071,7 +1191,7 @@ if (KK.gtagOn) {
         <tr>
           <td class="row-label">Time to first loaf</td>
           <td class="kk-col"><span class="yes">5–7 days</span></td>
-          <td>2–3 weeks, if it takes</td>
+          <td>1–2 weeks, if it takes</td>
           <td>—</td>
         </tr>
         <tr>
@@ -1148,7 +1268,7 @@ if (KK.gtagOn) {
 
   <div class="faq-item">
     <p class="faq-q">How long until I can bake my first loaf?</p>
-    <p class="faq-a">You'll see first bubbles by day 3. Keep up the daily feedings and it's bake-ready in 5–7 days. Starting a starter from scratch usually takes two to three weeks.</p>
+    <p class="faq-a">You'll see first bubbles by day 3. Keep up the daily feedings and it's bake-ready in 5–7 days. Building a starter from scratch takes 1–2 weeks.</p>
   </div>
 
   <div class="faq-item">
@@ -1192,10 +1312,26 @@ if (KK.gtagOn) {
     </ul>
   </div>
 
-  <div class="urgency-block">
-    <div class="urgency-title">Made In Small Batches</div>
-    <div class="urgency-text">
-      Every KozyKraft starter is cultured, tested, and dehydrated by hand in small runs in Ohio — we don't make industrial inventory. <strong>When a batch sells through, it can take time to restock, so grab yours while it's available.</strong>
+  <!-- URGENCY — text comes from KK.URGENCY_LINE; hidden when blank -->
+  <div class="urgency-block" id="urgencyBlock" hidden>
+    <div class="urgency-title">Good Timing</div>
+    <div class="urgency-text" id="urgencyText"></div>
+  </div>
+
+  <!-- OBJECTIONS — last questions before the final card -->
+  <div class="whats-in-box">
+    <h3>Before you decide</h3>
+    <div class="faq-item">
+      <p class="faq-q">Will it actually work?</p>
+      <p class="faq-a">Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free. Ordered on Amazon? Message us from Your Orders.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is it hard?</p>
+      <p class="faq-a">About 5 minutes a day. The steps are printed on the pouch.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why not make my own?</p>
+      <p class="faq-a">Building a starter from scratch takes 1–2 weeks. This one is bake-ready in 5–7 days.</p>
     </div>
   </div>
 
@@ -1205,7 +1341,11 @@ if (KK.gtagOn) {
       <span class="badge-label">Small Batch · Made in Ohio</span>
       <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
       <div class="product-sub">15g pouch · Bake-ready in 5–7 days</div>
-      <img class="product-img" src="images/pouch-15g.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch in front of a sourdough loaf" loading="lazy" decoding="async">
+      <img class="product-img" src="images/pouch-clean.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" loading="lazy" decoding="async">
+      <div class="find-us">
+        <img src="images/pouch-clean-thumb.jpg" alt="" width="44" height="44" loading="lazy" decoding="async">
+        <span>Look for KozyKraft on Amazon, then tap <strong>Add to Cart</strong>.</span>
+      </div>
       <a class="cta-button amz-link" data-pos="endcard"
          href="https://www.amazon.com/dp/B0FCPFH2WR"
          rel="nofollow noopener">
@@ -1236,12 +1376,13 @@ if (KK.gtagOn) {
 </div>
 
 <!-- ============ FLOATING DESKTOP CTA ============ -->
-<a href="https://www.amazon.com/dp/B0FCPFH2WR"
-   class="float-cta amz-link" data-pos="floatcta"
-   id="floatCta"
-   rel="nofollow noopener">
-   Check Price On Amazon <span class="arrow">→</span>
-</a>
+<div class="float-wrap" id="floatCta">
+  <a href="https://www.amazon.com/dp/B0FCPFH2WR"
+     class="float-cta amz-link" data-pos="floatcta"
+     rel="nofollow noopener">
+     Check Price On Amazon <span class="arrow">→</span>
+  </a>
+</div>
 
 <!-- ============ STICKY MOBILE CTA BAR ============ -->
 <div class="sticky-cta-spacer"></div>
@@ -1255,6 +1396,81 @@ if (KK.gtagOn) {
 
 <!-- ============ AMAZON LINKS + PIXEL EVENTS + LAZY VIDEO + STICKY CTA ============ -->
 <script>
+  // Reader promo: banner + a line under every buy button, only while the code is live.
+  (function(){
+    var promo = KK.PROMO || {};
+    var code = String(promo.code || '').trim();
+    var percent = String(promo.percent || '').trim();
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(promo.ends || '').trim());
+    if (!code || !percent || !m) return;
+    var ends = new Date(+m[1], +m[2] - 1, +m[3]);
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (today > ends) return;
+
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var text = 'Reader offer: ' + percent + '% off with code ' + code + ' at checkout. Ends ' +
+      months[ends.getMonth()] + ' ' + ends.getDate() + '.';
+
+    function copyCode(btn){
+      function done(){
+        btn.textContent = 'Copied!';
+        setTimeout(function(){ btn.textContent = 'Copy code'; }, 1500);
+      }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = code;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(done, fallback);
+      } else {
+        fallback();
+      }
+    }
+
+    function promoNode(className){
+      var el = document.createElement('div');
+      el.className = className;
+      el.appendChild(document.createTextNode(text + ' '));
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'promo-copy';
+      btn.textContent = 'Copy code';
+      btn.setAttribute('aria-label', 'Copy code ' + code);
+      btn.addEventListener('click', function(){ copyCode(btn); });
+      el.appendChild(btn);
+      return el;
+    }
+
+    var banner = document.getElementById('promoBanner');
+    banner.appendChild(promoNode('promo-text'));
+    banner.hidden = false;
+    document.querySelectorAll('a.amz-link').forEach(function(a){
+      a.insertAdjacentElement('afterend', promoNode('promo-line'));
+    });
+
+    // Sticky bar grew by a line: keep the page-bottom spacer the same height so nothing is covered.
+    var sticky = document.getElementById('stickyCta');
+    var spacer = document.querySelector('.sticky-cta-spacer');
+    if (sticky && spacer && sticky.offsetHeight) spacer.style.height = sticky.offsetHeight + 'px';
+  })();
+
+  // Time-based urgency line above the last product card.
+  (function(){
+    var line = String(KK.URGENCY_LINE || '').trim();
+    if (!line) return;
+    document.getElementById('urgencyText').textContent = line;
+    document.getElementById('urgencyBlock').hidden = false;
+  })();
+
   // Point every buy button at the chosen Amazon link and open it in the same tab.
   // On click: Meta InitiateCheckout + Google Ads conversion, then navigate once both have had time to send.
   (function(){
@@ -1347,10 +1563,8 @@ if (KK.gtagOn) {
     var floatCta = document.getElementById('floatCta');
     window.addEventListener('scroll', function(){
       var scrolled = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
-      if (scrolled >= 0.20) {
-        if (sticky && !sticky.classList.contains('visible')) sticky.classList.add('visible');
-        if (floatCta && !floatCta.classList.contains('visible')) floatCta.classList.add('visible');
-      }
+      if (window.scrollY > 10 && sticky && !sticky.classList.contains('visible')) sticky.classList.add('visible');
+      if (scrolled >= 0.20 && floatCta && !floatCta.classList.contains('visible')) floatCta.classList.add('visible');
       if (fired50) return;
       if (scrolled >= 0.5) {
         fired50 = true;

@@ -61,6 +61,7 @@ function buildPage(variant, page) {
     GUARANTEE_HTML: page.guaranteeBox === 'short'
       ? "    <p>If it isn't bubbling by day 7, we send a fresh packet, free.</p>\n    <p>How it works is in section 4 above.</p>"
       : "    <p>Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free. Ordered on Amazon? Message us from Your Orders.</p>",
+    GUARANTEE_POINTER: page.guaranteeBox === 'short' ? 'Details in section 4.' : 'Details below.',
     HERO_CAPTION_HTML: page.hero.caption ? `    <figcaption>${escapeHtml(page.hero.caption)}</figcaption>\n` : '',
   };
   vars.BYLINE_HTML = page.byline ? render(readPartial('byline.html'), vars) : '';

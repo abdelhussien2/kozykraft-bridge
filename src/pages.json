@@ -8,7 +8,7 @@
     "showPromo": false,
     "hero": {
       "file": "hero-pouch-loaf.webp",
-      "alt": "A torn-open sourdough loaf on a wooden board with a small starter pouch beside it",
+      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
       "caption": ""
     }
   },
@@ -34,7 +34,7 @@
     "showPromo": false,
     "hero": {
       "file": "hero-pouch-loaf.webp",
-      "alt": "A torn-open sourdough loaf on a wooden board with a small starter pouch beside it",
+      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
       "caption": ""
     }
   },
@@ -47,7 +47,7 @@
     "showPromo": false,
     "hero": {
       "file": "f1-cold-kitchen.webp",
-      "alt": "A small glass jar on a windowsill in cool morning light, a wool mitt beside it",
+      "alt": "A small glass jar of pale flour paste on a windowsill in cool morning light, a wool mitt beside it",
       "caption": ""
     }
   },
@@ -60,7 +60,7 @@
     "showPromo": true,
     "hero": {
       "file": "hero-pouch-loaf.webp",
-      "alt": "A torn-open sourdough loaf on a wooden board with a small starter pouch beside it",
+      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
       "caption": ""
     }
   }

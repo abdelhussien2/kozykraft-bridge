@@ -1,0 +1,42 @@
+{
+  "v1": {
+    "title": "7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter",
+    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.",
+    "body": "v1.html",
+    "reviewsInBody": true,
+    "byline": false,
+    "showPromo": false
+  },
+  "v2": {
+    "title": "We Tried the Sourdough Starter Everyone's Buying on Amazon. Here's What Happened, Day by Day.",
+    "subhead": "Seven days, one packet, one jar on the counter. Photos every morning.",
+    "body": "v2.html",
+    "reviewsInBody": false,
+    "byline": true,
+    "showPromo": false
+  },
+  "v3": {
+    "title": "We Did the Math: One Sourdough Packet vs. a Year of Store-Bought Bread",
+    "subhead": "A grocery sourdough loaf runs $7–$10. Here's what a starter costs per loaf, and why the gap gets bigger every week.",
+    "body": "v3.html",
+    "reviewsInBody": false,
+    "byline": false,
+    "showPromo": false
+  },
+  "v4": {
+    "title": "Your Sourdough Starter Died. It Wasn't Your Fault, and the Fix Takes 5 Days",
+    "subhead": "Most \"dead\" starters are just cold or hungry. Here's how to tell, and how to get one that's bake-ready in 5–7 days.",
+    "body": "v4.html",
+    "reviewsInBody": false,
+    "byline": false,
+    "showPromo": false
+  },
+  "v5": {
+    "title": "7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter",
+    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.",
+    "body": "v1.html",
+    "reviewsInBody": true,
+    "byline": false,
+    "showPromo": true
+  }
+}

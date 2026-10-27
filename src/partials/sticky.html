@@ -1,0 +1,202 @@
+<!-- 9. STICKY BUY BAR (mobile, after the first scroll) + floating CTA (desktop) -->
+<div class="float-wrap" id="floatCta">
+  <a href="https://www.amazon.com/dp/B0FCPFH2WR"
+     class="float-cta amz-link" data-pos="floatcta"
+     rel="nofollow noopener">
+     Check Today's Price On Amazon <span class="arrow">→</span>
+  </a>
+</div>
+
+<div class="sticky-cta-spacer"></div>
+<div class="sticky-cta" id="stickyCta">
+  <a href="https://www.amazon.com/dp/B0FCPFH2WR"
+     class="amz-link" data-pos="sticky"
+     rel="nofollow noopener">
+     Check Today's Price On Amazon →
+  </a>
+</div>
+
+<!-- ============ PROMO + URGENCY + AMAZON LINKS + EVENTS + LAZY VIDEO + STICKY CTA ============ -->
+<script>
+  // Reader promo: banner + a line under every buy button, only on SHOW_PROMO pages while the code is live.
+  (function(){
+    if (!KK.SHOW_PROMO) return;
+    var promo = KK.PROMO || {};
+    var code = String(promo.code || '').trim();
+    var percent = String(promo.percent || '').trim();
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(promo.ends || '').trim());
+    if (!code || !percent || !m) return;
+    var ends = new Date(+m[1], +m[2] - 1, +m[3]);
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (today > ends) return;
+
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var text = 'Reader offer: ' + percent + '% off with code ' + code + ' at checkout. Ends ' +
+      months[ends.getMonth()] + ' ' + ends.getDate() + '.';
+
+    function copyCode(btn){
+      function done(){
+        btn.textContent = 'Copied!';
+        setTimeout(function(){ btn.textContent = 'Copy code'; }, 1500);
+      }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = code;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(done, fallback);
+      } else {
+        fallback();
+      }
+    }
+
+    function promoNode(className){
+      var el = document.createElement('div');
+      el.className = className;
+      el.appendChild(document.createTextNode(text + ' '));
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'promo-copy';
+      btn.textContent = 'Copy code';
+      btn.setAttribute('aria-label', 'Copy code ' + code);
+      btn.addEventListener('click', function(){ copyCode(btn); });
+      el.appendChild(btn);
+      return el;
+    }
+
+    var banner = document.getElementById('promoBanner');
+    banner.appendChild(promoNode('promo-text'));
+    banner.hidden = false;
+    document.querySelectorAll('a.amz-link').forEach(function(a){
+      a.insertAdjacentElement('afterend', promoNode('promo-line'));
+    });
+
+    // Sticky bar grew by a line: keep the page-bottom spacer the same height so nothing is covered.
+    var sticky = document.getElementById('stickyCta');
+    var spacer = document.querySelector('.sticky-cta-spacer');
+    if (sticky && spacer && sticky.offsetHeight) spacer.style.height = sticky.offsetHeight + 'px';
+  })();
+
+  // Time-based urgency line under the end card.
+  (function(){
+    var line = String(KK.URGENCY_LINE || '').trim();
+    if (!line) return;
+    document.getElementById('urgencyText').textContent = line;
+    document.getElementById('urgencyBlock').hidden = false;
+  })();
+
+  // Point every buy button at the chosen Amazon link and open it in the same tab.
+  // On click: Meta InitiateCheckout + Google Ads conversion, then navigate once both have had time to send.
+  (function(){
+    var hasGoogleConversion = KK.gtagOn && !!KK.GOOGLE_ADS_CLICK_LABEL;
+
+    function fireClickEvents(position, onGoogleSent){
+      if (KK.pixelOn && typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', KK.params({
+          content_ids: [KK.ASIN],
+          content_type: 'product',
+          value: KK.VALUE,
+          currency: 'USD'
+        }), { eventID: KK.eventId('ic') });
+        fbq('trackCustom', 'BridgeAmzClick', KK.params({
+          position: position, sku: 'dehydrated', source: KK.trafficKey
+        }), { eventID: KK.eventId('bac') });
+      }
+      if (hasGoogleConversion && typeof gtag !== 'undefined') {
+        gtag('event', 'conversion', {
+          send_to: KK.GOOGLE_ADS_ID + '/' + KK.GOOGLE_ADS_CLICK_LABEL,
+          value: KK.VALUE,
+          currency: 'USD',
+          variant: KK.VARIANT,
+          transport_type: 'beacon',
+          event_callback: onGoogleSent
+        });
+      } else if (onGoogleSent) {
+        onGoogleSent();
+      }
+    }
+
+    document.querySelectorAll('a.amz-link').forEach(function(a){
+      a.href = KK.amazonUrl;
+      a.removeAttribute('target');
+      a.addEventListener('click', function(e){
+        // Cmd/Ctrl/middle-click opens a new tab and leaves this page alive — fire and let the browser handle it.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+          fireClickEvents(a.dataset.pos);
+          return;
+        }
+        e.preventDefault();
+        var googleSent = !hasGoogleConversion, minWaitDone = !KK.pixelOn, gone = false;
+        function go(){
+          if (gone || !googleSent || !minWaitDone) return;
+          gone = true;
+          window.location.href = KK.amazonUrl;
+        }
+        fireClickEvents(a.dataset.pos, function(){ googleSent = true; go(); });
+        // The pixel has no send callback: give its request ~300ms to leave, and never hold the click past 1s.
+        setTimeout(function(){ minWaitDone = true; go(); }, 300);
+        setTimeout(function(){ googleSent = minWaitDone = true; go(); }, 1000);
+        go();
+      });
+    });
+  })();
+
+  // Lazy-load + autoplay reason loops only when entering viewport. Pauses when offscreen.
+  (function(){
+    if (!('IntersectionObserver' in window)) {
+      // Fallback for old browsers — just load + play all
+      document.querySelectorAll('video.lazy-video').forEach(function(v){
+        var src = v.querySelector('source[data-src]');
+        if (src) { src.src = src.dataset.src; v.load(); v.play().catch(function(){}); }
+      });
+      return;
+    }
+    var videoObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var v = entry.target;
+        var src = v.querySelector('source[data-src]');
+        if (entry.isIntersecting) {
+          if (src && !src.src) {
+            src.src = src.dataset.src;
+            v.load();
+          }
+          v.play().catch(function(){});
+        } else {
+          if (!v.paused) v.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px', threshold: 0.1 });
+    document.querySelectorAll('video.lazy-video').forEach(function(v){
+      videoObserver.observe(v);
+    });
+  })();
+
+  // Sticky CTA + floating CTA reveal + scroll-depth Pixel events
+  (function(){
+    var fired50 = false;
+    var sticky = document.getElementById('stickyCta');
+    var floatCta = document.getElementById('floatCta');
+    window.addEventListener('scroll', function(){
+      var scrolled = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+      if (window.scrollY > 10 && sticky && !sticky.classList.contains('visible')) sticky.classList.add('visible');
+      if (scrolled >= 0.20 && floatCta && !floatCta.classList.contains('visible')) floatCta.classList.add('visible');
+      if (fired50) return;
+      if (scrolled >= 0.5) {
+        fired50 = true;
+        if (KK.pixelOn && typeof fbq !== 'undefined') {
+          fbq('track', 'ViewContent', KK.params({ content_ids: [KK.ASIN], content_type: 'product' }), { eventID: KK.eventId('vc') });
+          fbq('trackCustom', 'BridgeScroll50', KK.params(), { eventID: KK.eventId('bs50') });
+        }
+      }
+    }, { passive: true });
+  })();
+</script>

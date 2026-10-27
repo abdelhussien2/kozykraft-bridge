@@ -1,0 +1,5 @@
+# Source and planning files — not part of the published site
+src/
+build/
+playbook.md
+ads.md

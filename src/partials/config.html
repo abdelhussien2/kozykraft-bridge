@@ -1,0 +1,70 @@
+<!-- ============ SITE CONFIG — shared by all five pages; edit here, then run: node build/assemble.mjs ============
+     PIXEL_ID:               Meta Events Manager → Data sources → your pixel → 15–16 digit ID.
+     GOOGLE_ADS_ID:          Google Ads → Goals → Conversions → your action → Tag setup → "AW-123456789".
+     GOOGLE_ADS_CLICK_LABEL: the part after the slash in send_to ("AW-123456789/AbC-dEfGhIj" → "AbC-dEfGhIj").
+     AMAZON_URLS:            Amazon Ads → Measurement → Amazon Attribution → one tag per key
+                             for ASIN B0FCPFH2WR. Paste each full tag URL (contains maas=...).
+                             meta_v1 … meta_v5 = one Meta ad set per page; extra keys work with ?t=<key>.
+     How a visitor's link is chosen: ?t=<key> in the map → gclid/gbraid/wbraid or utm_source=google
+     → google → otherwise this page's own key (meta_v1 … meta_v5). An empty value falls back to
+     default, then to the plain listing URL.
+     PROMO:                  reader code; shows only on pages with SHOW_PROMO (v5) while code and
+                             percent are set and today is on or before ends (YYYY-MM-DD).
+     URGENCY_LINE:           true, time-based line under the end card (no inventory/scarcity claims).
+                             Swap for gift / January lines later; blank hides it.
+     VARIANT / SHOW_PROMO are set per page by the assembler (src/pages.json).
+     Pixel and Google tag stay off until their IDs are real, so no junk events are sent.
+     ============================================================================== -->
+<script>
+  window.KK = {
+    VARIANT: '{{VARIANT}}',
+    SHOW_PROMO: {{SHOW_PROMO}},
+    PIXEL_ID: 'PASTE_PIXEL_ID_HERE',
+    GOOGLE_ADS_ID: 'AW-XXXXXXXXX',
+    GOOGLE_ADS_CLICK_LABEL: '',
+    AMAZON_URLS: {
+      meta_v1: '',
+      meta_v2: '',
+      meta_v3: '',
+      meta_v4: '',
+      meta_v5: '',
+      google: '',
+      default: ''
+    },
+    FALLBACK_URL: 'https://www.amazon.com/dp/B0FCPFH2WR',
+    ASIN: 'B0FCPFH2WR',
+    VALUE: 10.99,
+    PROMO: { code: '', percent: '', ends: '' },
+    URGENCY_LINE: "Start this week and you're baking well before Thanksgiving."
+  };
+
+  KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
+  KK.gtagOn = /^AW-\d+$/.test(KK.GOOGLE_ADS_ID);
+
+  // Unique per event so a server-side Conversions API copy can be deduplicated later.
+  KK.eventId = function(prefix){
+    var rand = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+    return prefix + '_' + rand;
+  };
+
+  // Every Meta and Google event carries the page variant.
+  KK.params = function(extra){
+    var p = { variant: KK.VARIANT };
+    for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) p[k] = extra[k];
+    return p;
+  };
+
+  // Pick the Amazon link for this visitor's traffic source.
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var urls = KK.AMAZON_URLS;
+    var t = params.get('t');
+    var utm = (params.get('utm_source') || '').toLowerCase();
+    var key = 'meta_' + KK.VARIANT;
+    if (t && Object.prototype.hasOwnProperty.call(urls, t)) key = t;
+    else if (params.has('gclid') || params.has('gbraid') || params.has('wbraid') || utm === 'google') key = 'google';
+    KK.trafficKey = key;
+    KK.amazonUrl = urls[key] || urls['default'] || KK.FALLBACK_URL;
+  })();
+</script>

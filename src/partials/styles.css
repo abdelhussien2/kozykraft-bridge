@@ -917,3 +917,35 @@
   .cost-table { min-width: 0; }
   .cost-table td:first-child { text-align: left; font-weight: 600; background: var(--cream-soft); color: var(--coffee); }
   .cost-table tr.diff td { background: var(--cream-soft); font-weight: 700; color: var(--coffee); }
+
+  /* Generated images (images.md): 3:2 article images, captions on jar illustrations */
+  figure { margin: 0; }
+  .reason-img img { aspect-ratio: 3 / 2; }
+  .hero-banner figcaption,
+  .reason-img figcaption,
+  .article-img figcaption {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .hero-banner figcaption { padding: 0 22px; }
+  .article-img { margin: 0 0 12px; }
+  .article-img > img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+    background: var(--linen);
+  }
+  .strip { margin: 8px 0 36px; }
+  .strip-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .strip-scroll img { display: block; width: 100%; min-width: 600px; height: auto; border-radius: 2px; background: var(--linen); }
+  @media (max-width: 600px) {
+    .reason-img img { aspect-ratio: 3 / 2; }
+  }
+  @media (min-width: 760px) {
+    .hero-banner figcaption { padding: 0; }
+  }

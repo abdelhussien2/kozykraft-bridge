@@ -1056,6 +1056,38 @@ if (KK.gtagOn) {
   .cost-table td:first-child { text-align: left; font-weight: 600; background: var(--cream-soft); color: var(--coffee); }
   .cost-table tr.diff td { background: var(--cream-soft); font-weight: 700; color: var(--coffee); }
 
+  /* Generated images (images.md): 3:2 article images, captions on jar illustrations */
+  figure { margin: 0; }
+  .reason-img img { aspect-ratio: 3 / 2; }
+  .hero-banner figcaption,
+  .reason-img figcaption,
+  .article-img figcaption {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .hero-banner figcaption { padding: 0 22px; }
+  .article-img { margin: 0 0 12px; }
+  .article-img > img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+    background: var(--linen);
+  }
+  .strip { margin: 8px 0 36px; }
+  .strip-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .strip-scroll img { display: block; width: 100%; min-width: 600px; height: auto; border-radius: 2px; background: var(--linen); }
+  @media (max-width: 600px) {
+    .reason-img img { aspect-ratio: 3 / 2; }
+  }
+  @media (min-width: 760px) {
+    .hero-banner figcaption { padding: 0; }
+  }
+
 </style>
 
 </head>
@@ -1078,12 +1110,9 @@ if (KK.gtagOn) {
 
   <p class="sub-hook">A grocery sourdough loaf runs $7–$10. Here's what a starter costs per loaf, and why the gap gets bigger every week.</p>
 
-  <div class="hero-banner">
-    <video autoplay loop muted playsinline preload="metadata" poster="/images/hero-loaf.jpg">
-      <source src="/loops/hero-loaf.mp4" type="video/mp4">
-      <img src="/images/hero-loaf.jpg" alt="Sliced homemade sourdough loaf with an open crumb">
-    </video>
-  </div>
+  <figure class="hero-banner">
+    <img src="/images/hero-pouch-loaf.webp" alt="A torn-open sourdough loaf on a wooden board with a small starter pouch beside it" width="1600" height="1067" fetchpriority="high" decoding="async">
+  </figure>
 
   <div class="hero-cta">
     <a class="cta-button amz-link" data-pos="hero"
@@ -1096,7 +1125,6 @@ if (KK.gtagOn) {
 
   <!-- 3. PROOF BAR -->
   <div class="trust-row proof-bar">
-    <span class="stars" aria-hidden="true">★★★★★</span>
     <span class="rating-text">Hundreds of verified Amazon reviews · Day-7 guarantee · Made in the USA</span>
   </div>
 
@@ -1104,9 +1132,9 @@ if (KK.gtagOn) {
   <!-- 4. BODY — v3 money listicle, cost table after reason 1 (copy: playbook.md, word for word) -->
 
   <div class="reason">
-    <div class="reason-img">
-      <img src="/images/r07-receipt.jpg" alt="Grocery receipt with an $8.99 sourdough loaf circled in red" loading="lazy" decoding="async">
-    </div>
+    <figure class="reason-img">
+      <img src="/images/m1-store-vs-home.webp" alt="A plastic-wrapped supermarket loaf beside a torn-open home-baked sourdough loaf on the same board" width="1600" height="1067" loading="lazy" decoding="async">
+    </figure>
     <div class="reason-body">
       <h2>01. A home loaf costs about $1.20 in flour and salt.</h2>
       <p>A store loaf of real sourdough runs $7–$10; a bakery loaf more.</p>
@@ -1143,12 +1171,6 @@ if (KK.gtagOn) {
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="/images/r03-bubbly-jar.jpg">
-        <source data-src="/loops/r03-bubbly-jar.mp4" type="video/mp4">
-        <img src="/images/r03-bubbly-jar.jpg" alt="Active, bubbling sourdough starter in a glass jar">
-      </video>
-    </div>
     <div class="reason-body">
       <h2>02. One packet, bought once.</h2>
       <p>Feed it and it keeps going for years. There's nothing to re-buy.</p>
@@ -1156,22 +1178,16 @@ if (KK.gtagOn) {
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="/images/r04-sliced-loaf.jpg">
-        <source data-src="/loops/r04-sliced-loaf.mp4" type="video/mp4">
-        <img src="/images/r04-sliced-loaf.jpg" alt="Sliced homemade sourdough loaf">
-      </video>
-    </div>
     <div class="reason-body">
-      <h2>03. The packet costs about one bakery loaf.</h2>
-      <p>After that, every loaf is flour and salt.</p>
+      <h2>03. Nothing else to buy.</h2>
+      <p>A jar, flour and water from your kitchen.</p>
     </div>
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <img src="/images/r05-hands-kneading.jpg" alt="Flour-dusted hands kneading bread dough" loading="lazy" decoding="async">
-    </div>
+    <figure class="reason-img">
+      <img src="/images/m4-discard-pancakes.webp" alt="A short stack of golden pancakes on a stone plate, a jar of starter out of focus behind it" width="1600" height="1067" loading="lazy" decoding="async">
+    </figure>
     <div class="reason-body">
       <h2>04. Nothing goes to waste.</h2>
       <p>The discard from feedings becomes pancakes, crackers and pizza dough.</p>
@@ -1179,9 +1195,6 @@ if (KK.gtagOn) {
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <img src="/images/r09-ohio-kitchen.jpg" alt="Jars of sourdough starter on a kitchen counter" loading="lazy" decoding="async">
-    </div>
     <div class="reason-body">
       <h2>05. Five minutes a day beats a trip to the store.</h2>
       <p>Feed it, cover it, done.</p>
@@ -1189,9 +1202,9 @@ if (KK.gtagOn) {
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <img src="/images/pouch-clean.jpg" alt="KozyKraft sourdough starter pouch beside a loaf" loading="lazy" decoding="async">
-    </div>
+    <figure class="reason-img">
+      <img src="/images/m6-gift.webp" alt="A starter pouch and a small glass jar tied together with twine and a sprig of rosemary on linen" width="1600" height="1067" loading="lazy" decoding="async">
+    </figure>
     <div class="reason-body">
       <h2>06. The best gift you can give for the price of a loaf.</h2>
       <p>One packet, a jar, and a note.</p>
@@ -1199,9 +1212,6 @@ if (KK.gtagOn) {
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <img src="/images/r10-loaf-collage.jpg" alt="Collage of home-baked sourdough loaves" loading="lazy" decoding="async">
-    </div>
     <div class="reason-body">
       <h2>07. Day-7 guarantee, so the math never goes against you.</h2>
       <p>Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free.</p>

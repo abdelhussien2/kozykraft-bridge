@@ -5,15 +5,25 @@
     "body": "v1.html",
     "reviewsInBody": true,
     "byline": false,
-    "showPromo": false
+    "showPromo": false,
+    "hero": {
+      "file": "hero-pouch-loaf.webp",
+      "alt": "A torn-open sourdough loaf on a wooden board with a small starter pouch beside it",
+      "caption": ""
+    }
   },
   "v2": {
-    "title": "We Tried the Sourdough Starter Everyone's Buying on Amazon. Here's What Happened, Day by Day.",
-    "subhead": "Seven days, one packet, one jar on the counter. Photos every morning.",
+    "title": "Your First 7 Days With a Sourdough Starter, Day by Day: What's Normal and What Isn't",
+    "subhead": "Seven days, one packet, one jar on the counter. Here's what the week looks like, day by day.",
     "body": "v2.html",
     "reviewsInBody": false,
     "byline": true,
-    "showPromo": false
+    "showPromo": false,
+    "hero": {
+      "file": "day1.webp",
+      "alt": "Hands tipping dry starter flakes from a small pouch into a glass jar, a glass of water beside it",
+      "caption": "Day 1: what waking it up looks like."
+    }
   },
   "v3": {
     "title": "We Did the Math: One Sourdough Packet vs. a Year of Store-Bought Bread",
@@ -21,7 +31,12 @@
     "body": "v3.html",
     "reviewsInBody": false,
     "byline": false,
-    "showPromo": false
+    "showPromo": false,
+    "hero": {
+      "file": "hero-pouch-loaf.webp",
+      "alt": "A torn-open sourdough loaf on a wooden board with a small starter pouch beside it",
+      "caption": ""
+    }
   },
   "v4": {
     "title": "Your Sourdough Starter Died. It Wasn't Your Fault, and the Fix Takes 5 Days",
@@ -29,7 +44,12 @@
     "body": "v4.html",
     "reviewsInBody": false,
     "byline": false,
-    "showPromo": false
+    "showPromo": false,
+    "hero": {
+      "file": "f1-cold-kitchen.webp",
+      "alt": "A small glass jar on a windowsill in cool morning light, a wool mitt beside it",
+      "caption": ""
+    }
   },
   "v5": {
     "title": "7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter",
@@ -37,6 +57,11 @@
     "body": "v1.html",
     "reviewsInBody": true,
     "byline": false,
-    "showPromo": true
+    "showPromo": true,
+    "hero": {
+      "file": "hero-pouch-loaf.webp",
+      "alt": "A torn-open sourdough loaf on a wooden board with a small starter pouch beside it",
+      "caption": ""
+    }
   }
 }

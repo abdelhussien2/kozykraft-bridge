@@ -1056,6 +1056,38 @@ if (KK.gtagOn) {
   .cost-table td:first-child { text-align: left; font-weight: 600; background: var(--cream-soft); color: var(--coffee); }
   .cost-table tr.diff td { background: var(--cream-soft); font-weight: 700; color: var(--coffee); }
 
+  /* Generated images (images.md): 3:2 article images, captions on jar illustrations */
+  figure { margin: 0; }
+  .reason-img img { aspect-ratio: 3 / 2; }
+  .hero-banner figcaption,
+  .reason-img figcaption,
+  .article-img figcaption {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .hero-banner figcaption { padding: 0 22px; }
+  .article-img { margin: 0 0 12px; }
+  .article-img > img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+    background: var(--linen);
+  }
+  .strip { margin: 8px 0 36px; }
+  .strip-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .strip-scroll img { display: block; width: 100%; min-width: 600px; height: auto; border-radius: 2px; background: var(--linen); }
+  @media (max-width: 600px) {
+    .reason-img img { aspect-ratio: 3 / 2; }
+  }
+  @media (min-width: 760px) {
+    .hero-banner figcaption { padding: 0; }
+  }
+
 </style>
 
 </head>
@@ -1078,12 +1110,9 @@ if (KK.gtagOn) {
 
   <p class="sub-hook">Most &quot;dead&quot; starters are just cold or hungry. Here's how to tell, and how to get one that's bake-ready in 5–7 days.</p>
 
-  <div class="hero-banner">
-    <video autoplay loop muted playsinline preload="metadata" poster="/images/hero-loaf.jpg">
-      <source src="/loops/hero-loaf.mp4" type="video/mp4">
-      <img src="/images/hero-loaf.jpg" alt="Sliced homemade sourdough loaf with an open crumb">
-    </video>
-  </div>
+  <figure class="hero-banner">
+    <img src="/images/f1-cold-kitchen.webp" alt="A small glass jar on a windowsill in cool morning light, a wool mitt beside it" width="1600" height="1067" fetchpriority="high" decoding="async">
+  </figure>
 
   <div class="hero-cta">
     <a class="cta-button amz-link" data-pos="hero"
@@ -1096,7 +1125,6 @@ if (KK.gtagOn) {
 
   <!-- 3. PROOF BAR -->
   <div class="trust-row proof-bar">
-    <span class="stars" aria-hidden="true">★★★★★</span>
     <span class="rating-text">Hundreds of verified Amazon reviews · Day-7 guarantee · Made in the USA</span>
   </div>
 
@@ -1104,9 +1132,9 @@ if (KK.gtagOn) {
   <!-- 4. BODY — v4 "your starter failed": four sections, problem to fix (copy: playbook.md, word for word) -->
 
   <div class="reason">
-    <div class="reason-img">
-      <img src="/images/r09-ohio-kitchen.jpg" alt="Jars of sourdough starter by a kitchen window" loading="lazy" decoding="async">
-    </div>
+    <figure class="reason-img">
+      <img src="/images/f1-filtered-water.webp" alt="Filtered water poured from a glass pitcher into a measuring cup beside a small glass jar" width="1600" height="1067" loading="lazy" decoding="async">
+    </figure>
     <div class="reason-body">
       <h2>01. Why starters die (it's almost always one of three things).</h2>
       <p><strong>A cold kitchen:</strong> wild yeast slows way down under 68°F, so a starter on a drafty counter can look dead for days.</p>
@@ -1116,22 +1144,23 @@ if (KK.gtagOn) {
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="/images/r03-bubbly-jar.jpg">
-        <source data-src="/loops/r03-bubbly-jar.mp4" type="video/mp4">
-        <img src="/images/r03-bubbly-jar.jpg" alt="Active, bubbling sourdough starter in a glass jar">
-      </video>
-    </div>
     <div class="reason-body">
       <h2>02. What normal looks like, day by day.</h2>
       <p>Day 1, nothing. Day 2, probably still nothing. Day 3, the first bubbles and a sour smell. Day 4, a bigger feed. Day 5 to 7, it doubles after a feeding. Some days it rests. That's not death; that's a starter.</p>
     </div>
   </div>
 
-  <div class="reason">
-    <div class="reason-img">
-      <img src="/images/pouch-clean.jpg" alt="KozyKraft dehydrated sourdough starter pouch" loading="lazy" decoding="async">
+  <figure class="article-img strip">
+    <div class="strip-scroll">
+      <img src="/images/strip-days-1-5.webp" alt="Five views of the same glass jar from day 1 to day 5, from dry flakes to a domed, doubled starter" width="2000" height="267" loading="lazy" decoding="async">
     </div>
+    <figcaption>Days 1–5: what the first week looks like.</figcaption>
+  </figure>
+
+  <div class="reason">
+    <figure class="reason-img">
+      <img src="/images/f3-established-culture.webp" alt="A starter pouch leaning against a glass jar with a thin layer of dry starter flakes inside, a tablespoon beside them" width="1600" height="1067" loading="lazy" decoding="async">
+    </figure>
     <div class="reason-body">
       <h2>03. Why a dehydrated culture is different.</h2>
       <p>You're not building a culture from the wild yeast that happens to be in your flour. You're waking up an established one that's been tested for viability before it was dried. The steps are printed on the pouch, in tablespoons, and if something looks off you can message us and get an answer within 24 hours.</p>
@@ -1139,12 +1168,6 @@ if (KK.gtagOn) {
   </div>
 
   <div class="reason">
-    <div class="reason-img">
-      <video loop muted playsinline preload="none" class="lazy-video" poster="/images/r06-starter-macro.jpg">
-        <source data-src="/loops/r06-starter-macro.mp4" type="video/mp4">
-        <img src="/images/r06-starter-macro.jpg" alt="Close-up of bubbles in an active sourdough starter">
-      </video>
-    </div>
     <div class="reason-body">
       <h2>04. If it still isn't bubbling by day 7.</h2>
       <p>Send us a photo and we'll ship a fresh packet, free. Ordered on Amazon? Message us from Your Orders. That's the whole policy.</p>

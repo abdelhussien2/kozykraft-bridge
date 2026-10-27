@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Assembles the bridge-test pages from shared partials.
 //
-//   node build/assemble.mjs           write v1/ … v5/index.html, plus index.html (= v1)
+//   node build/assemble.mjs           write v1/ … v5/index.html, plus index.html (= v1), and publish
+//                                     src/images/* to images/ (src/ itself is not deployed)
 //   node build/assemble.mjs --check   exit 1 if any committed page is out of date with src/
 //
 // Template syntax (src/layout.html, src/partials/*, src/pages/*):
@@ -10,7 +11,7 @@
 //   {{KEY}}                         variable; HTML-escaped unless the name ends in _HTML
 // Any variable left unresolved is an error, so a typo never ships as literal braces.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -54,6 +55,9 @@ function buildPage(variant, page) {
     DESCRIPTION: page.subhead,
     H1: page.title,
     SUBHEAD: page.subhead,
+    HERO_FILE: page.hero.file,
+    HERO_ALT: page.hero.alt,
+    HERO_CAPTION_HTML: page.hero.caption ? `    <figcaption>${escapeHtml(page.hero.caption)}</figcaption>\n` : '',
   };
   vars.BYLINE_HTML = page.byline ? render(readPartial('byline.html'), vars) : '';
   vars.BODY_HTML = render(readPartial(page.body), vars, [page.body]);
@@ -65,18 +69,33 @@ const outputs = {};
 for (const [variant, page] of Object.entries(pages)) outputs[`${variant}/index.html`] = buildPage(variant, page);
 outputs['index.html'] = outputs['v1/index.html']; // "/" serves v1 for now
 
+// Generated images live in src/images/ and are published to images/ under the same name.
+const SRC_IMAGES = join(SRC, 'images');
+const srcImages = existsSync(SRC_IMAGES) ? readdirSync(SRC_IMAGES).filter((f) => !f.startsWith('.') && statSync(join(SRC_IMAGES, f)).isFile()) : [];
+for (const f of srcImages) outputs[`images/${f}`] = readFileSync(join(SRC_IMAGES, f));
+
+// Every /images/… a page points at must exist once published.
+const missing = new Set();
+for (const [rel, html] of Object.entries(outputs)) {
+  if (!rel.endsWith('.html')) continue;
+  for (const m of html.matchAll(/(?:src|poster)="\/images\/([^"]+)"/g)) {
+    if (!srcImages.includes(m[1]) && !existsSync(join(ROOT, 'images', m[1]))) missing.add(m[1]);
+  }
+}
+
 const check = process.argv.includes('--check');
 let stale = 0;
 for (const [rel, html] of Object.entries(outputs)) {
   const file = join(ROOT, rel);
   if (check) {
-    if (!existsSync(file) || readFileSync(file, 'utf8') !== html) { console.error(`out of date: ${rel}`); stale++; }
+    if (!existsSync(file) || !readFileSync(file).equals(Buffer.from(html))) { console.error(`out of date: ${rel}`); stale++; }
     continue;
   }
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
   console.log(`wrote ${rel} (${Math.round(html.length / 1024)} KB)`);
 }
+if (missing.size) console.warn(`\nimages referenced but not generated yet (${missing.size}):\n  ${[...missing].sort().join('\n  ')}`);
 if (check) {
   if (stale) { console.error(`${stale} page(s) out of date — run: node build/assemble.mjs`); process.exit(1); }
   console.log('all pages up to date');

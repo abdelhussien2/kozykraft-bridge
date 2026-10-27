@@ -1058,6 +1058,11 @@ if (KK.gtagOn) {
 
   /* Generated images (images.md): 3:2 article images, captions on jar illustrations */
   figure { margin: 0; }
+  /* The <img> width/height attributes reserve space (no layout shift); height:auto lets aspect-ratio size them. */
+  .hero-banner img,
+  .reason-img img,
+  .article-img > img,
+  .strip-scroll img { height: auto; }
   .reason-img img { aspect-ratio: 3 / 2; }
   .hero-banner figcaption,
   .reason-img figcaption,
@@ -1086,6 +1091,28 @@ if (KK.gtagOn) {
   }
   @media (min-width: 760px) {
     .hero-banner figcaption { padding: 0; }
+  }
+
+  /* Hero caption sits on the page, not on a linen strip */
+  .hero-banner { background: none; }
+  .hero-banner img { background: var(--linen); }
+
+  /* Desktop: diary days read like the listicle — photo left, text right */
+  @media (min-width: 760px) {
+    .diary-day:has(> figure) {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      column-gap: 26px;
+      align-items: start;
+    }
+    .diary-day > figure { grid-row: 1 / span 3; margin: 0; }
+    .diary-day:has(> figure) h2 { margin-top: 0; }
+  }
+
+  /* v2 byline: compact on phones so the first CTA still fits at 375x667 */
+  @media (max-width: 600px) {
+    .byline { margin: 0 0 10px; gap: 10px; }
+    .byline .monogram { width: 30px; height: 30px; font-size: 11px; }
   }
 
 </style>

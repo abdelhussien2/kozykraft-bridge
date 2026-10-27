@@ -4,7 +4,8 @@
      GOOGLE_ADS_CLICK_LABEL: the part after the slash in send_to ("AW-123456789/AbC-dEfGhIj" → "AbC-dEfGhIj").
      AMAZON_URLS:            Amazon Ads → Measurement → Amazon Attribution → one tag per key
                              for ASIN B0FCPFH2WR. Paste each full tag URL (contains maas=...).
-                             meta_v1 … meta_v5 = one Meta ad set per page; extra keys work with ?t=<key>.
+                             meta_v1 … meta_v5 = one Meta ad set per page; store = the Store tag (link
+                             with ?t=store); extra keys work the same way with ?t=<key>.
      How a visitor's link is chosen: ?t=<key> in the map → gclid/gbraid/wbraid or utm_source=google
      → google → otherwise this page's own key (meta_v1 … meta_v5). An empty value falls back to
      default, then to the plain listing URL.
@@ -29,6 +30,7 @@
       meta_v4: '',
       meta_v5: '',
       google: '',
+      store: '',
       default: ''
     },
     FALLBACK_URL: 'https://www.amazon.com/dp/B0FCPFH2WR',

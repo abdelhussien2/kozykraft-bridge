@@ -27,7 +27,8 @@
      GOOGLE_ADS_CLICK_LABEL: the part after the slash in send_to ("AW-123456789/AbC-dEfGhIj" → "AbC-dEfGhIj").
      AMAZON_URLS:            Amazon Ads → Measurement → Amazon Attribution → one tag per key
                              for ASIN B0FCPFH2WR. Paste each full tag URL (contains maas=...).
-                             meta_v1 … meta_v5 = one Meta ad set per page; extra keys work with ?t=<key>.
+                             meta_v1 … meta_v5 = one Meta ad set per page; store = the Store tag (link
+                             with ?t=store); extra keys work the same way with ?t=<key>.
      How a visitor's link is chosen: ?t=<key> in the map → gclid/gbraid/wbraid or utm_source=google
      → google → otherwise this page's own key (meta_v1 … meta_v5). An empty value falls back to
      default, then to the plain listing URL.
@@ -52,6 +53,7 @@
       meta_v4: '',
       meta_v5: '',
       google: '',
+      store: '',
       default: ''
     },
     FALLBACK_URL: 'https://www.amazon.com/dp/B0FCPFH2WR',
@@ -1097,23 +1099,44 @@ if (KK.gtagOn) {
   .hero-banner { background: none; }
   .hero-banner img { background: var(--linen); }
 
-  /* Desktop: diary days read like the listicle — photo left, text right */
-  @media (min-width: 760px) {
-    .diary-day:has(> figure) {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      column-gap: 26px;
-      align-items: start;
-    }
-    .diary-day > figure { grid-row: 1 / span 3; margin: 0; }
-    .diary-day:has(> figure) h2 { margin-top: 0; }
-  }
-
   /* v2 byline: compact on phones so the first CTA still fits at 375x667 */
   @media (max-width: 600px) {
     .byline { margin: 0 0 10px; gap: 10px; }
     .byline .monogram { width: 30px; height: 30px; font-size: 11px; }
   }
+
+  /* Round 4: every body image runs the full column width, text underneath */
+  .reason { display: block; margin: 40px 0; }
+  .reason-img { max-width: none; width: 100%; margin: 0 0 16px; }
+  .reason-body h2 { margin-top: 0; }
+  .diary-day .article-img + .article-img { margin-top: 10px; }
+
+  /* "What you'll see on Amazon" — a stand-in for our search-result tile */
+  .amz-preview { max-width: 340px; margin: 0 auto 14px; text-align: left; position: relative; }
+  .amz-preview-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 6px;
+  }
+  .amz-tile {
+    display: flex; gap: 12px; align-items: center;
+    background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 10px;
+    font-family: Arial, Helvetica, sans-serif; color: #0f1111;
+  }
+  .amz-tile img { width: 72px; height: 72px; object-fit: contain; flex-shrink: 0; background: #f7f7f7; border-radius: 4px; }
+  .amz-tile-text { min-width: 0; }
+  .amz-tile-title { font-size: 14px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .amz-tile-seller { font-size: 12px; color: #565959; margin-top: 3px; }
+  .amz-tile-prime { font-size: 12px; font-weight: 700; color: #1a98ff; margin-top: 3px; }
+  .amz-preview-note { font-size: 13px; color: var(--coffee-soft); margin: 8px 0 0; line-height: 1.45; }
+
+  /* "What you can bake" grid */
+  .bake-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 0 0 36px; }
+  @media (min-width: 760px) { .bake-grid { grid-template-columns: repeat(4, 1fr); } }
+  .bake-tile img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; display: block; border-radius: 2px; background: var(--linen); }
+  .bake-tile figcaption { font-size: 14px; font-weight: 600; color: var(--coffee); margin-top: 6px; }
+  /* Card is centered with auto margins, so give it the column width; otherwise the
+     single-line Amazon title sets its width and the page scrolls sideways. */
+  .product-grid.single .product-card { width: 100%; min-width: 0; }
 
 </style>
 
@@ -1189,6 +1212,10 @@ if (KK.gtagOn) {
       <img src="/images/day3.webp" alt="A small glass jar of starter paste with a few small bubbles on the surface" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 3: what first bubbles look like.</figcaption>
     </figure>
+    <figure class="article-img">
+      <img src="/images/day3-closeup.webp" alt="Close-up of the top of the starter in the jar, with small bubbles at the surface" width="960" height="640" loading="lazy" decoding="async">
+      <figcaption>Day 3, up close: what surface bubbles look like.</figcaption>
+    </figure>
     <h2>Day 3: First bubbles.</h2>
     <p>Same feed. Small bubbles on the surface and a faint sour smell. It's alive.</p>
   </div>
@@ -1206,6 +1233,10 @@ if (KK.gtagOn) {
     <figure class="article-img">
       <img src="/images/day5.webp" alt="A glass jar of bubbly starter risen well above the rubber band, with a domed top" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 5: what doubled looks like.</figcaption>
+    </figure>
+    <figure class="article-img">
+      <img src="/images/day5-closeup.webp" alt="Close-up of the domed top of the starter risen above the rim of the jar" width="960" height="640" loading="lazy" decoding="async">
+      <figcaption>Day 5, up close: what the dome looks like.</figcaption>
     </figure>
     <h2>Day 5: It doubled.</h2>
     <p>Feed it in the morning; by afternoon it should be well past the rubber band, domed, and full of bubbles. That's the ready signal.</p>
@@ -1245,9 +1276,17 @@ if (KK.gtagOn) {
       <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
       <div class="product-sub">15g pouch · Organic · Non-GMO · Shelf-stable</div>
       <img class="product-img" src="/images/pouch-clean.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" loading="lazy" decoding="async">
-      <div class="find-us">
-        <img src="/images/pouch-clean-thumb.jpg" alt="" width="44" height="44" loading="lazy" decoding="async">
-        <span>Look for KozyKraft on Amazon, then tap <strong>Add to Cart</strong>.</span>
+      <div class="amz-preview">
+        <div class="amz-preview-label">What you'll see on Amazon</div>
+        <div class="amz-tile" aria-label="Example of the KozyKraft listing in Amazon search results">
+          <img src="/images/pouch-clean-thumb.jpg" alt="" width="72" height="72" loading="lazy" decoding="async">
+          <div class="amz-tile-text">
+            <div class="amz-tile-title">Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)</div>
+            <div class="amz-tile-seller">Sold by KozyKraft</div>
+            <div class="amz-tile-prime"><span aria-hidden="true">✓</span> Prime</div>
+          </div>
+        </div>
+        <p class="amz-preview-note">Other starters show up next to it. This is ours.</p>
       </div>
       <a class="cta-button amz-link" data-pos="midcard"
          href="https://www.amazon.com/dp/B0FCPFH2WR"
@@ -1270,7 +1309,7 @@ if (KK.gtagOn) {
 
   <div class="review">
     <div class="stars">★ ★ ★ ★ ★</div>
-    <p class="quote">"This absolutely change my sour dough game. The starter is performing better than any of mine did. I am BEYOND satisfied with this product and highly recommend. These pics are a loaf made 7 days after the first water was added to the dehydrated starter. It doubles in size in under 3 hours and makes amazing loaves."</p>
+    <p class="quote">"This absolutely change my sour dough game. The starter is performing better than any of mine did. I am BEYOND satisfied with this product and highly recommend."</p>
     <div class="attribution">— Carrie D., Verified Purchase · September 28, 2026 · "Yes, yes and yes again."</div>
   </div>
 
@@ -1297,6 +1336,28 @@ if (KK.gtagOn) {
     <p class="quote">"Turned out perfect. Taste amazing. Happy with my purchase."</p>
     <div class="attribution">— Janet R., Verified Purchase · October 14, 2026 · "Sourdough starter"</div>
   </div>
+
+  <!-- WHAT YOU CAN BAKE — after the reviews on every page -->
+  <h2 class="section-heading">What You Can Bake</h2>
+  <div class="bake-grid">
+    <figure class="bake-tile">
+      <img src="/images/bake-country-loaf.webp" alt="A rustic country loaf torn open on a wooden board" width="1200" height="1200" loading="lazy" decoding="async">
+      <figcaption>Country loaf</figcaption>
+    </figure>
+    <figure class="bake-tile">
+      <img src="/images/bake-pizza.webp" alt="A pizza with a blistered crust on a wooden peel" width="1200" height="1200" loading="lazy" decoding="async">
+      <figcaption>Friday pizza</figcaption>
+    </figure>
+    <figure class="bake-tile">
+      <img src="/images/bake-focaccia.webp" alt="A dimpled focaccia with rosemary in a pan" width="1200" height="1200" loading="lazy" decoding="async">
+      <figcaption>Focaccia</figcaption>
+    </figure>
+    <figure class="bake-tile">
+      <img src="/images/m4-discard-pancakes.webp" alt="A short stack of golden pancakes on a stone plate" width="1600" height="1067" loading="lazy" decoding="async">
+      <figcaption>Discard pancakes</figcaption>
+    </figure>
+  </div>
+
 
 
   <!-- 7. COMPARISON + THREE OBJECTIONS + DAY-7 GUARANTEE -->
@@ -1353,7 +1414,7 @@ if (KK.gtagOn) {
     <h3>Before you decide</h3>
     <div class="faq-item">
       <p class="faq-q">Will it actually work?</p>
-      <p class="faq-a">Not bubbling by day 7? Send us a photo and we'll ship a fresh packet, free. Ordered on Amazon? Message us from Your Orders.</p>
+      <p class="faq-a">Not bubbling by day 7? A fresh packet, free. Details below.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Is it hard?</p>
@@ -1379,9 +1440,17 @@ if (KK.gtagOn) {
       <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
       <div class="product-sub">15g pouch · Bake-ready in 5–7 days</div>
       <img class="product-img" src="/images/pouch-clean.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" loading="lazy" decoding="async">
-      <div class="find-us">
-        <img src="/images/pouch-clean-thumb.jpg" alt="" width="44" height="44" loading="lazy" decoding="async">
-        <span>Look for KozyKraft on Amazon, then tap <strong>Add to Cart</strong>.</span>
+      <div class="amz-preview">
+        <div class="amz-preview-label">What you'll see on Amazon</div>
+        <div class="amz-tile" aria-label="Example of the KozyKraft listing in Amazon search results">
+          <img src="/images/pouch-clean-thumb.jpg" alt="" width="72" height="72" loading="lazy" decoding="async">
+          <div class="amz-tile-text">
+            <div class="amz-tile-title">Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)</div>
+            <div class="amz-tile-seller">Sold by KozyKraft</div>
+            <div class="amz-tile-prime"><span aria-hidden="true">✓</span> Prime</div>
+          </div>
+        </div>
+        <p class="amz-preview-note">Other starters show up next to it. This is ours.</p>
       </div>
       <a class="cta-button amz-link" data-pos="endcard"
          href="https://www.amazon.com/dp/B0FCPFH2WR"

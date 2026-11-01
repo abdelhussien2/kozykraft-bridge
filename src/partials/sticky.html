@@ -5,6 +5,7 @@
      rel="nofollow noopener">
      Check Today's Price On Amazon <span class="arrow">→</span>
   </a>
+{{BADGE_BTN_HTML}}
 </div>
 
 <div class="sticky-cta-spacer"></div>
@@ -14,6 +15,7 @@
      rel="nofollow noopener">
      Check Today's Price On Amazon →
   </a>
+{{BADGE_BTN_HTML}}
 </div>
 
 <!-- ============ PROMO + URGENCY + AMAZON LINKS + EVENTS + LAZY VIDEO + STICKY CTA ============ -->
@@ -94,34 +96,34 @@
     document.getElementById('urgencyBlock').hidden = false;
   })();
 
-  // Point every buy button at the chosen Amazon link and open it in the same tab.
-  // On click: Meta InitiateCheckout + Google Ads conversion, then navigate once both have had time to send.
+  // Buy taps: fire Meta InitiateCheckout (pixel + CAPI) and the Google Ads conversion, then go to
+  // this page's Amazon link in the same tab. Never waits on tracking: we leave as soon as Google
+  // confirms its beacon, and at 300ms at the latest. CAPI rides on sendBeacon, so it survives the redirect.
   (function(){
     var hasGoogleConversion = KK.gtagOn && !!KK.GOOGLE_ADS_CLICK_LABEL;
+    var MAX_WAIT_MS = 300;
 
     function fireClickEvents(position, onGoogleSent){
+      KK.track('InitiateCheckout', {
+        value: KK.PRICE,
+        currency: KK.CURRENCY,
+        content_ids: [KK.ASIN],
+        content_type: 'product',
+        destination: KK.amazonUrl,
+        destination_key: KK.trafficKey
+      });
       if (KK.pixelOn && typeof fbq !== 'undefined') {
-        fbq('track', 'InitiateCheckout', KK.params({
-          content_ids: [KK.ASIN],
-          content_type: 'product',
-          value: KK.VALUE,
-          currency: 'USD'
-        }), { eventID: KK.eventId('ic') });
-        fbq('trackCustom', 'BridgeAmzClick', KK.params({
-          position: position, sku: 'dehydrated', source: KK.trafficKey
-        }), { eventID: KK.eventId('bac') });
+        fbq('trackCustom', 'BridgeAmzClick', KK.params({ position: position, destination_key: KK.trafficKey }));
       }
       if (hasGoogleConversion && typeof gtag !== 'undefined') {
         gtag('event', 'conversion', {
           send_to: KK.GOOGLE_ADS_ID + '/' + KK.GOOGLE_ADS_CLICK_LABEL,
-          value: KK.VALUE,
-          currency: 'USD',
+          value: KK.PRICE,
+          currency: KK.CURRENCY,
           variant: KK.VARIANT,
           transport_type: 'beacon',
           event_callback: onGoogleSent
         });
-      } else if (onGoogleSent) {
-        onGoogleSent();
       }
     }
 
@@ -135,17 +137,14 @@
           return;
         }
         e.preventDefault();
-        var googleSent = !hasGoogleConversion, minWaitDone = !KK.pixelOn, gone = false;
+        var gone = false;
         function go(){
-          if (gone || !googleSent || !minWaitDone) return;
+          if (gone) return;
           gone = true;
           window.location.href = KK.amazonUrl;
         }
-        fireClickEvents(a.dataset.pos, function(){ googleSent = true; go(); });
-        // The pixel has no send callback: give its request ~300ms to leave, and never hold the click past 1s.
-        setTimeout(function(){ minWaitDone = true; go(); }, 300);
-        setTimeout(function(){ googleSent = minWaitDone = true; go(); }, 1000);
-        go();
+        fireClickEvents(a.dataset.pos, go);
+        setTimeout(go, hasGoogleConversion ? MAX_WAIT_MS : 0);
       });
     });
   })();
@@ -180,23 +179,22 @@
     });
   })();
 
-  // Sticky CTA + floating CTA reveal + scroll-depth Pixel events
+  // Sticky CTA + floating CTA reveal, and ViewContent at 50% scroll or 15s on the page, whichever comes first.
   (function(){
-    var fired50 = false;
+    var viewed = false;
+    function viewContent(){
+      if (viewed) return;
+      viewed = true;
+      KK.track('ViewContent', { content_ids: [KK.ASIN], content_type: 'product' });
+    }
+    setTimeout(viewContent, 15000);
     var sticky = document.getElementById('stickyCta');
     var floatCta = document.getElementById('floatCta');
     window.addEventListener('scroll', function(){
       var scrolled = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
       if (window.scrollY > 10 && sticky && !sticky.classList.contains('visible')) sticky.classList.add('visible');
       if (scrolled >= 0.20 && floatCta && !floatCta.classList.contains('visible')) floatCta.classList.add('visible');
-      if (fired50) return;
-      if (scrolled >= 0.5) {
-        fired50 = true;
-        if (KK.pixelOn && typeof fbq !== 'undefined') {
-          fbq('track', 'ViewContent', KK.params({ content_ids: [KK.ASIN], content_type: 'product' }), { eventID: KK.eventId('vc') });
-          fbq('trackCustom', 'BridgeScroll50', KK.params(), { eventID: KK.eventId('bs50') });
-        }
-      }
+      if (scrolled >= 0.5) viewContent();
     }, { passive: true });
   })();
 </script>

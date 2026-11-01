@@ -1,72 +1,100 @@
-<!-- ============ SITE CONFIG — shared by all five pages; edit here, then run: node build/assemble.mjs ============
-     PIXEL_ID:               Meta Events Manager → Data sources → your pixel → 15–16 digit ID.
-     GOOGLE_ADS_ID:          Google Ads → Goals → Conversions → your action → Tag setup → "AW-123456789".
-     GOOGLE_ADS_CLICK_LABEL: the part after the slash in send_to ("AW-123456789/AbC-dEfGhIj" → "AbC-dEfGhIj").
-     AMAZON_URLS:            Amazon Ads → Measurement → Amazon Attribution → one tag per key
-                             for ASIN B0FCPFH2WR. Paste each full tag URL (contains maas=...).
-                             meta_v1 … meta_v5 = one Meta ad set per page; store = the Store tag (link
-                             with ?t=store); extra keys work the same way with ?t=<key>.
-     How a visitor's link is chosen: ?t=<key> in the map → gclid/gbraid/wbraid or utm_source=google
-     → google → otherwise this page's own key (meta_v1 … meta_v5). An empty value falls back to
-     default, then to the plain listing URL.
-     PROMO:                  reader code; shows only on pages with SHOW_PROMO (v5) while code and
-                             percent are set and today is on or before ends (YYYY-MM-DD).
-     URGENCY_LINE:           true, time-based line under the end card (no inventory/scarcity claims).
-                             Swap for gift / January lines later; blank hides it.
-     VARIANT / SHOW_PROMO are set per page by the assembler (src/pages.json).
-     Pixel and Google tag stay off until their IDs are real, so no junk events are sent.
-     ============================================================================== -->
+<!-- ============ SITE CONFIG ============
+     Every value lives in src/site.config.json (one place, shared by all five pages).
+     Edit it, then rebuild: node build/assemble.mjs
+       PRICE        one number; Meta and Google conversion values read it, so a price change is a one-line edit
+       AMAZON_URLS  Amazon Attribution tags. ?t=<key> picks a key (e.g. ?t=store); gclid/gbraid/wbraid or
+                    utm_source=google → google; otherwise this page's own key (meta_v1 … meta_v5).
+                    An empty or unknown key falls back to default, then to the plain listing.
+       PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
+                    today is on or before ends (YYYY-MM-DD)
+       BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
+     VARIANT / SHOW_PROMO are set per page from src/pages.json.
+     Meta events go to the pixel and to /api/capi (Conversions API) with the same event_id for dedup.
+     The CAPI token is read server-side from the META_CAPI_TOKEN env var only.
+     ===================================== -->
 <script>
-  window.KK = {
-    VARIANT: '{{VARIANT}}',
-    SHOW_PROMO: {{SHOW_PROMO}},
-    PIXEL_ID: 'PASTE_PIXEL_ID_HERE',
-    GOOGLE_ADS_ID: 'AW-XXXXXXXXX',
-    GOOGLE_ADS_CLICK_LABEL: '',
-    AMAZON_URLS: {
-      meta_v1: '',
-      meta_v2: '',
-      meta_v3: '',
-      meta_v4: '',
-      meta_v5: '',
-      google: '',
-      store: '',
-      default: ''
-    },
-    FALLBACK_URL: 'https://www.amazon.com/dp/B0FCPFH2WR',
-    ASIN: 'B0FCPFH2WR',
-    VALUE: 10.99,
-    PROMO: { code: '', percent: '', ends: '' },
-    URGENCY_LINE: "Start this week and you're baking well before Thanksgiving."
-  };
+  window.KK = {{SITE_CONFIG_JSON_HTML}};
+  KK.VARIANT = '{{VARIANT}}';
+  KK.SHOW_PROMO = {{SHOW_PROMO}};
 
   KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
   KK.gtagOn = /^AW-\d+$/.test(KK.GOOGLE_ADS_ID);
 
-  // Unique per event so a server-side Conversions API copy can be deduplicated later.
+  // Unique per event; the same id goes to the pixel and to CAPI so Meta deduplicates them.
   KK.eventId = function(prefix){
     var rand = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
       : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
     return prefix + '_' + rand;
   };
 
-  // Every Meta and Google event carries the page variant.
+  function kkStore(method, key, value){
+    try { return method === 'get' ? sessionStorage.getItem(key) : sessionStorage.setItem(key, value); }
+    catch (e) { return null; }
+  }
+
+  // Save utm_* / fbclid (and the other routing params) on landing, so they survive in-site navigation.
+  (function(){
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+                'fbclid', 'gclid', 'gbraid', 'wbraid', 't', 'fb_test_code'];
+    var params = new URLSearchParams(window.location.search);
+    var saved = {};
+    try { saved = JSON.parse(kkStore('get', 'kk_attr') || '{}') || {}; } catch (e) { saved = {}; }
+    var fresh = {}, landed = false;
+    keys.forEach(function(k){ if (params.has(k)) { fresh[k] = params.get(k); landed = true; } });
+    if (landed) {
+      saved = fresh;
+      // fbc keeps the time of the ad click, so build it once per landing.
+      if (fresh.fbclid) saved.fbc = 'fb.1.' + Date.now() + '.' + fresh.fbclid;
+      kkStore('set', 'kk_attr', JSON.stringify(saved));
+    }
+    KK.attr = saved;
+  })();
+
+  // Pick the Amazon link for this visitor.
+  (function(){
+    var a = KK.attr, urls = KK.AMAZON_URLS, has = Object.prototype.hasOwnProperty;
+    var utm = (a.utm_source || '').toLowerCase();
+    var key = 'meta_' + KK.VARIANT;
+    if (a.t && has.call(urls, a.t)) key = a.t;
+    else if (a.gclid || a.gbraid || a.wbraid || utm === 'google') key = 'google';
+    KK.trafficKey = key;
+    KK.amazonUrl = (has.call(urls, key) && urls[key]) || urls['default'] || KK.FALLBACK_URL;
+  })();
+
+  // Every Meta and Google event carries the page variant and utm_content.
   KK.params = function(extra){
-    var p = { variant: KK.VARIANT };
+    var p = { variant: KK.VARIANT, utm_content: KK.attr.utm_content || '' };
     for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) p[k] = extra[k];
     return p;
   };
 
-  // Pick the Amazon link for this visitor's traffic source.
-  (function(){
-    var params = new URLSearchParams(window.location.search);
-    var urls = KK.AMAZON_URLS;
-    var t = params.get('t');
-    var utm = (params.get('utm_source') || '').toLowerCase();
-    var key = 'meta_' + KK.VARIANT;
-    if (t && Object.prototype.hasOwnProperty.call(urls, t)) key = t;
-    else if (params.has('gclid') || params.has('gbraid') || params.has('wbraid') || utm === 'google') key = 'google';
-    KK.trafficKey = key;
-    KK.amazonUrl = urls[key] || urls['default'] || KK.FALLBACK_URL;
-  })();
+  function kkCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  // Send one Meta event to the browser pixel and the Conversions API with the same event_id.
+  // Never blocks: CAPI goes out with sendBeacon (survives navigation), fetch keepalive as fallback.
+  KK.track = function(eventName, customData){
+    if (!KK.pixelOn) return null;
+    var eventId = KK.eventId(eventName.toLowerCase());
+    var data = KK.params(customData);
+    if (typeof fbq !== 'undefined') fbq('track', eventName, data, { eventID: eventId });
+    var body = JSON.stringify({
+      event_name: eventName,
+      event_id: eventId,
+      event_source_url: window.location.href,
+      custom_data: data,
+      fbp: kkCookie('_fbp'),
+      fbc: kkCookie('_fbc') || KK.attr.fbc || '',
+      test_event_code: KK.attr.fb_test_code || ''
+    });
+    try {
+      var blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+      if (!(navigator.sendBeacon && navigator.sendBeacon('/api/capi', blob))) throw 0;
+    } catch (e) {
+      try { fetch('/api/capi', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' } }); } catch (e2) {}
+    }
+    return eventId;
+  };
 </script>

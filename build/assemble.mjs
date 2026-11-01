@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // Assembles the bridge-test pages from shared partials.
 //
-//   node build/assemble.mjs           write v1/ … v5/index.html, plus index.html (= v1), and publish
-//                                     src/images/* to images/ (src/ itself is not deployed)
+//   node build/assemble.mjs           write v1/ … v5/index.html, plus index.html (= v1), publish
+//                                     src/images/* to images/ (src/ itself is not deployed), and write
+//                                     api/_site.json (pixel id + Graph version for /api/capi)
 //   node build/assemble.mjs --check   exit 1 if any committed page is out of date with src/
 //
 // Template syntax (src/layout.html, src/partials/*, src/pages/*):
@@ -18,6 +19,15 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'src');
 const pages = JSON.parse(readFileSync(join(SRC, 'pages.json'), 'utf8'));
+const site = JSON.parse(readFileSync(join(SRC, 'site.config.json'), 'utf8'));
+
+// Generated images live in src/images/; an `X-800.webp` beside `X.webp` is its phone-size version.
+const SRC_IMAGES = join(SRC, 'images');
+const srcImages = existsSync(SRC_IMAGES) ? readdirSync(SRC_IMAGES).filter((f) => !f.startsWith('.') && statSync(join(SRC_IMAGES, f)).isFile()) : [];
+const smallVersion = (file) => {
+  const small = file.replace(/\.webp$/, '-800.webp');
+  return small !== file && srcImages.includes(small) ? small : null;
+};
 
 const escapeHtml = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -47,8 +57,30 @@ function render(template, vars, stack = []) {
   });
 }
 
+// Inline JSON for <script>: "<" escaped so a value can never close the script tag.
+const SITE_CONFIG_JSON_HTML = JSON.stringify(site, null, 2).replace(/</g, '\\u003c').replace(/\n/g, '\n  ');
+
+const badge = (cls) => site.BADGE_LIVE
+  ? `  <div class="bestseller-badge ${cls}">${escapeHtml(site.BADGE_TEXT)}</div>\n`
+  : '';
+
+// Give every /images/X.webp that has an 800px version a srcset, so phones download the small file.
+function addSrcsets(html) {
+  return html.replace(/<img ([^>]*?)src="\/images\/([^"]+\.webp)"([^>]*)>/g, (tag, before, file, after) => {
+    const small = smallVersion(file);
+    if (!small || /srcset=/.test(tag)) return tag;
+    const sizes = file.startsWith('bake-') ? '(max-width: 760px) 50vw, 160px'
+      : file.startsWith('strip-') ? '(max-width: 760px) 600px, 636px'
+      : '(max-width: 760px) 100vw, 636px';
+    return `<img ${before}src="/images/${file}" srcset="/images/${small} 800w, /images/${file} 1600w" sizes="${sizes}"${after}>`;
+  });
+}
+
 function buildPage(variant, page) {
   const vars = {
+    SITE_CONFIG_JSON_HTML,
+    BADGE_TOP_HTML: badge('top'),
+    BADGE_BTN_HTML: badge('btn'),
     VARIANT: variant,
     SHOW_PROMO: page.showPromo ? 'true' : 'false',
     TITLE: page.title,
@@ -56,6 +88,7 @@ function buildPage(variant, page) {
     H1: page.title,
     SUBHEAD: page.subhead,
     HERO_FILE: page.hero.file,
+    HERO_FILE_800: smallVersion(page.hero.file) || page.hero.file,
     HERO_ALT: page.hero.alt,
     // Guarantee box: full policy by default; "short" where the page body already carries it (v4 section 4).
     GUARANTEE_HTML: page.guaranteeBox === 'short'
@@ -67,26 +100,27 @@ function buildPage(variant, page) {
   vars.BYLINE_HTML = page.byline ? render(readPartial('byline.html'), vars) : '';
   vars.BODY_HTML = render(readPartial(page.body), vars, [page.body]);
   vars.REVIEWS_HTML = page.reviewsInBody ? '' : render(readPartial('reviews.html'), vars, ['reviews.html']);
-  return render(readFileSync(join(SRC, 'layout.html'), 'utf8'), vars);
+  return addSrcsets(render(readFileSync(join(SRC, 'layout.html'), 'utf8'), vars));
 }
 
 const outputs = {};
 for (const [variant, page] of Object.entries(pages)) outputs[`${variant}/index.html`] = buildPage(variant, page);
 outputs['index.html'] = outputs['v1/index.html']; // "/" serves v1 for now
 
-// Generated images live in src/images/ and are published to images/ under the same name.
-const SRC_IMAGES = join(SRC, 'images');
-const srcImages = existsSync(SRC_IMAGES) ? readdirSync(SRC_IMAGES).filter((f) => !f.startsWith('.') && statSync(join(SRC_IMAGES, f)).isFile()) : [];
 for (const f of srcImages) outputs[`images/${f}`] = readFileSync(join(SRC_IMAGES, f));
 
 // Every /images/… a page points at must exist once published.
 const missing = new Set();
 for (const [rel, html] of Object.entries(outputs)) {
   if (!rel.endsWith('.html')) continue;
-  for (const m of html.matchAll(/(?:src|poster)="\/images\/([^"]+)"/g)) {
+  for (const m of html.matchAll(/(?:src|poster|href)="\/images\/([^"]+)"|\/images\/([^\s",]+\.webp) \d+w/g)) {
+    m[1] = m[1] || m[2];
     if (!srcImages.includes(m[1]) && !existsSync(join(ROOT, 'images', m[1]))) missing.add(m[1]);
   }
 }
+
+// /api/capi reads the pixel id and Graph API version from here (files starting with _ are not routes).
+outputs['api/_site.json'] = JSON.stringify({ pixelId: site.PIXEL_ID, graphVersion: site.META_GRAPH_VERSION }, null, 2) + '\n';
 
 const check = process.argv.includes('--check');
 let stale = 0;

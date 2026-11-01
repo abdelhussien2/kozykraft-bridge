@@ -31,8 +31,7 @@ if (KK.pixelOn) {
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', KK.PIXEL_ID);
-  fbq('track', 'PageView', KK.params(), { eventID: KK.eventId('pv') });
-  fbq('trackCustom', 'BridgePageView', KK.params({ source: KK.trafficKey }), { eventID: KK.eventId('bpv') });
+  KK.track('PageView');
 }
 </script>
 <!-- ============ END META PIXEL ============ -->
@@ -54,6 +53,7 @@ if (KK.gtagOn) {
 </script>
 <!-- ============ END GOOGLE TAG ============ -->
 
+<link rel="preload" as="image" href="/images/{{HERO_FILE}}" imagesrcset="/images/{{HERO_FILE_800}} 800w, /images/{{HERO_FILE}} 1600w" imagesizes="(max-width: 760px) 100vw, 636px" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet"

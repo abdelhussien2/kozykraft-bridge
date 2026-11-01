@@ -21,77 +21,132 @@
 <!-- Bread emoji favicon (SVG, works in all modern browsers) -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍞</text></svg>">
 
-<!-- ============ SITE CONFIG — shared by all five pages; edit here, then run: node build/assemble.mjs ============
-     PIXEL_ID:               Meta Events Manager → Data sources → your pixel → 15–16 digit ID.
-     GOOGLE_ADS_ID:          Google Ads → Goals → Conversions → your action → Tag setup → "AW-123456789".
-     GOOGLE_ADS_CLICK_LABEL: the part after the slash in send_to ("AW-123456789/AbC-dEfGhIj" → "AbC-dEfGhIj").
-     AMAZON_URLS:            Amazon Ads → Measurement → Amazon Attribution → one tag per key
-                             for ASIN B0FCPFH2WR. Paste each full tag URL (contains maas=...).
-                             meta_v1 … meta_v5 = one Meta ad set per page; store = the Store tag (link
-                             with ?t=store); extra keys work the same way with ?t=<key>.
-     How a visitor's link is chosen: ?t=<key> in the map → gclid/gbraid/wbraid or utm_source=google
-     → google → otherwise this page's own key (meta_v1 … meta_v5). An empty value falls back to
-     default, then to the plain listing URL.
-     PROMO:                  reader code; shows only on pages with SHOW_PROMO (v5) while code and
-                             percent are set and today is on or before ends (YYYY-MM-DD).
-     URGENCY_LINE:           true, time-based line under the end card (no inventory/scarcity claims).
-                             Swap for gift / January lines later; blank hides it.
-     VARIANT / SHOW_PROMO are set per page by the assembler (src/pages.json).
-     Pixel and Google tag stay off until their IDs are real, so no junk events are sent.
-     ============================================================================== -->
+<!-- ============ SITE CONFIG ============
+     Every value lives in src/site.config.json (one place, shared by all five pages).
+     Edit it, then rebuild: node build/assemble.mjs
+       PRICE        one number; Meta and Google conversion values read it, so a price change is a one-line edit
+       AMAZON_URLS  Amazon Attribution tags. ?t=<key> picks a key (e.g. ?t=store); gclid/gbraid/wbraid or
+                    utm_source=google → google; otherwise this page's own key (meta_v1 … meta_v5).
+                    An empty or unknown key falls back to default, then to the plain listing.
+       PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
+                    today is on or before ends (YYYY-MM-DD)
+       BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
+     VARIANT / SHOW_PROMO are set per page from src/pages.json.
+     Meta events go to the pixel and to /api/capi (Conversions API) with the same event_id for dedup.
+     The CAPI token is read server-side from the META_CAPI_TOKEN env var only.
+     ===================================== -->
 <script>
   window.KK = {
-    VARIANT: 'v2',
-    SHOW_PROMO: false,
-    PIXEL_ID: 'PASTE_PIXEL_ID_HERE',
-    GOOGLE_ADS_ID: 'AW-XXXXXXXXX',
-    GOOGLE_ADS_CLICK_LABEL: '',
-    AMAZON_URLS: {
-      meta_v1: '',
-      meta_v2: '',
-      meta_v3: '',
-      meta_v4: '',
-      meta_v5: '',
-      google: '',
-      store: '',
-      default: ''
+    "PIXEL_ID": "1910109106215479",
+    "GOOGLE_ADS_ID": "AW-18311531571",
+    "GOOGLE_ADS_CLICK_LABEL": "yfh6CLDRorAdELOYz5tE",
+    "AMAZON_URLS": {
+      "meta_v1": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_FEC03F7C4030647B8BD58D4956DB9F15_afap_abs&ref_=aa_maas&tag=maas",
+      "meta_v2": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_4850AAF7CD90260087A3240737AE6A2E_afap_abs&ref_=aa_maas&tag=maas",
+      "meta_v3": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_C0AD915011BE7AB15D32B982695CD7A5_afap_abs&ref_=aa_maas&tag=maas",
+      "meta_v4": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_EC8DE5652EECA2FDAEE61F0898EAD05D_afap_abs&ref_=aa_maas&tag=maas",
+      "meta_v5": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_9A47A908C535EC94AE37174F3B9ED887_afap_abs&ref_=aa_maas&tag=maas",
+      "google": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_7FC7055B0E4CE629EAE6C291C36C3A63_afap_abs&ref_=aa_maas&tag=maas",
+      "store": "https://www.amazon.com/stores/KozyKraft/page/2E76EBFB-4766-4926-8545-143BDB54DBB9?maas=maas_adg_89837A70A38DA1D07137A9EA911AF2AF_afap_abs&ref_=aa_maas&tag=maas",
+      "default": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_EC5BAD444D9772A41D59F9EF5A307631_afap_abs&ref_=aa_maas&tag=maas"
     },
-    FALLBACK_URL: 'https://www.amazon.com/dp/B0FCPFH2WR',
-    ASIN: 'B0FCPFH2WR',
-    VALUE: 10.99,
-    PROMO: { code: '', percent: '', ends: '' },
-    URGENCY_LINE: "Start this week and you're baking well before Thanksgiving."
+    "FALLBACK_URL": "https://www.amazon.com/dp/B0FCPFH2WR",
+    "ASIN": "B0FCPFH2WR",
+    "PRICE": 11.99,
+    "CURRENCY": "USD",
+    "PROMO": {
+      "code": "",
+      "percent": "",
+      "ends": ""
+    },
+    "URGENCY_LINE": "Start this week and you're baking well before Thanksgiving.",
+    "BADGE_LIVE": false,
+    "BADGE_TEXT": "#1 Best Seller in Bread Mixes on Amazon",
+    "META_GRAPH_VERSION": "v26.0"
   };
+  KK.VARIANT = 'v2';
+  KK.SHOW_PROMO = false;
 
   KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
   KK.gtagOn = /^AW-\d+$/.test(KK.GOOGLE_ADS_ID);
 
-  // Unique per event so a server-side Conversions API copy can be deduplicated later.
+  // Unique per event; the same id goes to the pixel and to CAPI so Meta deduplicates them.
   KK.eventId = function(prefix){
     var rand = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
       : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
     return prefix + '_' + rand;
   };
 
-  // Every Meta and Google event carries the page variant.
+  function kkStore(method, key, value){
+    try { return method === 'get' ? sessionStorage.getItem(key) : sessionStorage.setItem(key, value); }
+    catch (e) { return null; }
+  }
+
+  // Save utm_* / fbclid (and the other routing params) on landing, so they survive in-site navigation.
+  (function(){
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+                'fbclid', 'gclid', 'gbraid', 'wbraid', 't', 'fb_test_code'];
+    var params = new URLSearchParams(window.location.search);
+    var saved = {};
+    try { saved = JSON.parse(kkStore('get', 'kk_attr') || '{}') || {}; } catch (e) { saved = {}; }
+    var fresh = {}, landed = false;
+    keys.forEach(function(k){ if (params.has(k)) { fresh[k] = params.get(k); landed = true; } });
+    if (landed) {
+      saved = fresh;
+      // fbc keeps the time of the ad click, so build it once per landing.
+      if (fresh.fbclid) saved.fbc = 'fb.1.' + Date.now() + '.' + fresh.fbclid;
+      kkStore('set', 'kk_attr', JSON.stringify(saved));
+    }
+    KK.attr = saved;
+  })();
+
+  // Pick the Amazon link for this visitor.
+  (function(){
+    var a = KK.attr, urls = KK.AMAZON_URLS, has = Object.prototype.hasOwnProperty;
+    var utm = (a.utm_source || '').toLowerCase();
+    var key = 'meta_' + KK.VARIANT;
+    if (a.t && has.call(urls, a.t)) key = a.t;
+    else if (a.gclid || a.gbraid || a.wbraid || utm === 'google') key = 'google';
+    KK.trafficKey = key;
+    KK.amazonUrl = (has.call(urls, key) && urls[key]) || urls['default'] || KK.FALLBACK_URL;
+  })();
+
+  // Every Meta and Google event carries the page variant and utm_content.
   KK.params = function(extra){
-    var p = { variant: KK.VARIANT };
+    var p = { variant: KK.VARIANT, utm_content: KK.attr.utm_content || '' };
     for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) p[k] = extra[k];
     return p;
   };
 
-  // Pick the Amazon link for this visitor's traffic source.
-  (function(){
-    var params = new URLSearchParams(window.location.search);
-    var urls = KK.AMAZON_URLS;
-    var t = params.get('t');
-    var utm = (params.get('utm_source') || '').toLowerCase();
-    var key = 'meta_' + KK.VARIANT;
-    if (t && Object.prototype.hasOwnProperty.call(urls, t)) key = t;
-    else if (params.has('gclid') || params.has('gbraid') || params.has('wbraid') || utm === 'google') key = 'google';
-    KK.trafficKey = key;
-    KK.amazonUrl = urls[key] || urls['default'] || KK.FALLBACK_URL;
-  })();
+  function kkCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  // Send one Meta event to the browser pixel and the Conversions API with the same event_id.
+  // Never blocks: CAPI goes out with sendBeacon (survives navigation), fetch keepalive as fallback.
+  KK.track = function(eventName, customData){
+    if (!KK.pixelOn) return null;
+    var eventId = KK.eventId(eventName.toLowerCase());
+    var data = KK.params(customData);
+    if (typeof fbq !== 'undefined') fbq('track', eventName, data, { eventID: eventId });
+    var body = JSON.stringify({
+      event_name: eventName,
+      event_id: eventId,
+      event_source_url: window.location.href,
+      custom_data: data,
+      fbp: kkCookie('_fbp'),
+      fbc: kkCookie('_fbc') || KK.attr.fbc || '',
+      test_event_code: KK.attr.fb_test_code || ''
+    });
+    try {
+      var blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+      if (!(navigator.sendBeacon && navigator.sendBeacon('/api/capi', blob))) throw 0;
+    } catch (e) {
+      try { fetch('/api/capi', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' } }); } catch (e2) {}
+    }
+    return eventId;
+  };
 </script>
 
 
@@ -107,8 +162,7 @@ if (KK.pixelOn) {
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', KK.PIXEL_ID);
-  fbq('track', 'PageView', KK.params(), { eventID: KK.eventId('pv') });
-  fbq('trackCustom', 'BridgePageView', KK.params({ source: KK.trafficKey }), { eventID: KK.eventId('bpv') });
+  KK.track('PageView');
 }
 </script>
 <!-- ============ END META PIXEL ============ -->
@@ -130,6 +184,7 @@ if (KK.gtagOn) {
 </script>
 <!-- ============ END GOOGLE TAG ============ -->
 
+<link rel="preload" as="image" href="/images/day1.webp" imagesrcset="/images/day1-800.webp 800w, /images/day1.webp 1600w" imagesizes="(max-width: 760px) 100vw, 636px" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet"
@@ -1138,6 +1193,32 @@ if (KK.gtagOn) {
      single-line Amazon title sets its width and the page scrolls sideways. */
   .product-grid.single .product-card { width: 100%; min-width: 0; }
 
+  /* Best-seller badge (BADGE_LIVE). Text only, no marketplace logo. */
+  .bestseller-badge {
+    display: inline-block;
+    background: var(--cream-soft);
+    border: 1px solid var(--crust);
+    color: var(--crust-deep);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    line-height: 1.3;
+    padding: 4px 9px;
+    border-radius: 2px;
+  }
+  .bestseller-badge.top { margin: 0 0 8px; }
+  .bestseller-badge.btn { display: table; margin: 8px auto 0; position: relative; }
+  .sticky-cta .bestseller-badge.btn { margin: 6px auto 0; background: transparent; color: var(--cream); border-color: var(--accent-soft); }
+  .float-wrap .bestseller-badge.btn { margin: 0; background: var(--cream); }
+  /* Phones with the badge live: the badge takes the tagline's spot so the first buy button stays on screen. */
+  @media (max-width: 600px) {
+    .container:has(.bestseller-badge.top) .site-tagline { display: none; }
+    .container:has(.bestseller-badge.top) .site-name { margin-bottom: 12px; }
+    .bestseller-badge.top { margin: 0 0 6px; }
+    .container:has(.bestseller-badge.top) .byline { margin-bottom: 6px; }
+    .container:has(.bestseller-badge.top) .hero-banner figcaption { margin-top: 3px; }
+  }
+
 </style>
 
 </head>
@@ -1167,7 +1248,7 @@ if (KK.gtagOn) {
   </div>
 
   <figure class="hero-banner">
-    <img src="/images/day1.webp" alt="Hands tipping dry starter flakes from a small pouch into a glass jar, a glass of water beside it" width="1600" height="1067" fetchpriority="high" decoding="async">
+    <img src="/images/day1.webp" srcset="/images/day1-800.webp 800w, /images/day1.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="Hands tipping dry starter flakes from a small pouch into a glass jar, a glass of water beside it" width="1600" height="1067" fetchpriority="high" decoding="async">
     <figcaption>Day 1: what waking it up looks like.</figcaption>
   </figure>
 
@@ -1200,7 +1281,7 @@ if (KK.gtagOn) {
 
   <div class="diary-day">
     <figure class="article-img">
-      <img src="/images/day2.webp" alt="A small glass jar of thick pale paste with a flat surface, a rubber band around the jar and the lid resting on top" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/day2.webp" srcset="/images/day2-800.webp 800w, /images/day2.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A small glass jar of thick pale paste with a flat surface, a rubber band around the jar and the lid resting on top" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 2: what a quiet day looks like.</figcaption>
     </figure>
     <h2>Day 2: Nothing yet. That's normal.</h2>
@@ -1209,11 +1290,11 @@ if (KK.gtagOn) {
 
   <div class="diary-day">
     <figure class="article-img">
-      <img src="/images/day3.webp" alt="A small glass jar of starter paste with a few small bubbles on the surface" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/day3.webp" srcset="/images/day3-800.webp 800w, /images/day3.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A small glass jar of starter paste with a few small bubbles on the surface" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 3: what first bubbles look like.</figcaption>
     </figure>
     <figure class="article-img">
-      <img src="/images/day3-closeup.webp" alt="Close-up of the top of the starter in the jar, with small bubbles at the surface" width="960" height="640" loading="lazy" decoding="async">
+      <img src="/images/day3-closeup.webp" srcset="/images/day3-closeup-800.webp 800w, /images/day3-closeup.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="Close-up of the top of the starter in the jar, with small bubbles at the surface" width="960" height="640" loading="lazy" decoding="async">
       <figcaption>Day 3, up close: what surface bubbles look like.</figcaption>
     </figure>
     <h2>Day 3: First bubbles.</h2>
@@ -1222,7 +1303,7 @@ if (KK.gtagOn) {
 
   <div class="diary-day">
     <figure class="article-img">
-      <img src="/images/day4.webp" alt="A larger glass jar of starter with a few bubbles beside the small jar" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/day4.webp" srcset="/images/day4-800.webp 800w, /images/day4.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A larger glass jar of starter with a few bubbles beside the small jar" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 4: what the big feed looks like.</figcaption>
     </figure>
     <h2>Day 4: The big feed, and a bigger jar.</h2>
@@ -1231,11 +1312,11 @@ if (KK.gtagOn) {
 
   <div class="diary-day">
     <figure class="article-img">
-      <img src="/images/day5.webp" alt="A glass jar of bubbly starter risen well above the rubber band, with a domed top" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/day5.webp" srcset="/images/day5-800.webp 800w, /images/day5.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A glass jar of bubbly starter risen well above the rubber band, with a domed top" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 5: what doubled looks like.</figcaption>
     </figure>
     <figure class="article-img">
-      <img src="/images/day5-closeup.webp" alt="Close-up of the domed top of the starter risen above the rim of the jar" width="960" height="640" loading="lazy" decoding="async">
+      <img src="/images/day5-closeup.webp" srcset="/images/day5-closeup-800.webp 800w, /images/day5-closeup.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="Close-up of the domed top of the starter risen above the rim of the jar" width="960" height="640" loading="lazy" decoding="async">
       <figcaption>Day 5, up close: what the dome looks like.</figcaption>
     </figure>
     <h2>Day 5: It doubled.</h2>
@@ -1244,7 +1325,7 @@ if (KK.gtagOn) {
 
   <div class="diary-day">
     <figure class="article-img">
-      <img src="/images/day6-loaf.webp" alt="A torn-open sourdough loaf with an open crumb on a wooden board, a glass jar out of focus behind it" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/day6-loaf.webp" srcset="/images/day6-loaf-800.webp 800w, /images/day6-loaf.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A torn-open sourdough loaf with an open crumb on a wooden board, a glass jar out of focus behind it" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 6: what a first loaf looks like.</figcaption>
     </figure>
     <h2>Day 6: First loaf.</h2>
@@ -1253,7 +1334,7 @@ if (KK.gtagOn) {
 
   <div class="diary-day">
     <figure class="article-img">
-      <img src="/images/day7.webp" alt="A glass jar of risen, bubbly starter beside a whole sourdough loaf on a stone counter in morning light" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/day7.webp" srcset="/images/day7-800.webp 800w, /images/day7.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A glass jar of risen, bubbly starter beside a whole sourdough loaf on a stone counter in morning light" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Day 7: what a working starter looks like.</figcaption>
     </figure>
     <h2>Day 7: Verdict.</h2>
@@ -1262,7 +1343,7 @@ if (KK.gtagOn) {
 
   <figure class="article-img strip">
     <div class="strip-scroll">
-      <img src="/images/strip-days-1-5.webp" alt="Five views of the same glass jar from day 1 to day 5, from dry flakes to a domed, doubled starter" width="2000" height="267" loading="lazy" decoding="async">
+      <img src="/images/strip-days-1-5.webp" srcset="/images/strip-days-1-5-800.webp 800w, /images/strip-days-1-5.webp 1600w" sizes="(max-width: 760px) 600px, 636px" alt="Five views of the same glass jar from day 1 to day 5, from dry flakes to a domed, doubled starter" width="2000" height="267" loading="lazy" decoding="async">
     </div>
     <figcaption>Days 1–5: what the first week looks like.</figcaption>
   </figure>
@@ -1293,6 +1374,7 @@ if (KK.gtagOn) {
          rel="nofollow noopener">
          Check Today's Price On Amazon
       </a>
+
       <div class="guarantee-row">
         <span class="badge-icon">❋</span>
         <span>Day-7 Guarantee</span>
@@ -1341,19 +1423,19 @@ if (KK.gtagOn) {
   <h2 class="section-heading">What You Can Bake</h2>
   <div class="bake-grid">
     <figure class="bake-tile">
-      <img src="/images/bake-country-loaf.webp" alt="A rustic country loaf torn open on a wooden board" width="1200" height="1200" loading="lazy" decoding="async">
+      <img src="/images/bake-country-loaf.webp" srcset="/images/bake-country-loaf-800.webp 800w, /images/bake-country-loaf.webp 1600w" sizes="(max-width: 760px) 50vw, 160px" alt="A rustic country loaf torn open on a wooden board" width="1200" height="1200" loading="lazy" decoding="async">
       <figcaption>Country loaf</figcaption>
     </figure>
     <figure class="bake-tile">
-      <img src="/images/bake-pizza.webp" alt="A pizza with a blistered crust on a wooden peel" width="1200" height="1200" loading="lazy" decoding="async">
+      <img src="/images/bake-pizza.webp" srcset="/images/bake-pizza-800.webp 800w, /images/bake-pizza.webp 1600w" sizes="(max-width: 760px) 50vw, 160px" alt="A pizza with a blistered crust on a wooden peel" width="1200" height="1200" loading="lazy" decoding="async">
       <figcaption>Friday pizza</figcaption>
     </figure>
     <figure class="bake-tile">
-      <img src="/images/bake-focaccia.webp" alt="A dimpled focaccia with rosemary in a pan" width="1200" height="1200" loading="lazy" decoding="async">
+      <img src="/images/bake-focaccia.webp" srcset="/images/bake-focaccia-800.webp 800w, /images/bake-focaccia.webp 1600w" sizes="(max-width: 760px) 50vw, 160px" alt="A dimpled focaccia with rosemary in a pan" width="1200" height="1200" loading="lazy" decoding="async">
       <figcaption>Focaccia</figcaption>
     </figure>
     <figure class="bake-tile">
-      <img src="/images/m4-discard-pancakes.webp" alt="A short stack of golden pancakes on a stone plate" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/m4-discard-pancakes.webp" srcset="/images/m4-discard-pancakes-800.webp 800w, /images/m4-discard-pancakes.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A short stack of golden pancakes on a stone plate" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Discard pancakes</figcaption>
     </figure>
   </div>
@@ -1457,6 +1539,7 @@ if (KK.gtagOn) {
          rel="nofollow noopener">
          Check Today's Price On Amazon
       </a>
+
       <div class="guarantee-row">
         <span class="badge-icon">❋</span>
         <span>Day-7 Guarantee</span>
@@ -1496,6 +1579,7 @@ if (KK.gtagOn) {
      rel="nofollow noopener">
      Check Today's Price On Amazon <span class="arrow">→</span>
   </a>
+
 </div>
 
 <div class="sticky-cta-spacer"></div>
@@ -1505,6 +1589,7 @@ if (KK.gtagOn) {
      rel="nofollow noopener">
      Check Today's Price On Amazon →
   </a>
+
 </div>
 
 <!-- ============ PROMO + URGENCY + AMAZON LINKS + EVENTS + LAZY VIDEO + STICKY CTA ============ -->
@@ -1585,34 +1670,34 @@ if (KK.gtagOn) {
     document.getElementById('urgencyBlock').hidden = false;
   })();
 
-  // Point every buy button at the chosen Amazon link and open it in the same tab.
-  // On click: Meta InitiateCheckout + Google Ads conversion, then navigate once both have had time to send.
+  // Buy taps: fire Meta InitiateCheckout (pixel + CAPI) and the Google Ads conversion, then go to
+  // this page's Amazon link in the same tab. Never waits on tracking: we leave as soon as Google
+  // confirms its beacon, and at 300ms at the latest. CAPI rides on sendBeacon, so it survives the redirect.
   (function(){
     var hasGoogleConversion = KK.gtagOn && !!KK.GOOGLE_ADS_CLICK_LABEL;
+    var MAX_WAIT_MS = 300;
 
     function fireClickEvents(position, onGoogleSent){
+      KK.track('InitiateCheckout', {
+        value: KK.PRICE,
+        currency: KK.CURRENCY,
+        content_ids: [KK.ASIN],
+        content_type: 'product',
+        destination: KK.amazonUrl,
+        destination_key: KK.trafficKey
+      });
       if (KK.pixelOn && typeof fbq !== 'undefined') {
-        fbq('track', 'InitiateCheckout', KK.params({
-          content_ids: [KK.ASIN],
-          content_type: 'product',
-          value: KK.VALUE,
-          currency: 'USD'
-        }), { eventID: KK.eventId('ic') });
-        fbq('trackCustom', 'BridgeAmzClick', KK.params({
-          position: position, sku: 'dehydrated', source: KK.trafficKey
-        }), { eventID: KK.eventId('bac') });
+        fbq('trackCustom', 'BridgeAmzClick', KK.params({ position: position, destination_key: KK.trafficKey }));
       }
       if (hasGoogleConversion && typeof gtag !== 'undefined') {
         gtag('event', 'conversion', {
           send_to: KK.GOOGLE_ADS_ID + '/' + KK.GOOGLE_ADS_CLICK_LABEL,
-          value: KK.VALUE,
-          currency: 'USD',
+          value: KK.PRICE,
+          currency: KK.CURRENCY,
           variant: KK.VARIANT,
           transport_type: 'beacon',
           event_callback: onGoogleSent
         });
-      } else if (onGoogleSent) {
-        onGoogleSent();
       }
     }
 
@@ -1626,17 +1711,14 @@ if (KK.gtagOn) {
           return;
         }
         e.preventDefault();
-        var googleSent = !hasGoogleConversion, minWaitDone = !KK.pixelOn, gone = false;
+        var gone = false;
         function go(){
-          if (gone || !googleSent || !minWaitDone) return;
+          if (gone) return;
           gone = true;
           window.location.href = KK.amazonUrl;
         }
-        fireClickEvents(a.dataset.pos, function(){ googleSent = true; go(); });
-        // The pixel has no send callback: give its request ~300ms to leave, and never hold the click past 1s.
-        setTimeout(function(){ minWaitDone = true; go(); }, 300);
-        setTimeout(function(){ googleSent = minWaitDone = true; go(); }, 1000);
-        go();
+        fireClickEvents(a.dataset.pos, go);
+        setTimeout(go, hasGoogleConversion ? MAX_WAIT_MS : 0);
       });
     });
   })();
@@ -1671,23 +1753,22 @@ if (KK.gtagOn) {
     });
   })();
 
-  // Sticky CTA + floating CTA reveal + scroll-depth Pixel events
+  // Sticky CTA + floating CTA reveal, and ViewContent at 50% scroll or 15s on the page, whichever comes first.
   (function(){
-    var fired50 = false;
+    var viewed = false;
+    function viewContent(){
+      if (viewed) return;
+      viewed = true;
+      KK.track('ViewContent', { content_ids: [KK.ASIN], content_type: 'product' });
+    }
+    setTimeout(viewContent, 15000);
     var sticky = document.getElementById('stickyCta');
     var floatCta = document.getElementById('floatCta');
     window.addEventListener('scroll', function(){
       var scrolled = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
       if (window.scrollY > 10 && sticky && !sticky.classList.contains('visible')) sticky.classList.add('visible');
       if (scrolled >= 0.20 && floatCta && !floatCta.classList.contains('visible')) floatCta.classList.add('visible');
-      if (fired50) return;
-      if (scrolled >= 0.5) {
-        fired50 = true;
-        if (KK.pixelOn && typeof fbq !== 'undefined') {
-          fbq('track', 'ViewContent', KK.params({ content_ids: [KK.ASIN], content_type: 'product' }), { eventID: KK.eventId('vc') });
-          fbq('trackCustom', 'BridgeScroll50', KK.params(), { eventID: KK.eventId('bs50') });
-        }
-      }
+      if (scrolled >= 0.5) viewContent();
     }, { passive: true });
   })();
 </script>

@@ -1,0 +1,24 @@
+{
+  "PIXEL_ID": "1910109106215479",
+  "GOOGLE_ADS_ID": "AW-18311531571",
+  "GOOGLE_ADS_CLICK_LABEL": "yfh6CLDRorAdELOYz5tE",
+  "AMAZON_URLS": {
+    "meta_v1": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_FEC03F7C4030647B8BD58D4956DB9F15_afap_abs&ref_=aa_maas&tag=maas",
+    "meta_v2": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_4850AAF7CD90260087A3240737AE6A2E_afap_abs&ref_=aa_maas&tag=maas",
+    "meta_v3": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_C0AD915011BE7AB15D32B982695CD7A5_afap_abs&ref_=aa_maas&tag=maas",
+    "meta_v4": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_EC8DE5652EECA2FDAEE61F0898EAD05D_afap_abs&ref_=aa_maas&tag=maas",
+    "meta_v5": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_9A47A908C535EC94AE37174F3B9ED887_afap_abs&ref_=aa_maas&tag=maas",
+    "google": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_7FC7055B0E4CE629EAE6C291C36C3A63_afap_abs&ref_=aa_maas&tag=maas",
+    "store": "https://www.amazon.com/stores/KozyKraft/page/2E76EBFB-4766-4926-8545-143BDB54DBB9?maas=maas_adg_89837A70A38DA1D07137A9EA911AF2AF_afap_abs&ref_=aa_maas&tag=maas",
+    "default": "https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_EC5BAD444D9772A41D59F9EF5A307631_afap_abs&ref_=aa_maas&tag=maas"
+  },
+  "FALLBACK_URL": "https://www.amazon.com/dp/B0FCPFH2WR",
+  "ASIN": "B0FCPFH2WR",
+  "PRICE": 11.99,
+  "CURRENCY": "USD",
+  "PROMO": { "code": "", "percent": "", "ends": "" },
+  "URGENCY_LINE": "Start this week and you're baking well before Thanksgiving.",
+  "BADGE_LIVE": false,
+  "BADGE_TEXT": "#1 Best Seller in Bread Mixes on Amazon",
+  "META_GRAPH_VERSION": "v26.0"
+}

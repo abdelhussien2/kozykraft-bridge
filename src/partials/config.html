@@ -1,0 +1,100 @@
+<!-- ============ SITE CONFIG ============
+     Every value lives in src/site.config.json (one place, shared by all five pages).
+     Edit it, then rebuild: node build/assemble.mjs
+       PRICE        one number; Meta and Google conversion values read it, so a price change is a one-line edit
+       AMAZON_URLS  Amazon Attribution tags. ?t=<key> picks a key (e.g. ?t=store); gclid/gbraid/wbraid or
+                    utm_source=google → google; otherwise this page's own key (meta_v1 … meta_v5).
+                    An empty or unknown key falls back to default, then to the plain listing.
+       PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
+                    today is on or before ends (YYYY-MM-DD)
+       BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
+     VARIANT / SHOW_PROMO are set per page from src/pages.json.
+     Meta events go to the pixel and to /api/capi (Conversions API) with the same event_id for dedup.
+     The CAPI token is read server-side from the META_CAPI_TOKEN env var only.
+     ===================================== -->
+<script>
+  window.KK = {{SITE_CONFIG_JSON_HTML}};
+  KK.VARIANT = '{{VARIANT}}';
+  KK.SHOW_PROMO = {{SHOW_PROMO}};
+
+  KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
+  KK.gtagOn = /^AW-\d+$/.test(KK.GOOGLE_ADS_ID);
+
+  // Unique per event; the same id goes to the pixel and to CAPI so Meta deduplicates them.
+  KK.eventId = function(prefix){
+    var rand = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+    return prefix + '_' + rand;
+  };
+
+  function kkStore(method, key, value){
+    try { return method === 'get' ? sessionStorage.getItem(key) : sessionStorage.setItem(key, value); }
+    catch (e) { return null; }
+  }
+
+  // Save utm_* / fbclid (and the other routing params) on landing, so they survive in-site navigation.
+  (function(){
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+                'fbclid', 'gclid', 'gbraid', 'wbraid', 't', 'fb_test_code'];
+    var params = new URLSearchParams(window.location.search);
+    var saved = {};
+    try { saved = JSON.parse(kkStore('get', 'kk_attr') || '{}') || {}; } catch (e) { saved = {}; }
+    var fresh = {}, landed = false;
+    keys.forEach(function(k){ if (params.has(k)) { fresh[k] = params.get(k); landed = true; } });
+    if (landed) {
+      saved = fresh;
+      // fbc keeps the time of the ad click, so build it once per landing.
+      if (fresh.fbclid) saved.fbc = 'fb.1.' + Date.now() + '.' + fresh.fbclid;
+      kkStore('set', 'kk_attr', JSON.stringify(saved));
+    }
+    KK.attr = saved;
+  })();
+
+  // Pick the Amazon link for this visitor.
+  (function(){
+    var a = KK.attr, urls = KK.AMAZON_URLS, has = Object.prototype.hasOwnProperty;
+    var utm = (a.utm_source || '').toLowerCase();
+    var key = 'meta_' + KK.VARIANT;
+    if (a.t && has.call(urls, a.t)) key = a.t;
+    else if (a.gclid || a.gbraid || a.wbraid || utm === 'google') key = 'google';
+    KK.trafficKey = key;
+    KK.amazonUrl = (has.call(urls, key) && urls[key]) || urls['default'] || KK.FALLBACK_URL;
+  })();
+
+  // Every Meta and Google event carries the page variant and utm_content.
+  KK.params = function(extra){
+    var p = { variant: KK.VARIANT, utm_content: KK.attr.utm_content || '' };
+    for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) p[k] = extra[k];
+    return p;
+  };
+
+  function kkCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  // Send one Meta event to the browser pixel and the Conversions API with the same event_id.
+  // Never blocks: CAPI goes out with sendBeacon (survives navigation), fetch keepalive as fallback.
+  KK.track = function(eventName, customData){
+    if (!KK.pixelOn) return null;
+    var eventId = KK.eventId(eventName.toLowerCase());
+    var data = KK.params(customData);
+    if (typeof fbq !== 'undefined') fbq('track', eventName, data, { eventID: eventId });
+    var body = JSON.stringify({
+      event_name: eventName,
+      event_id: eventId,
+      event_source_url: window.location.href,
+      custom_data: data,
+      fbp: kkCookie('_fbp'),
+      fbc: kkCookie('_fbc') || KK.attr.fbc || '',
+      test_event_code: KK.attr.fb_test_code || ''
+    });
+    try {
+      var blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+      if (!(navigator.sendBeacon && navigator.sendBeacon('/api/capi', blob))) throw 0;
+    } catch (e) {
+      try { fetch('/api/capi', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' } }); } catch (e2) {}
+    }
+    return eventId;
+  };
+</script>

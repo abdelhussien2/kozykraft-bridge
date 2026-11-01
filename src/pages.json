@@ -1,0 +1,68 @@
+{
+  "v1": {
+    "title": "7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter",
+    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.",
+    "body": "v1.html",
+    "reviewsInBody": true,
+    "byline": false,
+    "showPromo": false,
+    "hero": {
+      "file": "hero-pouch-loaf.webp",
+      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
+      "caption": ""
+    }
+  },
+  "v2": {
+    "title": "Your First 7 Days With a Sourdough Starter, Day by Day: What's Normal and What Isn't",
+    "subhead": "Seven days, one packet, one jar on the counter. Here's what the week looks like, day by day.",
+    "body": "v2.html",
+    "reviewsInBody": false,
+    "byline": true,
+    "showPromo": false,
+    "hero": {
+      "file": "day1.webp",
+      "alt": "Hands tipping dry starter flakes from a small pouch into a glass jar, a glass of water beside it",
+      "caption": "Day 1: what waking it up looks like."
+    }
+  },
+  "v3": {
+    "title": "We Did the Math: One Sourdough Packet vs. a Year of Store-Bought Bread",
+    "subhead": "A grocery sourdough loaf runs $7–$10. Here's what a starter costs per loaf, and why the gap gets bigger every week.",
+    "body": "v3.html",
+    "reviewsInBody": false,
+    "byline": false,
+    "showPromo": false,
+    "hero": {
+      "file": "hero-pouch-loaf.webp",
+      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
+      "caption": ""
+    }
+  },
+  "v4": {
+    "title": "Your Sourdough Starter Died. It Wasn't Your Fault, and the Fix Takes About a Week.",
+    "subhead": "Most \"dead\" starters are just cold or hungry. Here's how to tell, and how to get one that's bake-ready in 5–7 days.",
+    "body": "v4.html",
+    "reviewsInBody": false,
+    "byline": false,
+    "showPromo": false,
+    "hero": {
+      "file": "f1-cold-kitchen.webp",
+      "alt": "A small glass jar of pale flour paste on a windowsill in cool morning light, a wool mitt beside it",
+      "caption": ""
+    },
+    "guaranteeBox": "short"
+  },
+  "v5": {
+    "title": "7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter",
+    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.",
+    "body": "v1.html",
+    "reviewsInBody": true,
+    "byline": false,
+    "showPromo": true,
+    "hero": {
+      "file": "hero-pouch-loaf.webp",
+      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
+      "caption": ""
+    }
+  }
+}

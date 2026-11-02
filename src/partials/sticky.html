@@ -78,7 +78,7 @@
     var banner = document.getElementById('promoBanner');
     banner.appendChild(promoNode('promo-text'));
     banner.hidden = false;
-    document.querySelectorAll('a.amz-link').forEach(function(a){
+    document.querySelectorAll('a.amz-link:not(.amz-badge)').forEach(function(a){
       a.insertAdjacentElement('afterend', promoNode('promo-line'));
     });
 

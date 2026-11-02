@@ -2,6 +2,7 @@
      Cream / wheat / crust / coffee — warm, hand-crafted, editorial
      ===================================================== */
   :root {
+    color-scheme: only light;
     --cream: #faf6ee;
     --cream-soft: #f3ecdc;
     --linen: #e8ddc4;
@@ -10,7 +11,7 @@
     --coffee: #3d2817;
     --coffee-soft: #5a4231;
     --ink: #2a1f17;
-    --muted: #8a7560;
+    --muted: #7b6855;  /* darkened from #8a7560 for WCAG AA on cream, cream-soft and white */
     --line: #d9cfb8;
     --accent: #c47e0a;
     --accent-soft: #e8a838;
@@ -1022,3 +1023,59 @@
     .container:has(.bestseller-badge.top) .byline { margin-bottom: 6px; }
     .container:has(.bestseller-badge.top) .hero-banner figcaption { margin-top: 3px; }
   }
+
+  /* Holiday deadline (DEADLINES in site.config.json): bar under the disclosure + a line above in-page buttons */
+  .deadline-bar, .deadline-line, .dl { display: none; }
+  html[data-deadline] .deadline-bar { display: block; }
+  html[data-deadline] .deadline-line { display: block; }
+  html[data-deadline="0"] .dl-0, html[data-deadline="1"] .dl-1, html[data-deadline="2"] .dl-2,
+  html[data-deadline="3"] .dl-3, html[data-deadline="4"] .dl-4 { display: inline; }
+  .deadline-bar {
+    background: #52280D;
+    color: var(--cream);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    padding: 7px 14px;
+  }
+  .deadline-line {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #52280D;
+    max-width: 340px;
+    margin: 0 auto 8px;
+    position: relative;
+  }
+
+  /* "Available at Amazon" (official file, unaltered). Amazon minimum for the horizontal tag is 200px at 1x;
+     clear space ≥ the height of the "amazon" lettering (~20px at this size) on every side. */
+  .amz-badge { display: block; width: 200px; margin: 20px auto; padding: 0; line-height: 0; position: relative; }
+  .amz-badge img { display: block; width: 200px; height: auto; }
+
+  .gift-line {
+    text-align: center;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--coffee);
+    margin: 36px 0 0;
+  }
+
+  /* Phones: buy block (deadline line, button, Amazon badge) comes before the hero image so it all fits
+     on the first screen at 375x667. Desktop keeps image-then-button. */
+  .hero-group { display: flex; flex-direction: column; }
+  @media (max-width: 600px) {
+    .hero-group .hero-cta { order: -1; margin: 0 0 4px; }
+    .hero-group .hero-cta .amz-badge { margin: 20px auto 20px; }
+  }
+
+  /* WCAG AA contrast fixes (all within the existing palette) */
+  .guarantee-row .sep { color: var(--muted); }
+  .guarantee-row .badge-icon { color: var(--crust-deep); }
+  .urgency-block .urgency-title { color: var(--crust-deep); }
+  .review .stars { color: #a56a08; }
+  .compare-table .yes { color: #656e55; }
+  .compare-table th.kk-col { background: var(--crust-deep); }

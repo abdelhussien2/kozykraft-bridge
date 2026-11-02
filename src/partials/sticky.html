@@ -88,14 +88,6 @@
     if (sticky && spacer && sticky.offsetHeight) spacer.style.height = sticky.offsetHeight + 'px';
   })();
 
-  // Time-based urgency line under the end card.
-  (function(){
-    var line = String(KK.URGENCY_LINE || '').trim();
-    if (!line) return;
-    document.getElementById('urgencyText').textContent = line;
-    document.getElementById('urgencyBlock').hidden = false;
-  })();
-
   // Buy taps: fire Meta InitiateCheckout (pixel + CAPI) and the Google Ads conversion, then go to
   // this page's Amazon link in the same tab. Never waits on tracking: we leave as soon as Google
   // confirms its beacon, and at 300ms at the latest. CAPI rides on sendBeacon, so it survives the redirect.

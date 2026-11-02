@@ -132,6 +132,10 @@ for (const [rel, html] of Object.entries(outputs)) {
   }
 }
 
+// Favicons and touch icon live in src/icons/ and are published to the site root.
+const SRC_ICONS = join(SRC, 'icons');
+if (existsSync(SRC_ICONS)) for (const f of readdirSync(SRC_ICONS).filter((f) => !f.startsWith('.'))) outputs[f] = readFileSync(join(SRC_ICONS, f));
+
 // /api/capi reads the pixel id and Graph API version from here (files starting with _ are not routes).
 outputs['api/_site.json'] = JSON.stringify({ pixelId: site.PIXEL_ID, graphVersion: site.META_GRAPH_VERSION }, null, 2) + '\n';
 

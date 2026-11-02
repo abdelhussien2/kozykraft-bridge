@@ -20,8 +20,11 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Bread emoji favicon (SVG, works in all modern browsers) -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍞</text></svg>">
+<!-- Brand favicon (src/icons): loaf mark on #52280D -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 <!-- ============ SITE CONFIG ============
      Every value lives in src/site.config.json (one place, shared by all five pages).
@@ -1313,6 +1316,29 @@ if (KK.gtagOn) {
   .compare-table .yes { color: #656e55; }
   .compare-table th.kk-col { background: var(--crust-deep); }
 
+  /* Mid-page buy block */
+  .mid-buy { margin: 32px 0 36px; text-align: center; }
+  .mid-buy .amz-badge { margin: 20px auto 0; }
+
+  /* Round 4: one brand brown for every in-page button, the mobile sticky bar and the deadline bar.
+     Gold stays only as the desktop floating button accent. */
+  .cta-button { background: #52280D; }
+  .sticky-cta { background: #52280D; }
+  .sticky-cta a { color: #52280D; }
+  .deadline-bar { background: #52280D; }
+
+  /* Desktop: the hero button text fits on one line */
+  @media (min-width: 601px) {
+    .hero-cta .cta-button { max-width: 420px; white-space: nowrap; }
+  }
+
+  /* Comparison table: two columns on phones (KozyKraft vs Grocery), DIY as a note underneath */
+  .diy-note { display: none; font-size: 14px; line-height: 1.55; color: var(--coffee-soft); background: var(--cream-soft); border-left: 3px solid var(--crust); padding: 12px 14px; margin: 12px 0 0; }
+  @media (max-width: 600px) {
+    .compare-table th:nth-child(3), .compare-table td:nth-child(3) { display: none; }
+    .diy-note { display: block; }
+  }
+
 </style>
 
 </head>
@@ -1339,7 +1365,7 @@ if (KK.gtagOn) {
 
   <div class="hero-group">
   <figure class="hero-banner">
-    <img src="/images/hero-pouch-loaf.webp" srcset="/images/hero-pouch-loaf-800.webp 800w, /images/hero-pouch-loaf.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it" width="1600" height="1067" fetchpriority="high" decoding="async">
+    <img src="/images/hero-pouch-loaf.webp" srcset="/images/hero-pouch-loaf-800.webp 800w, /images/hero-pouch-loaf.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="The KozyKraft sourdough starter pouch standing in front of a halved sourdough loaf on a wooden board" width="1600" height="1067" fetchpriority="high" decoding="async">
   </figure>
 
   <div class="hero-cta">
@@ -1394,6 +1420,20 @@ if (KK.gtagOn) {
     </div>
   </div>
 
+  <!-- MID-PAGE BUY BLOCK (midbuy) — same routing + tracking as every buy button -->
+  <div class="mid-buy">
+    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <a class="cta-button amz-link" data-pos="midbuy"
+       href="https://www.amazon.com/dp/B0FCPFH2WR"
+       rel="nofollow noopener">
+       Check Today's Price On Amazon
+    </a>
+    <a class="amz-link amz-badge" data-pos="midbuy-badge" href="https://www.amazon.com/dp/B0FCPFH2WR" rel="nofollow noopener">
+      <img src="/images/available-at-amazon.png" alt="Available at Amazon" width="200" height="32" loading="lazy" decoding="async">
+    </a>
+  </div>
+
+
   <div class="reason">
     <figure class="reason-img">
       <img src="/images/day3.webp" srcset="/images/day3-800.webp 800w, /images/day3.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A small glass jar of starter paste with a few small bubbles on the surface" width="1600" height="1067" loading="lazy" decoding="async">
@@ -1404,6 +1444,20 @@ if (KK.gtagOn) {
       <p>First bubbles usually show on day 2 or 3. If day 2 looks quiet, that's normal. By day 5 it doubles after a feeding, and that's the sign it's ready for a loaf.</p>
     </div>
   </div>
+
+  <!-- MID-PAGE BUY BLOCK (midbuy2) — same routing + tracking as every buy button -->
+  <div class="mid-buy">
+    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <a class="cta-button amz-link" data-pos="midbuy2"
+       href="https://www.amazon.com/dp/B0FCPFH2WR"
+       rel="nofollow noopener">
+       Check Today's Price On Amazon
+    </a>
+    <a class="amz-link amz-badge" data-pos="midbuy2-badge" href="https://www.amazon.com/dp/B0FCPFH2WR" rel="nofollow noopener">
+      <img src="/images/available-at-amazon.png" alt="Available at Amazon" width="200" height="32" loading="lazy" decoding="async">
+    </a>
+  </div>
+
 
   <!-- 6. FIVE REAL REVIEWS (verbatim, ASIN B0FCPFH2WR) -->
   <h2 class="section-heading">What Real Customers Are Saying</h2>
@@ -1520,6 +1574,20 @@ if (KK.gtagOn) {
     </div>
   </div>
 
+  <!-- MID-PAGE BUY BLOCK (midbuy3) — same routing + tracking as every buy button -->
+  <div class="mid-buy">
+    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <a class="cta-button amz-link" data-pos="midbuy3"
+       href="https://www.amazon.com/dp/B0FCPFH2WR"
+       rel="nofollow noopener">
+       Check Today's Price On Amazon
+    </a>
+    <a class="amz-link amz-badge" data-pos="midbuy3-badge" href="https://www.amazon.com/dp/B0FCPFH2WR" rel="nofollow noopener">
+      <img src="/images/available-at-amazon.png" alt="Available at Amazon" width="200" height="32" loading="lazy" decoding="async">
+    </a>
+  </div>
+
+
   <div class="reason">
     <div class="reason-body">
       <h2>07. Day-7 guarantee.</h2>
@@ -1582,7 +1650,23 @@ if (KK.gtagOn) {
     </table>
   </div>
 
+  <p class="diy-note"><strong>Starting from scratch instead?</strong> Same flour, water and salt, and the same ~$1.20 a loaf, but it takes 1–2 weeks of feeding before your first loaf, results are hit or miss, and there's no guarantee.</p>
+
   <p style="font-size: 12px; color: var(--muted); font-style: italic; margin-top: 8px;">Grocery prices reflect typical US supermarket and bakery sourdough as of 2026. Homemade cost assumes flour and salt only.</p>
+
+  <!-- MID-PAGE BUY BLOCK (comparebuy) — same routing + tracking as every buy button -->
+  <div class="mid-buy">
+    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <a class="cta-button amz-link" data-pos="comparebuy"
+       href="https://www.amazon.com/dp/B0FCPFH2WR"
+       rel="nofollow noopener">
+       Check Today's Price On Amazon
+    </a>
+    <a class="amz-link amz-badge" data-pos="comparebuy-badge" href="https://www.amazon.com/dp/B0FCPFH2WR" rel="nofollow noopener">
+      <img src="/images/available-at-amazon.png" alt="Available at Amazon" width="200" height="32" loading="lazy" decoding="async">
+    </a>
+  </div>
+
 
   <div class="whats-in-box">
     <h3>Before you decide</h3>
@@ -1646,11 +1730,6 @@ if (KK.gtagOn) {
   </div>
 
 
-  <!-- URGENCY — text comes from KK.URGENCY_LINE; hidden when blank -->
-  <div class="urgency-block" id="urgencyBlock" hidden>
-    <div class="urgency-title">Good Timing</div>
-    <div class="urgency-text" id="urgencyText"></div>
-  </div>
 
   <p style="text-align: center; font-size: 13px; color: #555; margin: 16px 0;">
     Made in Ohio · Fast Shipping · Day-7 bubble guarantee
@@ -1756,14 +1835,6 @@ if (KK.gtagOn) {
     var sticky = document.getElementById('stickyCta');
     var spacer = document.querySelector('.sticky-cta-spacer');
     if (sticky && spacer && sticky.offsetHeight) spacer.style.height = sticky.offsetHeight + 'px';
-  })();
-
-  // Time-based urgency line under the end card.
-  (function(){
-    var line = String(KK.URGENCY_LINE || '').trim();
-    if (!line) return;
-    document.getElementById('urgencyText').textContent = line;
-    document.getElementById('urgencyBlock').hidden = false;
   })();
 
   // Buy taps: fire Meta InitiateCheckout (pixel + CAPI) and the Google Ads conversion, then go to

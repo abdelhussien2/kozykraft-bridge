@@ -8,7 +8,7 @@
     "showPromo": false,
     "hero": {
       "file": "hero-pouch-loaf.webp",
-      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
+      "alt": "The KozyKraft sourdough starter pouch standing in front of a halved sourdough loaf on a wooden board",
       "caption": ""
     }
   },
@@ -21,7 +21,7 @@
     "showPromo": false,
     "hero": {
       "file": "day1.webp",
-      "alt": "Hands tipping dry starter flakes from a small pouch into a glass jar, a glass of water beside it",
+      "alt": "The KozyKraft sourdough starter pouch beside a small glass jar of dry starter flakes and a glass of water",
       "caption": "Day 1: what waking it up looks like."
     }
   },
@@ -34,13 +34,13 @@
     "showPromo": false,
     "hero": {
       "file": "hero-pouch-loaf.webp",
-      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
+      "alt": "The KozyKraft sourdough starter pouch standing in front of a halved sourdough loaf on a wooden board",
       "caption": ""
     }
   },
   "v4": {
     "title": "Your Sourdough Starter Died. It Wasn't Your Fault, and the Fix Takes About a Week.",
-    "subhead": "Most \"dead\" starters are just cold or hungry. Here's how to tell, and how to get one that's bake-ready in 5–7 days.",
+    "subhead": "A lot of \"dead\" starters are just cold or hungry. Here's how to tell, and how to get one that's bake-ready in 5–7 days.",
     "body": "v4.html",
     "reviewsInBody": false,
     "byline": false,
@@ -61,7 +61,7 @@
     "showPromo": true,
     "hero": {
       "file": "hero-pouch-loaf.webp",
-      "alt": "A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it",
+      "alt": "The KozyKraft sourdough starter pouch standing in front of a halved sourdough loaf on a wooden board",
       "caption": ""
     }
   }

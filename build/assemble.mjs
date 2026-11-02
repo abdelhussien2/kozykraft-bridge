@@ -72,13 +72,26 @@ function addSrcsets(html) {
     const sizes = file.startsWith('bake-') ? '(max-width: 760px) 50vw, 160px'
       : file.startsWith('strip-') ? '(max-width: 760px) 600px, 636px'
       : '(max-width: 760px) 100vw, 636px';
-    return `<img ${before}src="/images/${file}" srcset="/images/${small} 800w, /images/${file} 1600w" sizes="${sizes}"${after}>`;
+    const tiny = file.replace(/\.webp$/, '-400.webp');
+    const full = /width="(\d+)"/.exec(tag);
+    const set = [srcImages.includes(tiny) ? `/images/${tiny} 400w` : null, `/images/${small} 800w`, `/images/${file} ${full ? full[1] : 1600}w`].filter(Boolean).join(', ');
+    return `<img ${before}src="/images/${file}" srcset="${set}" sizes="${sizes}"${after}>`;
   });
 }
+
+// Holiday deadline: every configured message is rendered, hidden; a script in <head> sets
+// <html data-deadline="N"> for the one active in DEADLINE_TZ, so the right one shows with no layout shift.
+const deadlineSpans = (site.DEADLINES || []).map((d, i) => `<span class="dl dl-${i}">${escapeHtml(d.text)}</span>`).join('');
+const DEADLINE_BAR_HTML = deadlineSpans ? `<div class="deadline-bar" role="note">${deadlineSpans}</div>\n` : '';
+const DEADLINE_LINE_HTML = deadlineSpans ? `    <div class="deadline-line">${deadlineSpans}</div>\n` : '';
 
 function buildPage(variant, page) {
   const vars = {
     SITE_CONFIG_JSON_HTML,
+    AMAZON_THUMB: site.AMAZON_THUMB,
+    AMAZON_TITLE: site.AMAZON_TITLE,
+    DEADLINE_BAR_HTML,
+    DEADLINE_LINE_HTML,
     BADGE_TOP_HTML: badge('top'),
     BADGE_BTN_HTML: badge('btn'),
     VARIANT: variant,

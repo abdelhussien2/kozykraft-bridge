@@ -5,6 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
+<!-- Light only: stops Chrome/Android auto-dark from inverting the page (and the Amazon badge) -->
+<meta name="color-scheme" content="only light">
 <title>7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter</title>
 <meta name="description" content="A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.">
 
@@ -54,6 +56,20 @@
     "ASIN": "B0FCPFH2WR",
     "PRICE": 11.99,
     "CURRENCY": "USD",
+    "AMAZON_THUMB": "/images/pouch-clean-thumb.webp",
+    "AMAZON_TITLE": "Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)",
+    "DEADLINE_TZ": "America/Chicago",
+    "DEADLINES": [
+      {
+        "until": "2026-11-16T23:59",
+        "text": "Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16."
+      },
+      {
+        "from": "2026-11-17T00:00",
+        "until": "2026-12-15T23:59",
+        "text": "Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15."
+      }
+    ],
     "PROMO": {
       "code": "",
       "percent": "",
@@ -66,6 +82,28 @@
   };
   KK.VARIANT = 'v1';
   KK.SHOW_PROMO = false;
+
+  // Holiday deadline: compare "now" in DEADLINE_TZ (YYYY-MM-DDTHH:MM strings sort as dates) against
+  // each window; mark the active one on <html> so CSS shows it. No window active → nothing shows.
+  (function(){
+    var list = KK.DEADLINES || [];
+    if (!list.length) return;
+    var now;
+    try {
+      var parts = {};
+      new Intl.DateTimeFormat('en-CA', { timeZone: KK.DEADLINE_TZ, year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date())
+        .forEach(function(p){ parts[p.type] = p.value; });
+      now = parts.year + '-' + parts.month + '-' + parts.day + 'T' + parts.hour + ':' + parts.minute;
+    } catch (e) { return; }
+    for (var i = 0; i < list.length; i++) {
+      if ((!list[i].from || now >= list[i].from) && now <= list[i].until) {
+        document.documentElement.setAttribute('data-deadline', String(i));
+        KK.deadline = list[i];
+        return;
+      }
+    }
+  })();
 
   KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
   KK.gtagOn = /^AW-\d+$/.test(KK.GOOGLE_ADS_ID);
@@ -197,6 +235,7 @@ if (KK.gtagOn) {
      Cream / wheat / crust / coffee — warm, hand-crafted, editorial
      ===================================================== */
   :root {
+    color-scheme: only light;
     --cream: #faf6ee;
     --cream-soft: #f3ecdc;
     --linen: #e8ddc4;
@@ -205,7 +244,7 @@ if (KK.gtagOn) {
     --coffee: #3d2817;
     --coffee-soft: #5a4231;
     --ink: #2a1f17;
-    --muted: #8a7560;
+    --muted: #7b6855;  /* darkened from #8a7560 for WCAG AA on cream, cream-soft and white */
     --line: #d9cfb8;
     --accent: #c47e0a;
     --accent-soft: #e8a838;
@@ -1218,6 +1257,62 @@ if (KK.gtagOn) {
     .container:has(.bestseller-badge.top) .hero-banner figcaption { margin-top: 3px; }
   }
 
+  /* Holiday deadline (DEADLINES in site.config.json): bar under the disclosure + a line above in-page buttons */
+  .deadline-bar, .deadline-line, .dl { display: none; }
+  html[data-deadline] .deadline-bar { display: block; }
+  html[data-deadline] .deadline-line { display: block; }
+  html[data-deadline="0"] .dl-0, html[data-deadline="1"] .dl-1, html[data-deadline="2"] .dl-2,
+  html[data-deadline="3"] .dl-3, html[data-deadline="4"] .dl-4 { display: inline; }
+  .deadline-bar {
+    background: #52280D;
+    color: var(--cream);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    padding: 7px 14px;
+  }
+  .deadline-line {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #52280D;
+    max-width: 340px;
+    margin: 0 auto 8px;
+    position: relative;
+  }
+
+  /* "Available at Amazon" (official file, unaltered). Amazon minimum for the horizontal tag is 200px at 1x;
+     clear space ≥ the height of the "amazon" lettering (~20px at this size) on every side. */
+  .amz-badge { display: block; width: 200px; margin: 20px auto; padding: 0; line-height: 0; position: relative; }
+  .amz-badge img { display: block; width: 200px; height: auto; }
+
+  .gift-line {
+    text-align: center;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--coffee);
+    margin: 36px 0 0;
+  }
+
+  /* Phones: buy block (deadline line, button, Amazon badge) comes before the hero image so it all fits
+     on the first screen at 375x667. Desktop keeps image-then-button. */
+  .hero-group { display: flex; flex-direction: column; }
+  @media (max-width: 600px) {
+    .hero-group .hero-cta { order: -1; margin: 0 0 4px; }
+    .hero-group .hero-cta .amz-badge { margin: 20px auto 20px; }
+  }
+
+  /* WCAG AA contrast fixes (all within the existing palette) */
+  .guarantee-row .sep { color: var(--muted); }
+  .guarantee-row .badge-icon { color: var(--crust-deep); }
+  .urgency-block .urgency-title { color: var(--crust-deep); }
+  .review .stars { color: #a56a08; }
+  .compare-table .yes { color: #656e55; }
+  .compare-table th.kk-col { background: var(--crust-deep); }
+
 </style>
 
 </head>
@@ -1227,6 +1322,8 @@ if (KK.gtagOn) {
 <div class="disclaimer">
   This is a paid post written and published by KozyKraft.
 </div>
+<div class="deadline-bar" role="note"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+
 <div class="promo-banner" id="promoBanner" hidden></div>
 
 <div class="container">
@@ -1240,16 +1337,22 @@ if (KK.gtagOn) {
 
   <p class="sub-hook">A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.</p>
 
+  <div class="hero-group">
   <figure class="hero-banner">
     <img src="/images/hero-pouch-loaf.webp" srcset="/images/hero-pouch-loaf-800.webp 800w, /images/hero-pouch-loaf.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A torn-open sourdough loaf on a wooden board, a starter pouch out of focus behind it" width="1600" height="1067" fetchpriority="high" decoding="async">
   </figure>
 
   <div class="hero-cta">
+    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
     <a class="cta-button amz-link" data-pos="hero"
        href="https://www.amazon.com/dp/B0FCPFH2WR"
        rel="nofollow noopener">
        Check Today's Price On Amazon
     </a>
+    <a class="amz-link amz-badge" data-pos="hero-badge" href="https://www.amazon.com/dp/B0FCPFH2WR" rel="nofollow noopener">
+      <img src="/images/available-at-amazon.png" alt="Available at Amazon" width="200" height="32" decoding="async">
+    </a>
+  </div>
   </div>
 
 
@@ -1297,8 +1400,8 @@ if (KK.gtagOn) {
       <figcaption>Day 3: what first bubbles look like.</figcaption>
     </figure>
     <div class="reason-body">
-      <h2>04. Bubbles by day 3, bake-ready in 5–7 days.</h2>
-      <p>Day 2 can look like nothing is happening. That's normal. By day 5 it doubles after a feeding, and that's the sign it's ready for a loaf.</p>
+      <h2>04. Bubbles within 2–3 days, bake-ready in 5–7 days.</h2>
+      <p>First bubbles usually show on day 2 or 3. If day 2 looks quiet, that's normal. By day 5 it doubles after a feeding, and that's the sign it's ready for a loaf.</p>
     </div>
   </div>
 
@@ -1336,23 +1439,61 @@ if (KK.gtagOn) {
     <div class="attribution">— Janet R., Verified Purchase · October 14, 2026 · "Sourdough starter"</div>
   </div>
 
+  <!-- PRODUCT CARD (reviewcard) -->
+  <div class="product-grid single">
+    <div class="product-card">
+      <span class="badge-label">Small Batch · Made in Ohio</span>
+      <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
+      <div class="product-sub">15g pouch · Organic · Non-GMO · Shelf-stable</div>
+      <img class="product-img" src="/images/pouch-clean.webp" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" width="600" height="600" loading="lazy" decoding="async">
+      <div class="amz-preview">
+        <div class="amz-preview-label">What you'll see on Amazon</div>
+        <div class="amz-tile" aria-label="Example of the KozyKraft listing in Amazon search results">
+          <img src="/images/pouch-clean-thumb.webp" alt="" width="72" height="72" loading="lazy" decoding="async">
+          <div class="amz-tile-text">
+            <div class="amz-tile-title">Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)</div>
+            <div class="amz-tile-seller">Sold by KozyKraft</div>
+          </div>
+        </div>
+        <p class="amz-preview-note">Other starters show up next to it. This is ours. Tap Add to Cart on it.</p>
+      </div>
+    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+      <a class="cta-button amz-link" data-pos="reviewcard"
+         href="https://www.amazon.com/dp/B0FCPFH2WR"
+         rel="nofollow noopener">
+         Check Today's Price On Amazon
+      </a>
+      <a class="amz-link amz-badge" data-pos="reviewcard-badge" href="https://www.amazon.com/dp/B0FCPFH2WR" rel="nofollow noopener">
+        <img src="/images/available-at-amazon.png" alt="Available at Amazon" width="200" height="32" loading="lazy" decoding="async">
+      </a>
+
+      <div class="guarantee-row">
+        <span class="badge-icon" aria-hidden="true">❋</span>
+        <span>Day-7 Guarantee</span>
+        <span class="sep" aria-hidden="true">·</span>
+        <span>Fast Shipping</span>
+      </div>
+    </div>
+  </div>
+
+
   <!-- WHAT YOU CAN BAKE — after the reviews on every page -->
   <h2 class="section-heading">What You Can Bake</h2>
   <div class="bake-grid">
     <figure class="bake-tile">
-      <img src="/images/bake-country-loaf.webp" srcset="/images/bake-country-loaf-800.webp 800w, /images/bake-country-loaf.webp 1600w" sizes="(max-width: 760px) 50vw, 160px" alt="A rustic country loaf torn open on a wooden board" width="1200" height="1200" loading="lazy" decoding="async">
+      <img src="/images/bake-country-loaf.webp" srcset="/images/bake-country-loaf-400.webp 400w, /images/bake-country-loaf-800.webp 800w, /images/bake-country-loaf.webp 1200w" sizes="(max-width: 760px) 50vw, 160px" alt="A rustic country loaf torn open on a wooden board" width="1200" height="1200" loading="lazy" decoding="async">
       <figcaption>Country loaf</figcaption>
     </figure>
     <figure class="bake-tile">
-      <img src="/images/bake-pizza.webp" srcset="/images/bake-pizza-800.webp 800w, /images/bake-pizza.webp 1600w" sizes="(max-width: 760px) 50vw, 160px" alt="A pizza with a blistered crust on a wooden peel" width="1200" height="1200" loading="lazy" decoding="async">
+      <img src="/images/bake-pizza.webp" srcset="/images/bake-pizza-400.webp 400w, /images/bake-pizza-800.webp 800w, /images/bake-pizza.webp 1200w" sizes="(max-width: 760px) 50vw, 160px" alt="A pizza with a blistered crust on a wooden peel" width="1200" height="1200" loading="lazy" decoding="async">
       <figcaption>Friday pizza</figcaption>
     </figure>
     <figure class="bake-tile">
-      <img src="/images/bake-focaccia.webp" srcset="/images/bake-focaccia-800.webp 800w, /images/bake-focaccia.webp 1600w" sizes="(max-width: 760px) 50vw, 160px" alt="A dimpled focaccia with rosemary in a pan" width="1200" height="1200" loading="lazy" decoding="async">
+      <img src="/images/bake-focaccia.webp" srcset="/images/bake-focaccia-400.webp 400w, /images/bake-focaccia-800.webp 800w, /images/bake-focaccia.webp 1200w" sizes="(max-width: 760px) 50vw, 160px" alt="A dimpled focaccia with rosemary in a pan" width="1200" height="1200" loading="lazy" decoding="async">
       <figcaption>Focaccia</figcaption>
     </figure>
     <figure class="bake-tile">
-      <img src="/images/m4-discard-pancakes.webp" srcset="/images/m4-discard-pancakes-800.webp 800w, /images/m4-discard-pancakes.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A short stack of golden pancakes on a stone plate" width="1600" height="1067" loading="lazy" decoding="async">
+      <img src="/images/m4-discard-pancakes.webp" srcset="/images/m4-discard-pancakes-400.webp 400w, /images/m4-discard-pancakes-800.webp 800w, /images/m4-discard-pancakes.webp 1600w" sizes="(max-width: 760px) 100vw, 636px" alt="A short stack of golden pancakes on a stone plate" width="1600" height="1067" loading="lazy" decoding="async">
       <figcaption>Discard pancakes</figcaption>
     </figure>
   </div>
@@ -1365,7 +1506,7 @@ if (KK.gtagOn) {
     </figure>
     <div class="reason-body">
       <h2>05. One packet keeps going for years.</h2>
-      <p>Feed it on the counter or keep it in the fridge and feed it weekly. At two loaves a week, that's about $800 a year that stays in your pocket.</p>
+      <p>Feed it on the counter or keep it in the fridge and feed it weekly. At two store loaves a week, that's about $800 a year. Baking your own costs a fraction of that.</p>
     </div>
   </div>
 
@@ -1388,39 +1529,7 @@ if (KK.gtagOn) {
   </div>
 
 
-  <!-- 5. PRODUCT CARD + HOW TO FIND US -->
-  <!-- PRODUCT CARD (midcard) -->
-  <div class="product-grid single">
-    <div class="product-card">
-      <span class="badge-label">Small Batch · Made in Ohio</span>
-      <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
-      <div class="product-sub">15g pouch · Organic · Non-GMO · Shelf-stable</div>
-      <img class="product-img" src="/images/pouch-clean.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" loading="lazy" decoding="async">
-      <div class="amz-preview">
-        <div class="amz-preview-label">What you'll see on Amazon</div>
-        <div class="amz-tile" aria-label="Example of the KozyKraft listing in Amazon search results">
-          <img src="/images/pouch-clean-thumb.jpg" alt="" width="72" height="72" loading="lazy" decoding="async">
-          <div class="amz-tile-text">
-            <div class="amz-tile-title">Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)</div>
-            <div class="amz-tile-seller">Sold by KozyKraft</div>
-          </div>
-        </div>
-        <p class="amz-preview-note">Other starters show up next to it. This is ours. Tap Add to Cart on it.</p>
-      </div>
-      <a class="cta-button amz-link" data-pos="midcard"
-         href="https://www.amazon.com/dp/B0FCPFH2WR"
-         rel="nofollow noopener">
-         Check Today's Price On Amazon
-      </a>
-
-      <div class="guarantee-row">
-        <span class="badge-icon">❋</span>
-        <span>Day-7 Guarantee</span>
-        <span class="sep">·</span>
-        <span>Fast Shipping</span>
-      </div>
-    </div>
-  </div>
+  <!-- 5. PRODUCT CARD: now sits right after the reviews (src/partials/reviews.html) -->
 
 
 
@@ -1460,7 +1569,7 @@ if (KK.gtagOn) {
         <tr>
           <td class="row-label">Cost per loaf</td>
           <td class="kk-col"><strong>~$1.20</strong></td>
-          <td>~$1.20</td>
+          <td>Same, after 1–2 weeks of feeding</td>
           <td>$7–$10</td>
         </tr>
         <tr>
@@ -1473,7 +1582,7 @@ if (KK.gtagOn) {
     </table>
   </div>
 
-  <p style="font-size: 12px; color: #777; font-style: italic; margin-top: 8px;">Grocery prices reflect typical US supermarket and bakery sourdough as of 2026. Homemade cost assumes flour and salt only.</p>
+  <p style="font-size: 12px; color: var(--muted); font-style: italic; margin-top: 8px;">Grocery prices reflect typical US supermarket and bakery sourdough as of 2026. Homemade cost assumes flour and salt only.</p>
 
   <div class="whats-in-box">
     <h3>Before you decide</h3>
@@ -1498,17 +1607,18 @@ if (KK.gtagOn) {
 
 
   <!-- 8. END CARD + URGENCY LINE -->
+  <p class="gift-line">Easy gift for the baker in your life: it fits in a stocking.</p>
   <!-- PRODUCT CARD (endcard) -->
   <div class="product-grid single">
     <div class="product-card">
       <span class="badge-label">Small Batch · Made in Ohio</span>
       <div class="product-name">KozyKraft Dehydrated Sourdough Starter</div>
       <div class="product-sub">15g pouch · Bake-ready in 5–7 days</div>
-      <img class="product-img" src="/images/pouch-clean.jpg" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" loading="lazy" decoding="async">
+      <img class="product-img" src="/images/pouch-clean.webp" alt="KozyKraft 15g dehydrated sourdough starter pouch beside a sourdough loaf" width="600" height="600" loading="lazy" decoding="async">
       <div class="amz-preview">
         <div class="amz-preview-label">What you'll see on Amazon</div>
         <div class="amz-tile" aria-label="Example of the KozyKraft listing in Amazon search results">
-          <img src="/images/pouch-clean-thumb.jpg" alt="" width="72" height="72" loading="lazy" decoding="async">
+          <img src="/images/pouch-clean-thumb.webp" alt="" width="72" height="72" loading="lazy" decoding="async">
           <div class="amz-tile-text">
             <div class="amz-tile-title">Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)</div>
             <div class="amz-tile-seller">Sold by KozyKraft</div>
@@ -1516,16 +1626,20 @@ if (KK.gtagOn) {
         </div>
         <p class="amz-preview-note">Other starters show up next to it. This is ours. Tap Add to Cart on it.</p>
       </div>
+    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
       <a class="cta-button amz-link" data-pos="endcard"
          href="https://www.amazon.com/dp/B0FCPFH2WR"
          rel="nofollow noopener">
          Check Today's Price On Amazon
       </a>
+      <a class="amz-link amz-badge" data-pos="endcard-badge" href="https://www.amazon.com/dp/B0FCPFH2WR" rel="nofollow noopener">
+        <img src="/images/available-at-amazon.png" alt="Available at Amazon" width="200" height="32" loading="lazy" decoding="async">
+      </a>
 
       <div class="guarantee-row">
-        <span class="badge-icon">❋</span>
+        <span class="badge-icon" aria-hidden="true">❋</span>
         <span>Day-7 Guarantee</span>
-        <span class="sep">·</span>
+        <span class="sep" aria-hidden="true">·</span>
         <span>Fast Shipping</span>
       </div>
     </div>
@@ -1539,11 +1653,11 @@ if (KK.gtagOn) {
   </div>
 
   <p style="text-align: center; font-size: 13px; color: #555; margin: 16px 0;">
-    Made in Ohio · Fast shipping · Day-7 bubble guarantee
+    Made in Ohio · Fast Shipping · Day-7 bubble guarantee
   </p>
 
   <div class="footer">
-    <p>This is a sponsored advertorial published by KozyKraft LLC, Ohio USA.</p>
+    <p>This is a sponsored advertorial published by Kozy Kraft LLC.</p>
     <p>
       <a href="/privacy.html">Privacy Policy</a> |
       <a href="/terms.html">Terms</a> |
@@ -1634,7 +1748,7 @@ if (KK.gtagOn) {
     var banner = document.getElementById('promoBanner');
     banner.appendChild(promoNode('promo-text'));
     banner.hidden = false;
-    document.querySelectorAll('a.amz-link').forEach(function(a){
+    document.querySelectorAll('a.amz-link:not(.amz-badge)').forEach(function(a){
       a.insertAdjacentElement('afterend', promoNode('promo-line'));
     });
 

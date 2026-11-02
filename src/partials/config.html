@@ -17,6 +17,28 @@
   KK.VARIANT = '{{VARIANT}}';
   KK.SHOW_PROMO = {{SHOW_PROMO}};
 
+  // Holiday deadline: compare "now" in DEADLINE_TZ (YYYY-MM-DDTHH:MM strings sort as dates) against
+  // each window; mark the active one on <html> so CSS shows it. No window active → nothing shows.
+  (function(){
+    var list = KK.DEADLINES || [];
+    if (!list.length) return;
+    var now;
+    try {
+      var parts = {};
+      new Intl.DateTimeFormat('en-CA', { timeZone: KK.DEADLINE_TZ, year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date())
+        .forEach(function(p){ parts[p.type] = p.value; });
+      now = parts.year + '-' + parts.month + '-' + parts.day + 'T' + parts.hour + ':' + parts.minute;
+    } catch (e) { return; }
+    for (var i = 0; i < list.length; i++) {
+      if ((!list[i].from || now >= list[i].from) && now <= list[i].until) {
+        document.documentElement.setAttribute('data-deadline', String(i));
+        KK.deadline = list[i];
+        return;
+      }
+    }
+  })();
+
   KK.pixelOn = /^\d{15,16}$/.test(KK.PIXEL_ID);
   KK.gtagOn = /^AW-\d+$/.test(KK.GOOGLE_ADS_ID);
 

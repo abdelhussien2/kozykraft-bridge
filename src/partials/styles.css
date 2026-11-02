@@ -1079,3 +1079,26 @@
   .review .stars { color: #a56a08; }
   .compare-table .yes { color: #656e55; }
   .compare-table th.kk-col { background: var(--crust-deep); }
+
+  /* Mid-page buy block */
+  .mid-buy { margin: 32px 0 36px; text-align: center; }
+  .mid-buy .amz-badge { margin: 20px auto 0; }
+
+  /* Round 4: one brand brown for every in-page button, the mobile sticky bar and the deadline bar.
+     Gold stays only as the desktop floating button accent. */
+  .cta-button { background: #52280D; }
+  .sticky-cta { background: #52280D; }
+  .sticky-cta a { color: #52280D; }
+  .deadline-bar { background: #52280D; }
+
+  /* Desktop: the hero button text fits on one line */
+  @media (min-width: 601px) {
+    .hero-cta .cta-button { max-width: 420px; white-space: nowrap; }
+  }
+
+  /* Comparison table: two columns on phones (KozyKraft vs Grocery), DIY as a note underneath */
+  .diy-note { display: none; font-size: 14px; line-height: 1.55; color: var(--coffee-soft); background: var(--cream-soft); border-left: 3px solid var(--crust); padding: 12px 14px; margin: 12px 0 0; }
+  @media (max-width: 600px) {
+    .compare-table th:nth-child(3), .compare-table td:nth-child(3) { display: none; }
+    .diy-note { display: block; }
+  }

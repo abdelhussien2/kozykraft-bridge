@@ -16,7 +16,8 @@
   "ASIN": "B0FCPFH2WR",
   "PRICE": 11.99,
   "CURRENCY": "USD",
-  "AMAZON_THUMB": "/images/pouch-clean-thumb.webp",
+  "AMAZON_THUMB": "/images/pouch-thumb-72.webp",
+  "AMAZON_THUMB_SRCSET": "/images/pouch-thumb-72.webp 1x, /images/pouch-thumb-144.webp 2x, /images/pouch-thumb-216.webp 3x",
   "AMAZON_TITLE": "Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)",
   "DEADLINE_TZ": "America/Chicago",
   "DEADLINES": [

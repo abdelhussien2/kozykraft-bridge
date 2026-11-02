@@ -88,6 +88,8 @@ const DEADLINE_LINE_HTML = deadlineSpans ? `    <div class="deadline-line">${dea
 function buildPage(variant, page) {
   const vars = {
     SITE_CONFIG_JSON_HTML,
+    // Default href on every buy link: this page's own maas URL, so links work with JS off.
+    PAGE_AMAZON_URL: site.AMAZON_URLS['meta_' + variant] || site.AMAZON_URLS.default || site.FALLBACK_URL,
     AMAZON_THUMB: site.AMAZON_THUMB,
     AMAZON_THUMB_SRCSET: site.AMAZON_THUMB_SRCSET,
     AMAZON_TITLE: site.AMAZON_TITLE,

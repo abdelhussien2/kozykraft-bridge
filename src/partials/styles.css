@@ -1102,3 +1102,17 @@
     .compare-table th:nth-child(3), .compare-table td:nth-child(3) { display: none; }
     .diy-note { display: block; }
   }
+
+  /* Round 5 */
+  /* Card photo: explicit 300x300 reserves space; height:auto keeps it square (was rendering 289x600) */
+  .product-card .product-img { height: auto; }
+  /* Text links that replace the extra buy blocks */
+  .text-buy { text-align: center; margin: 24px 0 28px; }
+  .text-buy a { color: #52280D; font-weight: 600; font-size: 16px; text-decoration: underline; text-underline-offset: 3px; }
+  /* Real pouch beside the top button, phones only (desktop shows it in the hero) */
+  .hero-pouch { display: none; }
+  @media (max-width: 600px) {
+    .hero-buy-row { display: flex; align-items: center; gap: 12px; max-width: 340px; margin: 0 auto; }
+    .hero-pouch { display: block; flex: 0 0 auto; width: 53px; height: 80px; }
+    .hero-buy-row .cta-button { margin: 0; flex: 1 1 auto; padding: 14px 10px; }
+  }

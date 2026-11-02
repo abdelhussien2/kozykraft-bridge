@@ -89,6 +89,7 @@ function buildPage(variant, page) {
   const vars = {
     SITE_CONFIG_JSON_HTML,
     AMAZON_THUMB: site.AMAZON_THUMB,
+    AMAZON_THUMB_SRCSET: site.AMAZON_THUMB_SRCSET,
     AMAZON_TITLE: site.AMAZON_TITLE,
     DEADLINE_BAR_HTML,
     DEADLINE_LINE_HTML,

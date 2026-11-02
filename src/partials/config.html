@@ -2,9 +2,10 @@
      Every value lives in src/site.config.json (one place, shared by all five pages).
      Edit it, then rebuild: node build/assemble.mjs
        PRICE        one number; Meta and Google conversion values read it, so a price change is a one-line edit
-       AMAZON_URLS  Amazon Attribution tags. ?t=<key> picks a key (e.g. ?t=store); gclid/gbraid/wbraid or
-                    utm_source=google → google; otherwise this page's own key (meta_v1 … meta_v5).
-                    An empty or unknown key falls back to default, then to the plain listing.
+       AMAZON_URLS  Amazon Attribution tags. Every buy link's HTML href is this page's own key (meta_v1 …
+                    meta_v5), so links work with JS off. JS only overrides: ?t=<known key> (e.g. ?t=store)
+                    → that key; ?t=<unknown> → default; gclid/gbraid/wbraid or utm_source=google → google.
+                    An empty value falls back to default, then to the plain listing.
        PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
                     today is on or before ends (YYYY-MM-DD)
        BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
@@ -77,7 +78,7 @@
     var a = KK.attr, urls = KK.AMAZON_URLS, has = Object.prototype.hasOwnProperty;
     var utm = (a.utm_source || '').toLowerCase();
     var key = 'meta_' + KK.VARIANT;
-    if (a.t && has.call(urls, a.t)) key = a.t;
+    if (a.t) key = has.call(urls, a.t) ? a.t : 'default';
     else if (a.gclid || a.gbraid || a.wbraid || utm === 'google') key = 'google';
     KK.trafficKey = key;
     KK.amazonUrl = (has.call(urls, key) && urls[key]) || urls['default'] || KK.FALLBACK_URL;

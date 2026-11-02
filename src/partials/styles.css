@@ -1116,3 +1116,10 @@
     .hero-pouch { display: block; flex: 0 0 auto; width: 53px; height: 80px; }
     .hero-buy-row .cta-button { margin: 0; flex: 1 1 auto; padding: 14px 10px; }
   }
+
+  /* Round 6: phones get a shorter top-button label so it fits on one line beside the pouch */
+  .hero-cta .label-short { display: none; }
+  @media (max-width: 600px) {
+    .hero-cta .label-full { display: none; }
+    .hero-cta .label-short { display: inline; white-space: nowrap; }
+  }

@@ -9,7 +9,8 @@
        PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
                     today is on or before ends (YYYY-MM-DD)
        BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
-     VARIANT / SHOW_PROMO are set per page from src/pages.json.
+     VARIANT / SHOW_PROMO / PAGE_KEY are set per page from src/pages.json (PAGE_KEY = the page's own
+     AMAZON_URLS key: meta_vN on the Meta pages, google on /google).
      Meta events go to the pixel and to /api/capi (Conversions API) with the same event_id for dedup.
      The CAPI token is read server-side from the META_CAPI_TOKEN env var only.
      ===================================== -->
@@ -17,6 +18,7 @@
   window.KK = {{SITE_CONFIG_JSON_HTML}};
   KK.VARIANT = '{{VARIANT}}';
   KK.SHOW_PROMO = {{SHOW_PROMO}};
+  KK.PAGE_KEY = '{{PAGE_KEY}}';
 
   // Holiday deadline: compare "now" in DEADLINE_TZ (YYYY-MM-DDTHH:MM strings sort as dates) against
   // each window; mark the active one on <html> so CSS shows it. No window active → nothing shows.
@@ -77,7 +79,7 @@
   (function(){
     var a = KK.attr, urls = KK.AMAZON_URLS, has = Object.prototype.hasOwnProperty;
     var utm = (a.utm_source || '').toLowerCase();
-    var key = 'meta_' + KK.VARIANT;
+    var key = KK.PAGE_KEY || ('meta_' + KK.VARIANT);
     if (a.t) key = has.call(urls, a.t) ? a.t : 'default';
     else if (a.gclid || a.gbraid || a.wbraid || utm === 'google') key = 'google';
     KK.trafficKey = key;

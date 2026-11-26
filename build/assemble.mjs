@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Assembles the bridge-test pages from shared partials.
 //
-//   node build/assemble.mjs           write v1/ … v5/index.html, plus index.html (= v1), publish
+//   node build/assemble.mjs           write v1/ … v5/ and google/index.html, plus index.html (= v1), publish
 //                                     src/images/* to images/ (src/ itself is not deployed), and write
 //                                     api/_site.json (pixel id + Graph version for /api/capi)
 //   node build/assemble.mjs --check   exit 1 if any committed page is out of date with src/
@@ -60,6 +60,34 @@ function render(template, vars, stack = []) {
 // Inline JSON for <script>: "<" escaped so a value can never close the script tag.
 const SITE_CONFIG_JSON_HTML = JSON.stringify(site, null, 2).replace(/</g, '\\u003c').replace(/\n/g, '\n  ');
 
+// Visible price on the product page: one number in site.config.json, shown as "$9.99", with the day it was
+// last checked against the Amazon listing. Google Ads requires the landing-page price to be accurate, so
+// change PRICE + PRICE_CHECKED together the same day the Amazon price moves, rebuild, and push.
+const PRICE_DISPLAY = (site.CURRENCY === 'USD' ? '$' : site.CURRENCY + ' ') + Number(site.PRICE).toFixed(2);
+const PRICE_CHECKED_DISPLAY = (() => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(site.PRICE_CHECKED || '');
+  if (!m) throw new Error('site.config.json PRICE_CHECKED must be YYYY-MM-DD (the day PRICE was last checked on Amazon)');
+  return new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+})();
+const productJsonLd = (page) => JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: page.productName,
+  image: [`https://www.theloafreport.com/images/${page.hero.file}`],
+  description: page.subhead,
+  brand: { '@type': 'Brand', name: 'KozyKraft' },
+  sku: site.ASIN,
+  offers: {
+    '@type': 'Offer',
+    url: site.FALLBACK_URL,
+    priceCurrency: site.CURRENCY,
+    price: Number(site.PRICE).toFixed(2),
+    availability: 'https://schema.org/InStock',
+    itemCondition: 'https://schema.org/NewCondition',
+    seller: { '@type': 'Organization', name: 'Kozy Kraft LLC' }
+  }
+}, null, 2).replace(/</g, '\\u003c');
+
 const badge = (cls) => site.BADGE_LIVE
   ? `  <div class="bestseller-badge ${cls}">${escapeHtml(site.BADGE_TEXT)}</div>\n`
   : '';
@@ -86,10 +114,17 @@ const DEADLINE_BAR_HTML = deadlineSpans ? `<div class="deadline-bar" role="note"
 const DEADLINE_LINE_HTML = deadlineSpans ? `    <div class="deadline-line">${deadlineSpans}</div>\n` : '';
 
 function buildPage(variant, page) {
+  // Each page's own Attribution key: meta_vN on the Meta pages, "google" on the product page (pages.json "key").
+  const pageKey = page.key || 'meta_' + variant;
   const vars = {
     SITE_CONFIG_JSON_HTML,
+    PAGE_KEY: pageKey,
     // Default href on every buy link: this page's own maas URL, so links work with JS off.
-    PAGE_AMAZON_URL: site.AMAZON_URLS['meta_' + variant] || site.AMAZON_URLS.default || site.FALLBACK_URL,
+    PAGE_AMAZON_URL: site.AMAZON_URLS[pageKey] || site.AMAZON_URLS.default || site.FALLBACK_URL,
+    OG_TYPE: page.ogType || 'article',
+    PRICE_DISPLAY,
+    PRICE_CHECKED_DISPLAY,
+    PRODUCT_JSONLD_HTML: page.productName ? `<script type="application/ld+json">\n${productJsonLd(page)}\n</script>` : '',
     AMAZON_THUMB: site.AMAZON_THUMB,
     AMAZON_THUMB_SRCSET: site.AMAZON_THUMB_SRCSET,
     AMAZON_TITLE: site.AMAZON_TITLE,
@@ -116,7 +151,8 @@ function buildPage(variant, page) {
   vars.BYLINE_HTML = page.byline ? render(readPartial('byline.html'), vars) : '';
   vars.BODY_HTML = render(readPartial(page.body), vars, [page.body]);
   vars.REVIEWS_HTML = page.reviewsInBody ? '' : render(readPartial('reviews.html'), vars, ['reviews.html']);
-  return addSrcsets(render(readFileSync(join(SRC, 'layout.html'), 'utf8'), vars));
+  // pages.json "layout" picks the page shell: layout.html (advertorial) or layout-pdp.html (product page).
+  return addSrcsets(render(readFileSync(join(SRC, page.layout || 'layout.html'), 'utf8'), vars));
 }
 
 const outputs = {};

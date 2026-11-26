@@ -37,7 +37,8 @@
        PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
                     today is on or before ends (YYYY-MM-DD)
        BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
-     VARIANT / SHOW_PROMO are set per page from src/pages.json.
+     VARIANT / SHOW_PROMO / PAGE_KEY are set per page from src/pages.json (PAGE_KEY = the page's own
+     AMAZON_URLS key: meta_vN on the Meta pages, google on /google).
      Meta events go to the pixel and to /api/capi (Conversions API) with the same event_id for dedup.
      The CAPI token is read server-side from the META_CAPI_TOKEN env var only.
      ===================================== -->
@@ -58,17 +59,14 @@
     },
     "FALLBACK_URL": "https://www.amazon.com/dp/B0FCPFH2WR",
     "ASIN": "B0FCPFH2WR",
-    "PRICE": 11.99,
+    "PRICE": 9.99,
+    "PRICE_CHECKED": "2026-11-24",
     "CURRENCY": "USD",
     "AMAZON_THUMB": "/images/pouch-thumb-72.webp",
     "AMAZON_THUMB_SRCSET": "/images/pouch-thumb-72.webp 1x, /images/pouch-thumb-144.webp 2x, /images/pouch-thumb-216.webp 3x",
     "AMAZON_TITLE": "Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)",
     "DEADLINE_TZ": "America/Chicago",
     "DEADLINES": [
-      {
-        "until": "2026-11-16T23:59",
-        "text": "Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16."
-      },
       {
         "from": "2026-11-17T00:00",
         "until": "2026-12-15T23:59",
@@ -87,6 +85,7 @@
   };
   KK.VARIANT = 'v1';
   KK.SHOW_PROMO = false;
+  KK.PAGE_KEY = 'meta_v1';
 
   // Holiday deadline: compare "now" in DEADLINE_TZ (YYYY-MM-DDTHH:MM strings sort as dates) against
   // each window; mark the active one on <html> so CSS shows it. No window active → nothing shows.
@@ -147,7 +146,7 @@
   (function(){
     var a = KK.attr, urls = KK.AMAZON_URLS, has = Object.prototype.hasOwnProperty;
     var utm = (a.utm_source || '').toLowerCase();
-    var key = 'meta_' + KK.VARIANT;
+    var key = KK.PAGE_KEY || ('meta_' + KK.VARIANT);
     if (a.t) key = has.call(urls, a.t) ? a.t : 'default';
     else if (a.gclid || a.gbraid || a.wbraid || utm === 'google') key = 'google';
     KK.trafficKey = key;
@@ -1371,7 +1370,7 @@ if (KK.gtagOn) {
 <div class="disclaimer">
   This is a paid post written and published by Kozy Kraft LLC.
 </div>
-<div class="deadline-bar" role="note"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+<div class="deadline-bar" role="note"><span class="dl dl-0">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
 
 <div class="promo-banner" id="promoBanner" hidden></div>
 
@@ -1392,7 +1391,7 @@ if (KK.gtagOn) {
   </figure>
 
   <div class="hero-cta">
-    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <div class="deadline-line"><span class="dl dl-0">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
     <div class="hero-buy-row">
       <img class="hero-pouch" src="/images/pouch-top-80.webp" srcset="/images/pouch-top-80.webp 1x, /images/pouch-top-160.webp 2x, /images/pouch-top-240.webp 3x" alt="KozyKraft 15g sourdough starter pouch" width="53" height="80" decoding="async">
       <a class="cta-button amz-link" data-pos="hero"
@@ -1446,7 +1445,7 @@ if (KK.gtagOn) {
 
   <!-- MID-PAGE BUY BLOCK (midbuy) — same routing + tracking as every buy button -->
   <div class="mid-buy">
-    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <div class="deadline-line"><span class="dl dl-0">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
     <a class="cta-button amz-link" data-pos="midbuy"
        href="https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_FEC03F7C4030647B8BD58D4956DB9F15_afap_abs&amp;ref_=aa_maas&amp;tag=maas"
        rel="nofollow noopener">
@@ -1507,6 +1506,7 @@ if (KK.gtagOn) {
     <div class="attribution">— Janet R., Verified Purchase · October 14, 2026 · "Sourdough starter"</div>
   </div>
 
+
   <!-- PRODUCT CARD (reviewcard) -->
   <div class="product-grid single">
     <div class="product-card">
@@ -1525,7 +1525,7 @@ if (KK.gtagOn) {
         </div>
         <p class="amz-preview-note">Other starters show up next to it. This is ours. Tap Add to Cart on it.</p>
       </div>
-    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <div class="deadline-line"><span class="dl dl-0">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
       <a class="cta-button amz-link" data-pos="reviewcard"
          href="https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_FEC03F7C4030647B8BD58D4956DB9F15_afap_abs&amp;ref_=aa_maas&amp;tag=maas"
          rel="nofollow noopener">
@@ -1704,7 +1704,7 @@ if (KK.gtagOn) {
         </div>
         <p class="amz-preview-note">Other starters show up next to it. This is ours. Tap Add to Cart on it.</p>
       </div>
-    <div class="deadline-line"><span class="dl dl-0">Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16.</span><span class="dl dl-1">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
+    <div class="deadline-line"><span class="dl dl-0">Baking for Christmas? It takes 5–7 days to wake up. Order by Dec 15.</span></div>
       <a class="cta-button amz-link" data-pos="endcard"
          href="https://www.amazon.com/dp/B0FCPFH2WR?maas=maas_adg_FEC03F7C4030647B8BD58D4956DB9F15_afap_abs&amp;ref_=aa_maas&amp;tag=maas"
          rel="nofollow noopener">
@@ -1933,6 +1933,7 @@ if (KK.gtagOn) {
     }, { passive: true });
   })();
 </script>
+
 
 
 </body>

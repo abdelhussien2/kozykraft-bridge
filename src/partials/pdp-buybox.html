@@ -1,0 +1,19 @@
+  <!-- BUY BOX ({{POS}}): price, what you get, the holiday line, the button, the disclosure. Same routing + tracking as every amz-link. -->
+  <div class="buybox buybox-{{WRAP}}">
+    <div class="buybox-price-row">
+      <span class="buybox-price">{{PRICE_DISPLAY}}</span>
+      <span class="buybox-unit">per pouch</span>
+    </div>
+    <ul class="buybox-list">
+      <li>One pouch, years of bread</li>
+      <li>Steps on the pouch. 5 min a day, no scale</li>
+      <li>Free replacement if it doesn't wake up</li>
+      <li>Checkout, shipping and returns by Amazon</li>
+    </ul>
+{{DEADLINE_LINE_HTML}}    <a class="cta-button amz-link" data-pos="{{POS}}"
+       href="{{PAGE_AMAZON_URL}}"
+       rel="nofollow noopener">
+       Buy on Amazon →
+    </a>
+{{BADGE_BTN_HTML}}    <p class="buybox-note">Price on Amazon.com, checked {{PRICE_CHECKED_DISPLAY}} · Sold by KozyKraft · Tax &amp; shipping at checkout</p>
+  </div>

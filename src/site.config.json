@@ -14,17 +14,14 @@
   },
   "FALLBACK_URL": "https://www.amazon.com/dp/B0FCPFH2WR",
   "ASIN": "B0FCPFH2WR",
-  "PRICE": 11.99,
+  "PRICE": 9.99,
+  "PRICE_CHECKED": "2026-11-24",
   "CURRENCY": "USD",
   "AMAZON_THUMB": "/images/pouch-thumb-72.webp",
   "AMAZON_THUMB_SRCSET": "/images/pouch-thumb-72.webp 1x, /images/pouch-thumb-144.webp 2x, /images/pouch-thumb-216.webp 3x",
   "AMAZON_TITLE": "Sourdough Starter Culture, Live Culture Bread Mix for Baking (15 Grams)",
   "DEADLINE_TZ": "America/Chicago",
   "DEADLINES": [
-    {
-      "until": "2026-11-16T23:59",
-      "text": "Baking for Thanksgiving? It takes 5–7 days to wake up. Order by Nov 16."
-    },
     {
       "from": "2026-11-17T00:00",
       "until": "2026-12-15T23:59",

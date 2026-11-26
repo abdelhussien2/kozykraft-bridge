@@ -64,5 +64,22 @@
       "alt": "The KozyKraft sourdough starter pouch standing in front of a halved sourdough loaf on a wooden board",
       "caption": ""
     }
+  },
+  "google": {
+    "title": "KozyKraft Dehydrated Sourdough Starter, 15 g Pouch",
+    "subhead": "A dried, tested sourdough culture you wake up at home: first bubbles by day 3, bake-ready in 5–7 days. Organic flour, filtered water, small batches made in the USA. Sold on Amazon.",
+    "productName": "KozyKraft Dehydrated Sourdough Starter (15 g pouch)",
+    "layout": "layout-pdp.html",
+    "key": "google",
+    "ogType": "product",
+    "body": "v1.html",
+    "reviewsInBody": true,
+    "byline": false,
+    "showPromo": false,
+    "hero": {
+      "file": "hero-pouch-loaf.webp",
+      "alt": "The KozyKraft 15 g dehydrated sourdough starter pouch standing in front of a halved sourdough loaf on a wooden board",
+      "caption": ""
+    }
   }
 }

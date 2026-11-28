@@ -40,7 +40,10 @@
                     An empty value falls back to default, then to the plain listing.
        PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
                     today is on or before ends (YYYY-MM-DD)
-       BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
+       BADGE_LIVE   true renders BADGE_TEXT above the headline, next to every buy button and in the reviews
+                    intro; false renders nothing. BADGE_CHECKED = the day the badge was last seen on the
+                    listing. A page opts out with "badge": false in pages.json (/google does). Lose the
+                    badge → set BADGE_LIVE false, rebuild, push the same day.
      VARIANT / SHOW_PROMO / PAGE_KEY are set per page from src/pages.json (PAGE_KEY = the page's own
      AMAZON_URLS key: meta_vN on the Meta pages, google on /google).
      Meta events go to the pixel and to /api/capi (Conversions API) with the same event_id for dedup.
@@ -83,8 +86,9 @@
       "ends": ""
     },
     "URGENCY_LINE": "Start this week and you're baking well before Thanksgiving.",
-    "BADGE_LIVE": false,
+    "BADGE_LIVE": true,
     "BADGE_TEXT": "#1 Best Seller in Bread Mixes on Amazon",
+    "BADGE_CHECKED": "2026-11-27",
     "META_GRAPH_VERSION": "v26.0"
   };
   KK.VARIANT = 'google';
@@ -1254,7 +1258,14 @@ if (KK.gtagOn) {
   }
   .bestseller-badge.top { margin: 0 0 8px; }
   .bestseller-badge.btn { display: table; margin: 8px auto 0; position: relative; }
-  .sticky-cta .bestseller-badge.btn { margin: 6px auto 0; background: transparent; color: var(--cream); border-color: var(--accent-soft); }
+  /* Mobile sticky bar: the badge takes its own row above the button (the bar is a wrapping flex row),
+     so the button keeps its full width; the spacer grows to match. */
+  .sticky-cta .bestseller-badge.btn {
+    order: -1; flex: 0 0 100%; display: block; width: 100%;
+    margin: 0; padding: 0; background: transparent; border: 0;
+    color: var(--cream); text-align: center; font-size: 11px; letter-spacing: 0.4px; line-height: 1.2;
+  }
+  .sticky-cta-spacer:has(+ .sticky-cta .bestseller-badge) { height: 96px; }
   .float-wrap .bestseller-badge.btn { margin: 0; background: var(--cream); }
   /* Phones with the badge live: the badge takes the tagline's spot so the first buy button stays on screen. */
   @media (max-width: 600px) {

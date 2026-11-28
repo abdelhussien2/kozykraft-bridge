@@ -1013,7 +1013,14 @@
   }
   .bestseller-badge.top { margin: 0 0 8px; }
   .bestseller-badge.btn { display: table; margin: 8px auto 0; position: relative; }
-  .sticky-cta .bestseller-badge.btn { margin: 6px auto 0; background: transparent; color: var(--cream); border-color: var(--accent-soft); }
+  /* Mobile sticky bar: the badge takes its own row above the button (the bar is a wrapping flex row),
+     so the button keeps its full width; the spacer grows to match. */
+  .sticky-cta .bestseller-badge.btn {
+    order: -1; flex: 0 0 100%; display: block; width: 100%;
+    margin: 0; padding: 0; background: transparent; border: 0;
+    color: var(--cream); text-align: center; font-size: 11px; letter-spacing: 0.4px; line-height: 1.2;
+  }
+  .sticky-cta-spacer:has(+ .sticky-cta .bestseller-badge) { height: 96px; }
   .float-wrap .bestseller-badge.btn { margin: 0; background: var(--cream); }
   /* Phones with the badge live: the badge takes the tagline's spot so the first buy button stays on screen. */
   @media (max-width: 600px) {

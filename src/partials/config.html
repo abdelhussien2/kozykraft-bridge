@@ -8,7 +8,10 @@
                     An empty value falls back to default, then to the plain listing.
        PROMO        reader code; shows only on SHOW_PROMO pages (v5) while code + percent are set and
                     today is on or before ends (YYYY-MM-DD)
-       BADGE_LIVE   true renders BADGE_TEXT in the hero and next to every buy button; false renders nothing
+       BADGE_LIVE   true renders BADGE_TEXT above the headline, next to every buy button and in the reviews
+                    intro; false renders nothing. BADGE_CHECKED = the day the badge was last seen on the
+                    listing. A page opts out with "badge": false in pages.json (/google does). Lose the
+                    badge → set BADGE_LIVE false, rebuild, push the same day.
      VARIANT / SHOW_PROMO / PAGE_KEY are set per page from src/pages.json (PAGE_KEY = the page's own
      AMAZON_URLS key: meta_vN on the Meta pages, google on /google).
      Meta events go to the pixel and to /api/capi (Conversions API) with the same event_id for dedup.

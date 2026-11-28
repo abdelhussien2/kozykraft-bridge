@@ -34,7 +34,8 @@
     "ends": ""
   },
   "URGENCY_LINE": "Start this week and you're baking well before Thanksgiving.",
-  "BADGE_LIVE": false,
+  "BADGE_LIVE": true,
   "BADGE_TEXT": "#1 Best Seller in Bread Mixes on Amazon",
+  "BADGE_CHECKED": "2026-11-27",
   "META_GRAPH_VERSION": "v26.0"
 }

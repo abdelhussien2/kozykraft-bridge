@@ -1,7 +1,7 @@
 {
   "v1": {
     "title": "7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter",
-    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.",
+    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified reviews, and Amazon's #1 spot in Bread Mixes.",
     "body": "v1.html",
     "reviewsInBody": true,
     "byline": false,
@@ -54,7 +54,7 @@
   },
   "v5": {
     "title": "7 Reasons Thousands of Home Bakers Quit Store-Bought Bread for This Sourdough Starter",
-    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified Amazon reviews.",
+    "subhead": "A dehydrated starter that's bake-ready in 5–7 days, from a small US batch. Hundreds of verified reviews, and Amazon's #1 spot in Bread Mixes.",
     "body": "v1.html",
     "reviewsInBody": true,
     "byline": false,
@@ -72,6 +72,7 @@
     "layout": "layout-pdp.html",
     "key": "google",
     "ogType": "product",
+    "badge": false,
     "body": "v1.html",
     "reviewsInBody": true,
     "byline": false,

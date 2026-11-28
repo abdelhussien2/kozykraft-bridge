@@ -88,9 +88,14 @@ const productJsonLd = (page) => JSON.stringify({
   }
 }, null, 2).replace(/</g, '\\u003c');
 
-const badge = (cls) => site.BADGE_LIVE
+// Best-seller badge: BADGE_LIVE in site.config.json turns it on everywhere; a page can opt out with
+// "badge": false in pages.json (the Google Ads product page does, to keep that page claim-free).
+const badgeOn = (page) => Boolean(site.BADGE_LIVE) && page.badge !== false;
+const badge = (page, cls) => badgeOn(page)
   ? `  <div class="bestseller-badge ${cls}">${escapeHtml(site.BADGE_TEXT)}</div>\n`
   : '';
+const REVIEWS_INTRO_PLAIN = 'Recent verified-purchase reviews of the dehydrated starter on Amazon.';
+const REVIEWS_INTRO_BADGE = 'Recent verified-purchase reviews of the dehydrated starter on Amazon, where it\u2019s currently the #1 Best Seller in Bread Mixes.';
 
 // Give every /images/X.webp that has an 800px version a srcset, so phones download the small file.
 function addSrcsets(html) {
@@ -130,8 +135,11 @@ function buildPage(variant, page) {
     AMAZON_TITLE: site.AMAZON_TITLE,
     DEADLINE_BAR_HTML,
     DEADLINE_LINE_HTML,
-    BADGE_TOP_HTML: badge('top'),
-    BADGE_BTN_HTML: badge('btn'),
+    BADGE_TOP_HTML: badge(page, 'top'),
+    BADGE_BTN_HTML: badge(page, 'btn'),
+    // Product page highlight pill (layout-pdp.html); empty unless the badge is on for that page.
+    BADGE_PILL_HTML: badgeOn(page) ? `        <li>${escapeHtml(site.BADGE_TEXT)}</li>\n` : '',
+    REVIEWS_INTRO: badgeOn(page) ? REVIEWS_INTRO_BADGE : REVIEWS_INTRO_PLAIN,
     VARIANT: variant,
     SHOW_PROMO: page.showPromo ? 'true' : 'false',
     TITLE: page.title,

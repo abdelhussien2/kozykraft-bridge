@@ -604,6 +604,8 @@
     color: var(--crust);
     font-size: 12px;
   }
+  .whats-in-box li strong { color: var(--coffee); }
+  .whats-in-box .checklist-note { position: relative; margin: 14px 0 0; font-size: 14px; line-height: 1.55; color: var(--coffee); }
 
   /* Founder mini-card */
   .founder-card {

@@ -140,6 +140,14 @@ function buildPage(variant, page) {
     // Product page highlight pill (layout-pdp.html); empty unless the badge is on for that page.
     BADGE_PILL_HTML: badgeOn(page) ? `        <li>${escapeHtml(site.BADGE_TEXT)}</li>\n` : '',
     REVIEWS_INTRO: badgeOn(page) ? REVIEWS_INTRO_BADGE : REVIEWS_INTRO_PLAIN,
+    // Badge-dependent copy: a compare-table row, a sentence in v1 reason 06, the end-card trust line.
+    COMPARE_BADGE_ROW_HTML: badgeOn(page)
+      ? '        <tr>\n          <td class="row-label">#1 Best Seller badge (Amazon Bread Mixes)</td>\n          <td class="kk-col"><span class="yes">✓ Yes</span></td>\n          <td>—</td>\n          <td>—</td>\n        </tr>\n'
+      : '',
+    BADGE_SENTENCE: badgeOn(page) ? " It\u2019s now the #1 Best Seller in Bread Mixes on Amazon." : '',
+    END_TRUST_LINE: badgeOn(page)
+      ? '#1 Best Seller in Bread Mixes on Amazon · Made in Ohio · Day-7 bubble guarantee'
+      : 'Made in Ohio · Fast Shipping · Day-7 bubble guarantee',
     VARIANT: variant,
     SHOW_PROMO: page.showPromo ? 'true' : 'false',
     TITLE: page.title,
